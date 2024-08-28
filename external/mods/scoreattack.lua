@@ -4,12 +4,10 @@ Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 
 Description:
-Based on official Time Attack and Boss Rush Module this one implements
-SCORE ATTACK game mode (defeat all opponents beating previous score record).
+This module implements SCORE ATTACK game mode with a Co-Op variant
+(defeat opponents beating previous score record).
 
-(Includes a Co-Op Variant).
-
-This mode is detectable by GameMode trigger as scoreattack.
+This mode is detectable by GameMode trigger as scoreattack and scoreattackcoop.
 =========================================
 ]]
 
@@ -18,8 +16,8 @@ This mode is detectable by GameMode trigger as scoreattack.
 
 [Options]
  ;IKEMEN feature: Maximum number of normal and ratio matches to fight before
- ;game ends in Boss Rush mode. Can be left empty, if player is meant to fight
- ;against all boss characters (in such case order parameter is still respected)
+ ;game ends in Score Attack mode. Can be left empty, if player is meant to fight
+ ;against all characters (in such case order parameter is still respected)
 
 scoreattack.maxmatches = 
 ]]
@@ -84,28 +82,18 @@ main.t_itemname.scoreattack = function()
 	main.charparam.single = true
 	main.charparam.stage = true
 	main.charparam.time = true
-	main.continueScreen = true
 	main.exitSelect = true
+	main.elimination = true
 	main.hiscoreScreen = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
-	main.matchWins.draw = {0, 0}
-	main.matchWins.simul = {1, 1}
-	main.matchWins.single = {1, 1}
-	main.matchWins.tag = {1, 1}
 	main.makeRoster = true
 	main.quickContinue = true
 	main.orderSelect[1] = true
 	main.orderSelect[2] = true
-	
-	main.resetScore = true
-	
 	main.rankDisplay = true
-	main.rankingCondition = true
 	main.resultsTable = motif.score_attack_results_screen
 	main.stageOrder = true
-	main.storyboard.credits = true
-	main.storyboard.gameover = true
 	main.teamMenu[1].ratio = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].single = true
@@ -118,14 +106,18 @@ main.t_itemname.scoreattack = function()
 	main.teamMenu[2].turns = true
 	main.versusScreen = true
 	main.versusMatchNo = true
-	main.f_setCredits()
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	--main.stageMenu = true
+	--main.rankingCondition = true
+	--main.resetScore = true
+	--main.continueScreen = true
 	main.txt_mainSelect:update({text = motif.select_info.title_scoreattack_text})
 	setGameMode('scoreattack')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
 
---[[ TODO
 main.t_itemname.scoreattackcoop = function()
 	main.charparam.ai = true
 	main.charparam.music = true
@@ -136,36 +128,36 @@ main.t_itemname.scoreattackcoop = function()
 	main.elimination = true
 	main.exitSelect = true
 	main.hiscoreScreen = true
+	main.quickContinue = true
 	main.coop = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
-	main.matchWins.draw = {0, 0}
-	main.matchWins.simul = {2, 2}
-	main.matchWins.single = {2, 2}
-	main.matchWins.tag = {2, 2}
 	main.rankDisplay = true
 	main.makeRoster = true
 	main.numSimul = {2, math.min(4, config.Players)}
 	main.numTag = {2, math.min(4, config.Players)}
-	main.rankingCondition = true
 	main.resultsTable = motif.score_attack_results_screen
-	main.stageMenu = true
-	main.storyboard.credits = true
+	main.stageOrder = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = false
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].single = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
 	main.versusScreen = true
 	main.versusMatchNo = true
-	main.txt_mainSelect:update({text = motif.select_info.title_scoreattack_text})
-	setGameMode('scoreattack')
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	--main.stageMenu = true
+	--main.continueScreen = true
+	--main.resetScore = true
+	--main.rankingCondition = true
+	main.txt_mainSelect:update({text = motif.select_info.title_scoreattackcoop_text})
+	setGameMode('scoreattackcoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
-]]
 
 --;===========================================================
 --; motif.lua
@@ -177,6 +169,10 @@ end
 -- [Select Info] default parameters. Displayed in select screen.
 if motif.select_info.title_scoreattack_text == nil then
 	motif.select_info.title_scoreattack_text = 'Score Attack'
+end
+
+if motif.select_info.title_scoreattackcoop_text == nil then
+	motif.select_info.title_scoreattackcoop_text = 'Score Attack Cooperative'
 end
 
 -- [Score Attack Results Screen] default parameters. Works similarly to
@@ -248,17 +244,21 @@ end
 -- start.t_makeRoster is a table storing functions returning table data used
 -- by start.f_makeRoster function, depending on game mode.
 start.t_makeRoster.scoreattack = start.t_makeRoster.arcade
+start.t_makeRoster.scoreattackcoop = start.t_makeRoster.arcade
 
 -- start.t_aiRampData is a table storing functions returning variable data used
 -- by start.f_aiRamp function, depending on game mode.
 start.t_aiRampData.scoreattack = start.t_aiRampData.arcade
+start.t_aiRampData.scoreattackcoop = start.t_aiRampData.arcade
 
 -- start.t_sortRanking is a table storing functions with ranking sorting logic
 -- used by start.f_storeStats function, depending on game mode.
 start.t_sortRanking.scoreattack = function(t, a, b) return t[b].score < t[a].score end
+start.t_sortRanking.scoreattackcoop = start.t_sortRanking.scoreattack --Reuse above data
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.scoreattack = function() return winnerteam() == 1 end
+start.t_clearCondition.scoreattackcoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -281,10 +281,13 @@ start.t_resultData.scoreattack = function()
 	return true
 end
 
+start.t_resultData.scoreattackcoop = start.t_resultData.scoreattack --Reuse above data
+
 --;===========================================================
 --; main.lua
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scoreattack = {mode = 'scoreattack', data = 'score', title = motif.select_info.title_scoreattack_text}
+main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = "Score Attack Co-Op"}
 
 if main.t_selOptions.scoreattackmaxmatches == nil then main.t_selOptions.scoreattackmaxmatches = {6, 1, 1, 0, 0, 0, 0, 0, 0, 0} end
