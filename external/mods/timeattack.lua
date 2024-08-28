@@ -7,6 +7,7 @@ Description: Adds personal improvements to make Time Attack
 more faithful to what is seen in Commercial Games.
 
 CD2's Tweaks:
+- Show Best Record in Character Select
 - Set 1 Round to Win
 - Infinite Continues
 - Ranking record will now be displayed when you complete the game mode
@@ -63,16 +64,16 @@ main.t_itemname.timeattack = function()
 	main.rankingCondition = true
 	main.resultsTable = motif.time_attack_results_screen
 	main.stageOrder = true
-	main.teamMenu[1].ratio = true
-	main.teamMenu[1].simul = true
 	main.teamMenu[1].single = true
+	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[1].turns = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = true
+	main.teamMenu[1].ratio = true
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.versusMatchNo = true
 	main.storyboard.gameover = true
@@ -116,11 +117,11 @@ main.t_itemname.timeattackcoop = function()
 	main.stageOrder = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = true
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.versusMatchNo = true
 	main.storyboard.gameover = true
@@ -137,6 +138,14 @@ end
 --;===========================================================
 if motif.select_info.title_timeattackcoop_text == nil then
 	motif.select_info.title_timeattackcoop_text = 'Time Attack Cooperative'
+end
+
+if motif.select_info.record_timeattack_text == nil then
+	motif.select_info.record_timeattack_text = '- BEST RECORD -\n%c %m:%s.%x: %n'
+end
+
+if motif.select_info.record_timeattackcoop_text == nil then
+	motif.select_info.record_timeattackcoop_text = '- BEST RECORD -\n%c %m:%s.%x: %n'
 end
 
 --;===========================================================

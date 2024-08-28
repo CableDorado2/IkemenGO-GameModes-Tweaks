@@ -6,9 +6,10 @@ part of the default scripts distributed with engine, now it's used as a
 showcase how to implement full fledged mode with Ikemen GO external modules
 feature, without conflicting with default scripts. More info:
 https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as scorechallenge
+This mode is detectable by GameMode trigger as scorechallenge or scorechallengecoop
 
 CD2's Tweaks:
+- Team Mode Enabled
 - Adds a Co-Op Variant
 ]]
 
@@ -17,9 +18,16 @@ CD2's Tweaks:
 
 [Title Info]
 menu.itemname.scorechallenge = "SCORE CHALLENGE"
+menu.itemname.scorechallengecoop = "SCORE CHALLENGE CO-OP"
 
 [Select Info]
+; Displaying game mode record directly in select screen
+record.offset = 159,39
+record.font = 3,0,0
+record.scale = 1.0, 1.0
+; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.scorechallenge.text = "- BEST RECORD -\n%c %p PTS: %n"
+record.scorechallengecoop.text = "- BEST RECORD -\n%c %p PTS: %n"
 
 [Score Challenge Results Screen]
 enabled = 1
@@ -37,7 +45,7 @@ winstext.text = "Score: %i"
 winstext.offset = 159, 70
 winstext.font = 3, 0, 0
 winstext.scale = 1.0, 1.0
-winstext.displaytime = 0
+winstext.displaytime = -1
 winstext.layerno = 2
 
 ;overlay.window = 0, 0, 320, 240
@@ -68,17 +76,21 @@ main.t_itemname.scorechallenge = function()
 	main.hiscoreScreen = true
 	--main.lifebar.p1score = true
 	--main.lifebar.p2aiLevel = true
-	main.matchWins.draw = {0, 0}
-	main.matchWins.simul = {1, 1}
-	main.matchWins.single = {1, 1}
-	main.matchWins.tag = {1, 1}
 	main.rankDisplay = true
 	main.rankingCondition = true
 	main.resultsTable = motif.score_challenge_results_screen
 	main.selectMenu[2] = true
 	main.stageMenu = true
 	main.teamMenu[1].single = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[1].turns = true
+	main.teamMenu[1].ratio = true
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
+	main.teamMenu[2].tag = true
+	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.txt_mainSelect:update({text = motif.select_info.title_scorechallenge_text})
 	setGameMode('scorechallenge')
@@ -87,39 +99,27 @@ main.t_itemname.scorechallenge = function()
 end
 
 main.t_itemname.scorechallengecoop = function()
-	main.charparam.ai = true
-	main.charparam.music = true
-	main.charparam.rounds = true
-	main.charparam.single = true
-	main.charparam.stage = true
-	main.charparam.time = true
-	main.elimination = true
-	main.exitSelect = true
 	main.hiscoreScreen = true
 	main.coop = true
-	--main.lifebar.p1score = true
-	--main.lifebar.p2aiLevel = true
-	main.matchWins.draw = {0, 0}
-	main.matchWins.simul = {2, 2}
-	main.matchWins.single = {2, 2}
-	main.matchWins.tag = {2, 2}
-	main.rankDisplay = true
-	--main.makeRoster = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
 	main.numSimul = {2, math.min(4, config.Players)}
 	main.numTag = {2, math.min(4, config.Players)}
+	main.rankDisplay = true
 	main.rankingCondition = true
 	main.resultsTable = motif.score_challenge_results_screen
+	main.selectMenu[2] = true
 	main.stageMenu = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = false
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
-	main.txt_mainSelect:update({text = motif.select_info.title_scorechallenge_text})
-	setGameMode('scorechallenge')
+	main.txt_mainSelect:update({text = motif.select_info.title_scorechallengecoop_text})
+	setGameMode('scorechallengecoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
@@ -135,8 +135,17 @@ end
 if motif.select_info.title_scorechallenge_text == nil then
 	motif.select_info.title_scorechallenge_text = 'Score Challenge'
 end
+
+if motif.select_info.title_scorechallengecoop_text == nil then
+	motif.select_info.title_scorechallengecoop_text = 'Score Challenge Cooperative'
+end
+
 if motif.select_info.record_scorechallenge_text == nil then
 	motif.select_info.record_scorechallenge_text = '- BEST RECORD -\n%c %p PTS: %n'
+end
+
+if motif.select_info.record_scorechallengecoop_text == nil then
+	motif.select_info.record_scorechallengecoop_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
 
 -- [Score Challenge Results Screen] default parameters. Works similarly to
@@ -209,9 +218,11 @@ end
 -- used by start.f_storeStats function, depending on game mode. Here we're
 -- reusing logic already declared for arcade mode (refer to start.lua)
 start.t_sortRanking.scorechallenge = start.t_sortRanking.arcade
+start.t_sortRanking.scorechallengecoop = start.t_sortRanking.arcade
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.scorechallenge = function() return winnerteam() == 1 end
+start.t_clearCondition.scorechallengecoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -234,8 +245,11 @@ start.t_resultData.scorechallenge = function()
 	return true
 end
 
+start.t_resultData.scorechallengecoop = start.t_resultData.scorechallenge
+
 --;===========================================================
 --; main.lua
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scorechallenge = {mode = 'scorechallenge', data = 'score', title = motif.select_info.title_scorechallenge_text}
+main.t_hiscoreData.scorechallengecoop = {mode = 'scorechallengecoop', data = 'score', title = 'Score Challenge Co-Op'}

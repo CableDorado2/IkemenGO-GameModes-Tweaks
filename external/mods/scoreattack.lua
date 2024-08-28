@@ -101,16 +101,16 @@ main.t_itemname.scoreattack = function()
 	main.rankDisplay = true
 	main.resultsTable = motif.score_attack_results_screen
 	main.stageOrder = true
-	main.teamMenu[1].ratio = true
-	main.teamMenu[1].simul = true
 	main.teamMenu[1].single = true
+	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[1].turns = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = true
+	main.teamMenu[1].ratio = true
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.versusMatchNo = true
 	main.storyboard.gameover = true
@@ -147,11 +147,11 @@ main.t_itemname.scoreattackcoop = function()
 	main.stageOrder = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = true
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.versusMatchNo = true
 	main.storyboard.gameover = true
@@ -180,6 +180,14 @@ end
 
 if motif.select_info.title_scoreattackcoop_text == nil then
 	motif.select_info.title_scoreattackcoop_text = 'Score Attack Cooperative'
+end
+
+if motif.select_info.record_scoreattack_text == nil then
+	motif.select_info.record_scoreattack_text = '- BEST RECORD -\n%c %p PTS: %n'
+end
+
+if motif.select_info.record_scoreattackcoop_text == nil then
+	motif.select_info.record_scoreattackcoop_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
 
 -- [Score Attack Results Screen] default parameters. Works similarly to
@@ -295,6 +303,6 @@ start.t_resultData.scoreattackcoop = start.t_resultData.scoreattack --Reuse abov
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scoreattack = {mode = 'scoreattack', data = 'score', title = motif.select_info.title_scoreattack_text}
-main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = "Score Attack Co-Op"}
+main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = 'Score Attack Co-Op'}
 
 if main.t_selOptions.scoreattackmaxmatches == nil then main.t_selOptions.scoreattackmaxmatches = {6, 1, 1, 0, 0, 0, 0, 0, 0, 0} end
