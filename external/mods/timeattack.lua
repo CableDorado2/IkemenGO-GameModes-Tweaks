@@ -1,5 +1,5 @@
 --[[	   TIME ATTACK TWEAKS
-=========================================
+=======================================================================
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 
@@ -11,7 +11,24 @@ CD2's Tweaks:
 - Infinite Continues
 - Ranking record will now be displayed when you complete the game mode
 - Adds a Co-Op Variant
-=========================================
+=======================================================================
+]]
+
+--[[
+; Example system.def parameters assignments
+
+[Title Info]
+menu.itemname.timeattack = "TIME ATTACK"
+menu.itemname.timeattackcoop = "TIME ATTACK CO-OP"
+
+[Select Info]
+; Displaying game mode record directly in select screen
+record.offset = 159,39
+record.font = 3,0,0
+record.scale = 1.0, 1.0
+; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
+record.timeattack.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
+record.timeattackcoop.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 ]]
 
 --;===========================================================

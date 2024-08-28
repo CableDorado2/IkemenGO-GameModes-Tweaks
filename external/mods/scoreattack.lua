@@ -1,5 +1,5 @@
 --[[	   SCORE ATTACK MODULE
-=========================================
+=================================================================================
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 
@@ -8,7 +8,7 @@ This module implements SCORE ATTACK game mode with a Co-Op variant
 (defeat opponents beating previous score record).
 
 This mode is detectable by GameMode trigger as scoreattack and scoreattackcoop.
-=========================================
+=================================================================================
 ]]
 
 --[[
@@ -27,34 +27,41 @@ scoreattack.maxmatches =
 
 [Title Info]
 menu.itemname.scoreattack = "SCORE ATTACK"
+menu.itemname.scoreattackcoop = "SCORE ATTACK CO-OP"
 
 [Select Info]
+; Displaying game mode record directly in select screen
+record.offset = 159,39
+record.font = 3,0,0
+record.scale = 1.0, 1.0
+; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.scoreattack.text = "- BEST RECORD -\n%c %p PTS: %n"
+record.scoreattackcoop.text = "- BEST RECORD -\n%c %p PTS: %n"
 
 [Score Attack Results Screen]
 enabled = 1
 sounds.enabled = 1
 
-fadein.time = 0
-fadein.col = 0, 0, 0
+fadein.time = 32
+fadein.col = 0,0,0
 fadein.anim = -1
 fadeout.time = 64
 fadeout.col = 0, 0, 0
 fadeout.anim = -1
 show.time = 300
 
-winstext.text = "Score: %i"
-winstext.offset = 159, 70
-winstext.font = 3, 0, 0
-winstext.scale = 1.0, 1.0
-winstext.displaytime = 0
+winstext.text = "Clear Score: %i"
+winstext.offset = 159,70
+winstext.font = 3,0,0
+winstext.scale = 1.0,1.0
+winstext.displaytime = -1
 winstext.layerno = 2
 
-;overlay.window = 0, 0, 320, 240
-overlay.col = 0, 0, 0
-overlay.alpha = 20, 100
+;overlay.window = 0,0,320,240
+overlay.col = 0,0,0
+overlay.alpha = 20,100
 
-p1.state = 175, 170
+p1.state = 175,170
 p1.win.state = 180
 p2.state = 
 p2.win.state = 
@@ -63,7 +70,7 @@ p1.teammate.win.state =
 p2.teammate.state = 
 p2.teammate.win.state = 
 
-[scoreattackResultsBGdef]
+[ScoreAttackResultsBGdef]
 ; left blank (character and stage not covered)
 ]]
 
