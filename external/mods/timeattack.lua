@@ -1,4 +1,4 @@
---[[	   TIME ATTACK TWEAKS
+--[[	   				TIME ATTACK TWEAKS
 =======================================================================
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build

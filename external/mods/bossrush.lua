@@ -1,18 +1,20 @@
---[[
-Last tested on Ikemen GO v0.98
+--[[Tested on Ikemen GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
+
 This external module implements BOSS RUSH game mode (defeat all opponents
 that are consider bosses). Up to release 0.97 this mode was part of the
 default scripts distributed with engine, now it's used as a showcase how to
 implement full fledged mode with Ikemen GO external modules feature, without
 conflicting with default scripts. More info:
 https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as bossrush.
+This mode is detectable by GameMode trigger as bossrush or bossrushcoop.
 Only characters with select.def "boss = 1" parameter assigned are valid for
 this mode.
 
 CD2's Tweaks:
+- Removed MatchNo in VS Screen
+- Rank Display Enabled
 - Adds a Co-Op Variant
-- Modify t_bossChars to allow a Single Boss fight variant like bonus games?
+- t_bossChars renamed to t_bossRushChars to allow Single Boss Fight variant like Bonus Games
 ]]
 
 --[[
@@ -37,6 +39,7 @@ bossrush.maxmatches =
 
 [Title Info]
 menu.itemname.bossrush = "BOSS RUSH"
+menu.itemname.bossrushcoop = "BOSS RUSH CO-OP"
 
 [Boss Rush Results Screen]
 enabled = 1
@@ -54,7 +57,7 @@ winstext.text = "Congratulations!"
 winstext.offset = 159, 70
 winstext.font = 3, 0, 0
 winstext.scale = 1.0, 1.0
-winstext.displaytime = 0
+winstext.displaytime = -1
 winstext.layerno = 2
 
 ;overlay.window = 0, 0, localcoordX, localcoordY
@@ -78,6 +81,7 @@ p2.teammate.state =
 main.t_itemname.bossrush = function()
 	main.f_playerInput(main.playerInput, 1)
 	main.t_pIn[2] = 1
+	main.rankDisplay = true
 	main.charparam.ai = true
 	main.charparam.music = true
 	main.charparam.rounds = true
@@ -94,20 +98,19 @@ main.t_itemname.bossrush = function()
 	main.orderSelect[2] = true
 	main.rankingCondition = true
 	main.resultsTable = motif.boss_rush_results_screen
-	main.storyboard.credits = true
-	main.storyboard.gameover = true
-	main.teamMenu[1].ratio = true
-	main.teamMenu[1].simul = true
 	main.teamMenu[1].single = true
+	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[1].turns = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = true
+	main.teamMenu[1].ratio = true
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
-	main.versusMatchNo = true
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
 	main.txt_mainSelect:update({text = motif.select_info.title_bossrush_text})
 	setGameMode('bossrush')
 	hook.run("main.t_itemname")
@@ -115,6 +118,7 @@ main.t_itemname.bossrush = function()
 end
 
 main.t_itemname.bossrushcoop = function()
+	main.rankDisplay = true
 	main.charparam.ai = true
 	main.charparam.music = true
 	main.charparam.rounds = true
@@ -123,34 +127,27 @@ main.t_itemname.bossrushcoop = function()
 	main.charparam.time = true
 	main.elimination = true
 	main.exitSelect = true
-	--main.hiscoreScreen = true
-	main.continueScreen = true
+	main.hiscoreScreen = true
 	main.coop = true
-	--main.lifebar.p1score = true
-	--main.lifebar.p2aiLevel = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
 	main.makeRoster = true
-	main.matchWins.draw = {0, 0}
-	main.matchWins.simul = {2, 2}
-	main.matchWins.single = {2, 2}
-	main.matchWins.tag = {2, 2}
 	main.numSimul = {2, math.min(4, config.Players)}
 	main.numTag = {2, math.min(4, config.Players)}
 	main.rankingCondition = true
 	main.resultsTable = motif.boss_rush_results_screen
-	main.stageMenu = true
-	main.storyboard.ending = true
-	main.storyboard.credits = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
-	main.teamMenu[2].ratio = true
-	main.teamMenu[2].simul = false
 	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
 	main.teamMenu[2].tag = true
 	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
 	main.versusScreen = true
-	main.versusMatchNo = true
-	main.txt_mainSelect:update({text = motif.select_info.title_bossrush_text})
-	setGameMode('bossrush')
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	main.txt_mainSelect:update({text = motif.select_info.title_bossrushcoop_text})
+	setGameMode('bossrushcoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
@@ -165,6 +162,10 @@ end
 -- [Select Info] default parameters. Displayed in select screen.
 if motif.select_info.title_bossrush_text == nil then
 	motif.select_info.title_bossrush_text = 'Boss Rush'
+end
+
+if motif.select_info.title_bossrushcoop_text == nil then
+	motif.select_info.title_bossrushcoop_text = 'Boss Rush Cooperative'
 end
 
 -- [Boss Rush Results Screen] default parameters. Works similarly to
@@ -232,16 +233,20 @@ end
 -- start.t_makeRoster is a table storing functions returning table data used
 -- by start.f_makeRoster function, depending on game mode.
 start.t_makeRoster.bossrush = function()
-	return start.f_unifySettings(main.t_selOptions.bossrushmaxmatches, main.t_bossChars), main.t_bossChars
+	return start.f_unifySettings(main.t_selOptions.bossrushmaxmatches, main.t_bossRushChars), main.t_bossRushChars
 end
+
+start.t_makeRoster.bossrushcoop = start.t_makeRoster.bossrush
 
 -- start.t_sortRanking is a table storing functions with ranking sorting logic
 -- used by start.f_storeStats function, depending on game mode. Here we're
 -- reusing logic already declared for survival mode (refer to start.lua)
 start.t_sortRanking.bossrush = start.t_sortRanking.survival
+start.t_sortRanking.bossrushcoop = start.t_sortRanking.survival
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.bossrush = function() return winnerteam() == 1 end
+start.t_clearCondition.bossrushcoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -258,35 +263,38 @@ start.t_resultData.bossrush = function()
 	return true
 end
 
+start.t_resultData.bossrushcoop = start.t_resultData.bossrush
+
 --;===========================================================
 --; main.lua
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.bossrush = {mode = 'bossrush', data = 'score', title = motif.select_info.title_bossrush_text}
+main.t_hiscoreData.bossrushcoop = {mode = 'bossrushcoop', data = 'score', title = motif.select_info.title_bossrushcoop_text}
 
-main.t_bossChars = {}
+main.t_bossRushChars = {}
 
 for _, v in ipairs(main.t_selChars) do
 	if v.boss ~= nil and v.boss == 1 then
-		if main.t_bossChars[v.order] == nil then
-			main.t_bossChars[v.order] = {}
+		if main.t_bossRushChars[v.order] == nil then
+			main.t_bossRushChars[v.order] = {}
 		end
-		table.insert(main.t_bossChars[v.order], v.char_ref)
+		table.insert(main.t_bossRushChars[v.order], v.char_ref)
 	end
 end
 
 if main.t_selOptions.bossrushmaxmatches == nil or #main.t_selOptions.bossrushmaxmatches == 0 then
 	local size = 1
-	for k, _ in pairs(main.t_bossChars) do if k > size then size = k end end
+	for k, _ in pairs(main.t_bossRushChars) do if k > size then size = k end end
 	main.t_selOptions.bossrushmaxmatches = {}
 	for i = 1, size do
 		table.insert(main.t_selOptions.bossrushmaxmatches, 0)
 	end	
-	for k, v in pairs(main.t_bossChars) do
+	for k, v in pairs(main.t_bossRushChars) do
 		main.t_selOptions.bossrushmaxmatches[k] = #v
 	end
 end
 
 if main.debugLog then
-	main.f_printTable(main.t_bossChars, "debug/t_bossChars.txt")
+	main.f_printTable(main.t_bossRushChars, "debug/t_bossRushChars.txt")
 end

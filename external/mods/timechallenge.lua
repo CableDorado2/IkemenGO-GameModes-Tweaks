@@ -1,5 +1,5 @@
---[[
-Last tested on Ikemen GO v0.98
+--[[Tested on Ikemen GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
+
 This external module implements TIME CHALLENGE game mode (defeat selected
 opponent beating previous time record). Up to release 0.97 this mode was part
 of the default scripts distributed with engine, now it's used as a showcase

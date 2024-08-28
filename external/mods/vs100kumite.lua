@@ -1,5 +1,5 @@
---[[
-Last tested on Ikemen GO v0.98
+--[[Tested on Ikemen GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
+
 This external module implements VS 100 KUMITE game mode known from Street
 Fighter Alpha 3 MAX (defeat as many opponents as you can in 100 successive
 matches). Up to release 0.97 this mode was part of the default scripts
