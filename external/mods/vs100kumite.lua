@@ -7,7 +7,7 @@ distributed with engine, now it's used as a showcase how to implement full
 fledged mode with Ikemen GO external modules feature, without conflicting
 with default scripts. More info:
 https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as vs100kumite or vs100kumitecoop
+This mode is detectable by GameMode trigger as vs100kumite and vs100kumitecoop
 
 CD2's Tweaks:
 - MatchNo now is displayed in VS Screen

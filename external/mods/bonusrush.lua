@@ -4,12 +4,12 @@ Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 
 Description:
-Based on official Boss Rush Module this one implements
-BONUS RUSH game mode (defeat all opponents that are consider bonuses).
+Based on official Boss Rush Module this one implements BONUS RUSH game mode
+(defeat all opponents that are consider bonuses).
 
 (Includes a Co-Op Variant)
 
-This mode is detectable by GameMode trigger as bonusrush or bonusrushcoop.
+This mode is detectable by GameMode trigger as bonusrush and bonusrushcoop.
 Only characters with select.def "bonus = 1" parameter assigned are valid for
 this mode.
 =============================================================================
@@ -293,6 +293,4 @@ if main.t_selOptions.bonusrushmaxmatches == nil or #main.t_selOptions.bonusrushm
 	end
 end
 
-if main.debugLog then
-	main.f_printTable(main.t_bonusRushChars, "debug/t_bonusRushChars.txt")
-end
+if main.debugLog then main.f_printTable(main.t_bonusRushChars, "debug/t_bonusRushChars.txt") end

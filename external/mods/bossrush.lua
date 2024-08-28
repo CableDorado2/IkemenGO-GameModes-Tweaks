@@ -6,7 +6,7 @@ default scripts distributed with engine, now it's used as a showcase how to
 implement full fledged mode with Ikemen GO external modules feature, without
 conflicting with default scripts. More info:
 https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as bossrush or bossrushcoop.
+This mode is detectable by GameMode trigger as bossrush and bossrushcoop.
 Only characters with select.def "boss = 1" parameter assigned are valid for
 this mode.
 
@@ -14,6 +14,8 @@ CD2's Tweaks:
 - Removed MatchNo in VS Screen
 - Rank Display Enabled
 - Adds a Co-Op Variant
+- Adds Boss Fight game mode (defeat a boss character selected)
+  detectable by GameMode trigger as bossfight and bossfightcoop.
 - t_bossChars renamed to t_bossRushChars to allow Single Boss Fight variant like Bonus Games
 ]]
 
@@ -22,9 +24,8 @@ CD2's Tweaks:
 
 [Characters]
  ; - boss
- ;   IKEMEN feature: Set the paramvalue to 1 to include this character in "Boss
- ;   Rush" mode. At least 1 character needs this parameter for the mode to show
- ;   up in modes selection menu.
+ ;   IKEMEN feature: Set the paramvalue to 1 to include this character in "Boss Rush" and "Boss Fight" mode.
+ ;   At least 1 character needs this parameter for the mode to show up in modes selection menu.
 
 [Options]
  ;IKEMEN feature: Maximum number of normal and ratio matches to fight before
@@ -40,6 +41,12 @@ bossrush.maxmatches =
 [Title Info]
 menu.itemname.bossrush = "BOSS RUSH"
 menu.itemname.bossrushcoop = "BOSS RUSH CO-OP"
+
+menu.itemname.bossfight = "BOSS FIGHT"
+menu.itemname.bossfight.back = "BACK" ; boss characters menu items are automatically added before bossfight.back
+
+menu.itemname.bossfightcoop = "BOSS FIGHT CO-OP"
+menu.itemname.bossfightcoop.back = "BACK" ; boss characters menu items are automatically added before bossfightcoop.back
 
 [Boss Rush Results Screen]
 enabled = 1
@@ -152,6 +159,62 @@ main.t_itemname.bossrushcoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.bossfight = function()
+	main.f_playerInput(main.playerInput, 1)
+	main.t_pIn[2] = 1
+	main.rankDisplay = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
+	main.teamMenu[1].single = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[1].turns = true
+	main.teamMenu[1].ratio = true
+	main.teamMenu[2].single = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.forceChar[2] = {main.t_bossChars[1]}
+	main.selectMenu[2] = true
+	main.orderSelect[1] = true
+	main.orderSelect[2] = true
+	main.versusScreen = true
+	main.victoryScreen = true
+	main.txt_mainSelect:update({text = motif.select_info.title_bossfight_text})
+	setGameMode('bossfight')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
+main.t_itemname.bossfightcoop = function()
+	main.coop = true
+	main.rankDisplay = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.forceChar[2] = {main.t_bossChars[1]}
+	main.selectMenu[2] = true
+	main.versusScreen = true
+	main.victoryScreen = true
+	main.txt_mainSelect:update({text = motif.select_info.title_bossfightcoop_text})
+	setGameMode('bossfightcoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
 --;===========================================================
 --; motif.lua
 --;===========================================================
@@ -166,6 +229,14 @@ end
 
 if motif.select_info.title_bossrushcoop_text == nil then
 	motif.select_info.title_bossrushcoop_text = 'Boss Rush Cooperative'
+end
+
+if motif.select_info.title_bossfight_text == nil then
+	motif.select_info.title_bossfight_text = 'Boss Fight'
+end
+
+if motif.select_info.title_bossfightcoop_text == nil then
+	motif.select_info.title_bossfightcoop_text = 'Boss Fight Cooperative'
 end
 
 -- [Boss Rush Results Screen] default parameters. Works similarly to
@@ -283,6 +354,17 @@ for _, v in ipairs(main.t_selChars) do
 	end
 end
 
+main.t_bossChars = {}
+
+for _, v in ipairs(main.t_selChars) do
+	if v.boss ~= nil and v.boss == 1 then
+		if main.t_bossChars == nil then
+			main.t_bossChars = {}
+		end
+		table.insert(main.t_bossChars, v.char_ref)
+	end
+end
+
 if main.t_selOptions.bossrushmaxmatches == nil or #main.t_selOptions.bossrushmaxmatches == 0 then
 	local size = 1
 	for k, _ in pairs(main.t_bossRushChars) do if k > size then size = k end end
@@ -296,5 +378,6 @@ if main.t_selOptions.bossrushmaxmatches == nil or #main.t_selOptions.bossrushmax
 end
 
 if main.debugLog then
+	main.f_printTable(main.t_bossChars, "debug/t_bossChars.txt")
 	main.f_printTable(main.t_bossRushChars, "debug/t_bossRushChars.txt")
 end
