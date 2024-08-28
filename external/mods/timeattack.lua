@@ -8,6 +8,7 @@ more faithful to what is seen in Commercial Games.
 
 CD2's Tweaks:
 - Show Best Record in Character Select
+- Removed MatchNo in VS Screen
 - Set 1 Round to Win
 - Infinite Continues
 - Ranking record will now be displayed when you complete the game mode
@@ -75,7 +76,6 @@ main.t_itemname.timeattack = function()
 	main.teamMenu[2].turns = true
 	main.teamMenu[2].ratio = true
 	main.versusScreen = true
-	main.versusMatchNo = true
 	main.storyboard.gameover = true
 	--main.storyboard.credits = true
 	--main.stageMenu = true
@@ -123,7 +123,6 @@ main.t_itemname.timeattackcoop = function()
 	main.teamMenu[2].turns = true
 	main.teamMenu[2].ratio = true
 	main.versusScreen = true
-	main.versusMatchNo = true
 	main.storyboard.gameover = true
 	--main.storyboard.credits = true
 	--main.stageMenu = true
