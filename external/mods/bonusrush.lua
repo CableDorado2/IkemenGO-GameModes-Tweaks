@@ -102,10 +102,6 @@ main.t_itemname.bonusrush = function()
 	main.teamMenu[1].turns = true
 	main.teamMenu[1].ratio = true
 	main.teamMenu[2].single = true
-	main.teamMenu[2].simul = true
-	main.teamMenu[2].tag = true
-	main.teamMenu[2].turns = true
-	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.storyboard.gameover = true
 	--main.storyboard.credits = true
@@ -137,15 +133,58 @@ main.t_itemname.bonusrushcoop = function()
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[2].single = true
-	main.teamMenu[2].simul = true
-	main.teamMenu[2].tag = true
-	main.teamMenu[2].turns = true
-	main.teamMenu[2].ratio = true
 	main.versusScreen = true
 	main.storyboard.gameover = true
 	--main.storyboard.credits = true
 	main.txt_mainSelect:update({text = motif.select_info.title_bonusrushcoop_text})
 	setGameMode('bonusrushcoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
+main.t_itemname.bonus = function(t, item)
+	main.f_playerInput(main.playerInput, 1)
+	main.rankDisplay = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.forceChar[2] = {main.t_bonusChars[item]}
+	main.selectMenu[2] = true
+	main.teamMenu[1].single = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[1].turns = true
+	main.teamMenu[1].ratio = true
+	main.teamMenu[2].single = true
+	main.lifebar.p1score = true
+	main.txt_mainSelect:update({text = motif.select_info.title_bonus_text})
+	setGameMode('bonus')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
+main.t_itemname.bonuscoop = function(t, item)
+	main.coop = true
+	main.rankDisplay = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.forceChar[2] = {main.t_bonusChars[item]}
+	main.selectMenu[2] = true
+	main.lifebar.p1score = true
+	main.txt_mainSelect:update({text = motif.select_info.title_bonuscoop_text})
+	setGameMode('bonuscoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
@@ -164,6 +203,10 @@ end
 
 if motif.select_info.title_bonusrushcoop_text == nil then
 	motif.select_info.title_bonusrushcoop_text = 'Bonus Rush Cooperative'
+end
+
+if motif.select_info.title_bonuscoop_text == nil then
+	motif.select_info.title_bonuscoop_text = 'Bonus Cooperative'
 end
 
 -- [Bonus Rush Results Screen] default parameters. Works similarly to

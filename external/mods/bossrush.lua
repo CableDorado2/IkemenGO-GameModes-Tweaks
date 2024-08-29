@@ -15,7 +15,7 @@ CD2's Tweaks:
 - Rank Display Enabled
 - Adds a Co-Op Variant
 - Adds Boss Fight game mode (defeat a boss character selected)
-  detectable by GameMode trigger as bossfight and bossfightcoop.
+  detectable by GameMode trigger as boss and bosscoop.
 - t_bossChars renamed to t_bossRushChars to allow Single Boss Fight variant like Bonus Games
 ]]
 
@@ -159,9 +159,15 @@ main.t_itemname.bossrushcoop = function()
 	return start.f_selectMode
 end
 
-main.t_itemname.bossfight = function()
+main.t_itemname.boss = function()
 	main.f_playerInput(main.playerInput, 1)
 	main.t_pIn[2] = 1
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
 	main.rankDisplay = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
@@ -171,26 +177,26 @@ main.t_itemname.bossfight = function()
 	main.teamMenu[1].turns = true
 	main.teamMenu[1].ratio = true
 	main.teamMenu[2].single = true
+	main.forceChar[2] = {main.t_bossChars[item]}
+	main.selectMenu[2] = true
+	main.orderSelect[1] = true
+	main.orderSelect[2] = true
+	main.versusScreen = true
+	main.victoryScreen = true
+	main.txt_mainSelect:update({text = motif.select_info.title_boss_text})
+	setGameMode('boss')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
+main.t_itemname.bosscoop = function()
+	main.coop = true
 	main.charparam.ai = true
 	main.charparam.music = true
 	main.charparam.rounds = true
 	main.charparam.single = true
 	main.charparam.stage = true
 	main.charparam.time = true
-	main.forceChar[2] = {main.t_bossChars[1]}
-	main.selectMenu[2] = true
-	main.orderSelect[1] = true
-	main.orderSelect[2] = true
-	main.versusScreen = true
-	main.victoryScreen = true
-	main.txt_mainSelect:update({text = motif.select_info.title_bossfight_text})
-	setGameMode('bossfight')
-	hook.run("main.t_itemname")
-	return start.f_selectMode
-end
-
-main.t_itemname.bossfightcoop = function()
-	main.coop = true
 	main.rankDisplay = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
@@ -199,18 +205,12 @@ main.t_itemname.bossfightcoop = function()
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[2].single = true
-	main.charparam.ai = true
-	main.charparam.music = true
-	main.charparam.rounds = true
-	main.charparam.single = true
-	main.charparam.stage = true
-	main.charparam.time = true
-	main.forceChar[2] = {main.t_bossChars[1]}
+	main.forceChar[2] = {main.t_bossChars[item]}
 	main.selectMenu[2] = true
 	main.versusScreen = true
 	main.victoryScreen = true
-	main.txt_mainSelect:update({text = motif.select_info.title_bossfightcoop_text})
-	setGameMode('bossfightcoop')
+	main.txt_mainSelect:update({text = motif.select_info.title_bosscoop_text})
+	setGameMode('bosscoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
@@ -231,12 +231,12 @@ if motif.select_info.title_bossrushcoop_text == nil then
 	motif.select_info.title_bossrushcoop_text = 'Boss Rush Cooperative'
 end
 
-if motif.select_info.title_bossfight_text == nil then
-	motif.select_info.title_bossfight_text = 'Boss Fight'
+if motif.select_info.title_boss_text == nil then
+	motif.select_info.title_boss_text = 'Boss Fight'
 end
 
-if motif.select_info.title_bossfightcoop_text == nil then
-	motif.select_info.title_bossfightcoop_text = 'Boss Fight Cooperative'
+if motif.select_info.title_bosscoop_text == nil then
+	motif.select_info.title_bosscoop_text = 'Boss Fight Cooperative'
 end
 
 -- [Boss Rush Results Screen] default parameters. Works similarly to
