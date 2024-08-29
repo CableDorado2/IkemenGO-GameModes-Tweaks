@@ -54,11 +54,11 @@ unlock = true
 [Music]
 
 ;Music to play at event mode screen.
-event.bgm = 
+event.bgm = ""
 event.bgm.volume = 100
 event.bgm.loop = 1
-event.bgm.loopstart = 
-event.bgm.loopend = 
+event.bgm.loopstart = 0
+event.bgm.loopend = 0
 
 [Title Info]
 
@@ -75,6 +75,13 @@ title.offset = 159,15
 title.font = 2,0,0
 title.scale = 1.0, 1.0
 title.text = "EVENT SELECT"
+info.offset = 400,580
+info.font = 2,0,1
+info.scale = 1.0, 1.0
+hiscore.offset = 400,530
+hiscore.font = 2,0,1
+hiscore.text = "HIGH SCORE:"
+hiscore.scale = 1.0, 1.0
 menu.uselocalcoord = 0
 menu.pos = 85,33
 menu.item.offset = 0,0
@@ -107,7 +114,6 @@ menu.title.uppercase = 1
 cursor.move.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
-menu.itemname.back = "Back"
 
 ;Event select screen background
 [EventBGdef]
@@ -153,6 +159,13 @@ local t_base = {
 	title_font = {'f-6x9.def', 0, 0, 255, 255, 255, -1},
 	title_scale = {1.0, 1.0},
 	title_text = 'EVENT SELECT',
+	info_offset = {159, 200},
+	info_font = {'f-6x9.def', 0, 0, 255, 255, 255, -1},
+	info_scale = {1.0, 1.0},
+	hiscore_offset = {159, 180},
+	hiscore_font = {'f-6x9.def', 0, 0, 255, 255, 255, -1},
+	hiscore_scale = {1.0, 1.0},
+	hiscore_text = 'HIGH SCORE: ',
 	menu_uselocalcoord = 0,
 	menu_pos = {85, 33},
 	--menu_bg_<itemname>_anim = -1,
@@ -173,7 +186,7 @@ local t_base = {
 	menu_item_active_scale = {1.0, 1.0},
 	menu_item_spacing = {0, 14},
 	menu_window_margins_y = {0, 0},
-	menu_window_visibleitems = 13,
+	menu_window_visibleitems = 10,
 	menu_boxcursor_visible = 1,
 	menu_boxcursor_coords = {-5, -10, 154, 3},
 	menu_boxcursor_col = {255, 255, 255},
@@ -195,7 +208,7 @@ local t_base = {
 	cursor_move_snd = {100, 0},
 	cursor_done_snd = {100, 1},
 	cancel_snd = {100, 2},
-	menu_itemname_back = 'Back',
+	--menu_itemname_back = 'Back',
 }
 if motif.event_info == nil then
 	motif.event_info = {}
@@ -244,54 +257,61 @@ if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 --===================================================================================
 --									MENU LOGIC
 --===================================================================================
-t_selEventMode = {}
-local section = 0
-local row = 0
-local content = main.f_fileRead(motif.files.select)
-content = content:gsub('([^\r\n;]*)%s*;[^\r\n]*', '%1')
-content = content:gsub('\n%s*\n', '\n')
-for line in content:gmatch('[^\r\n]+') do
---for line in io.lines("data/select.def") do
-	local lineCase = line:lower()
-	if lineCase:match('^%s*%[%s*eventsmode%s*%]') then
-		row = 0
-		section = 1
-	elseif lineCase:match('^%s*%[%w+%]$') then
-		section = -1
-	elseif section == 1 then --[EventsMode]
-		local param, value = line:match('^%s*(.-)%s*=%s*(.-)%s*$')
-		if param ~= nil and value ~= nil and param ~= '' and value ~= '' then
-			if param:match('^id$') then --Generate Table to manage each event
-				table.insert(t_selEventMode, {id = value, name = '', path = '', unlock = 'true'})
-			elseif t_selEventMode[#t_selEventMode][param] ~= nil then
-				t_selEventMode[#t_selEventMode][param] = value
+function f_loadEvents()
+	t_selEventMode = {}
+	local section = 0
+	local row = 0
+	local content = main.f_fileRead(motif.files.select)
+	content = content:gsub('([^\r\n;]*)%s*;[^\r\n]*', '%1')
+	content = content:gsub('\n%s*\n', '\n')
+	for line in content:gmatch('[^\r\n]+') do
+	--for line in io.lines("data/select.def") do
+		local lineCase = line:lower()
+		if lineCase:match('^%s*%[%s*eventsmode%s*%]') then
+			row = 0
+			section = 1
+		elseif lineCase:match('^%s*%[%w+%]$') then
+			section = -1
+		elseif section == 1 then --[EventsMode]
+			local param, value = line:match('^%s*(.-)%s*=%s*(.-)%s*$')
+			if param ~= nil and value ~= nil and param ~= '' and value ~= '' then
+				if param:match('^id$') then --Generate Table to manage each event
+					table.insert(t_selEventMode, {id = value, name = '', description = '', path = '', unlock = 'true'})
+				elseif t_selEventMode[#t_selEventMode][param] ~= nil then
+					t_selEventMode[#t_selEventMode][param] = value
+				end
 			end
 		end
 	end
+	for k, v in ipairs(t_selEventMode) do --Check Events Unlocks
+		main.t_unlockLua.modes[v.name] = v.unlock
+	end
+	if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
 end
-
-for k, v in ipairs(t_selEventMode) do --Check Events Unlocks
-	main.t_unlockLua.modes[v.name] = v.unlock
-end
-
-if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
 
 main.t_itemname.events = function()
 	return f_events() --Go to below function (that contains a custom sub-menu) when you enter in main menu item
 end
 
-local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
+local rect_boxcursor = rect:create({})
+local rect_boxbg = rect:create({})
 local t_menuWindowEvent = main.f_menuWindow(motif.event_info)
+
+local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
+local txt_infoEvent = main.f_createTextImg(motif.event_info, 'info', {defsc = motif.defaultEvent})
+local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defsc = motif.defaultEvent})
+
 function f_events()
 	sndPlay(motif.files.snd_data, motif.event_info.cursor_done_snd[1], motif.event_info.cursor_done_snd[2])
+	f_loadEvents()
 	local cursorPosY = 1
 	local moveTxt = 0
 	local item = 1
 	local t = {}
 	for k, v in ipairs(t_selEventMode) do
-		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, path = v.path, unlock = v.unlock})
+		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, info = v.description, path = v.path, unlock = v.unlock})
 	end
-	table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back})
+	--table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
 	main.f_bgReset(motif.eventbgdef.bg)
 	main.f_fadeReset('fadein', motif.event_info)
 	if motif.music.event_bgm ~= '' then
@@ -299,7 +319,217 @@ function f_events()
 	end
 	main.close = false
 	while true do
-		main.f_menuCommonDraw(t, item, cursorPosY, moveTxt, 'event_info', 'eventbgdef', txt_titleEvent, motif.defaultEvent, {})
+		--f_menuCommonDraw(t, item, cursorPosY, moveTxt, 'event_info', 'eventbgdef', txt_titleEvent, motif.defaultEvent, {txt_infoEvent, txt_hiscoreEvent})
+--;---------------------------------------------------------------------------------------------------------------------
+		--draw clearcolor
+		if not skipClear then
+		clearColor(motif['eventbgdef'].bgclearcolor[1], motif['eventbgdef'].bgclearcolor[2], motif['eventbgdef'].bgclearcolor[3])
+		end
+		--draw layerno = 0 backgrounds
+		bgDraw(motif['eventbgdef'].bg, 0)
+		--draw menu box
+		if motif['event_info'].menu_boxbg_visible == 1 then
+			rect_boxbg:update({
+				x1 =    motif['event_info'].menu_pos[1] + motif['event_info'].menu_boxcursor_coords[1],
+				y1 =    motif['event_info'].menu_pos[2] + motif['event_info'].menu_boxcursor_coords[2],
+				x2 =    motif['event_info'].menu_boxcursor_coords[3] - motif['event_info'].menu_boxcursor_coords[1] + 1,
+				y2 =    motif['event_info'].menu_boxcursor_coords[4] - motif['event_info'].menu_boxcursor_coords[2] + 1 + (math.min(#t, motif['event_info'].menu_window_visibleitems) - 1) * motif['event_info'].menu_item_spacing[2],
+				r =     motif['event_info'].menu_boxbg_col[1],
+				g =     motif['event_info'].menu_boxbg_col[2],
+				b =     motif['event_info'].menu_boxbg_col[3],
+				src =   motif['event_info'].menu_boxbg_alpha[1],
+				dst =   motif['event_info'].menu_boxbg_alpha[2],
+				defsc = motif.defaultEvent,
+			})
+			rect_boxbg:draw()
+		end
+		--draw title
+		txt_titleEvent:draw()
+		--draw menu items
+		local items_shown = item + motif['event_info'].menu_window_visibleitems - cursorPosY
+		if items_shown > #t or (motif['event_info'].menu_window_visibleitems > 0 and items_shown < #t and (motif['event_info'].menu_window_margins_y[1] ~= 0 or motif['event_info'].menu_window_margins_y[2] ~= 0)) then
+			items_shown = #t
+		end
+		for i = 1, items_shown do
+			if i > item - cursorPosY then
+				if i == item then
+					--Draw active item background
+					if t[i].paramname ~= nil then
+						animDraw(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
+						animUpdate(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
+					end
+					--Draw active item font
+					if t[i].selected then
+						t[i].data:update({
+							font =   motif['event_info'].menu_item_selected_active_font[1],
+							bank =   motif['event_info'].menu_item_selected_active_font[2],
+							align =  motif['event_info'].menu_item_selected_active_font[3],
+							text =   t[i].displayname,
+							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
+							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
+							scaleX = motif['event_info'].menu_item_selected_active_scale[1],
+							scaleY = motif['event_info'].menu_item_selected_active_scale[2],
+							r =      motif['event_info'].menu_item_selected_active_font[4],
+							g =      motif['event_info'].menu_item_selected_active_font[5],
+							b =      motif['event_info'].menu_item_selected_active_font[6],
+							height = motif['event_info'].menu_item_selected_active_font[7],
+							defsc =  motif.defaultEvent,
+						})
+						t[i].data:draw()
+					else
+						t[i].data:update({
+							font =   motif['event_info'].menu_item_active_font[1],
+							bank =   motif['event_info'].menu_item_active_font[2],
+							align =  motif['event_info'].menu_item_active_font[3],
+							text =   t[i].displayname,
+							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_active_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
+							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_active_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
+							scaleX = motif['event_info'].menu_item_active_scale[1],
+							scaleY = motif['event_info'].menu_item_active_scale[2],
+							r =      motif['event_info'].menu_item_active_font[4],
+							g =      motif['event_info'].menu_item_active_font[5],
+							b =      motif['event_info'].menu_item_active_font[6],
+							height = motif['event_info'].menu_item_active_font[7],
+							defsc =  motif.defaultEvent,
+						})
+						t[i].data:draw()
+					end
+					if t[i].vardata ~= nil then
+						t[i].vardata:update({
+							font =   motif['event_info'].menu_item_value_active_font[1],
+							bank =   motif['event_info'].menu_item_value_active_font[2],
+							align =  motif['event_info'].menu_item_value_active_font[3],
+							text =   t[i].vardisplay,
+							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_value_active_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
+							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_value_active_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
+							scaleX = motif['event_info'].menu_item_value_active_scale[1],
+							scaleY = motif['event_info'].menu_item_value_active_scale[2],
+							r =      motif['event_info'].menu_item_value_active_font[4],
+							g =      motif['event_info'].menu_item_value_active_font[5],
+							b =      motif['event_info'].menu_item_value_active_font[6],
+							height = motif['event_info'].menu_item_value_active_font[7],
+							defsc =  motif.defaultEvent,
+						})
+						t[i].vardata:draw()
+					end
+				else
+					--Draw not active item background
+					if t[i].paramname ~= nil then
+						animDraw(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
+						animUpdate(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
+					end
+					--Draw not active item font
+					if t[i].selected then
+						t[i].data:update({
+							font =   motif['event_info'].menu_item_selected_font[1],
+							bank =   motif['event_info'].menu_item_selected_font[2],
+							align =  motif['event_info'].menu_item_selected_font[3],
+							text =   t[i].displayname,
+							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_selected_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
+							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_selected_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
+							scaleX = motif['event_info'].menu_item_selected_scale[1],
+							scaleY = motif['event_info'].menu_item_selected_scale[2],
+							r =      motif['event_info'].menu_item_selected_font[4],
+							g =      motif['event_info'].menu_item_selected_font[5],
+							b =      motif['event_info'].menu_item_selected_font[6],
+							height = motif['event_info'].menu_item_selected_font[7],
+							defsc =  motif.defaultEvent,
+						})
+						t[i].data:draw()
+					else
+						t[i].data:update({
+							font =   motif['event_info'].menu_item_font[1],
+							bank =   motif['event_info'].menu_item_font[2],
+							align =  motif['event_info'].menu_item_font[3],
+							text =   t[i].displayname,
+							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
+							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
+							scaleX = motif['event_info'].menu_item_scale[1],
+							scaleY = motif['event_info'].menu_item_scale[2],
+							r =      motif['event_info'].menu_item_font[4],
+							g =      motif['event_info'].menu_item_font[5],
+							b =      motif['event_info'].menu_item_font[6],
+							height = motif['event_info'].menu_item_font[7],
+							defsc =  motif.defaultEvent,
+						})
+						t[i].data:draw()
+					end
+					if t[i].vardata ~= nil then
+						t[i].vardata:update({
+							font =   motif['event_info'].menu_item_value_font[1],
+							bank =   motif['event_info'].menu_item_value_font[2],
+							align =  motif['event_info'].menu_item_value_font[3],
+							text =   t[i].vardisplay,
+							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_value_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
+							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_value_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
+							scaleX = motif['event_info'].menu_item_value_scale[1],
+							scaleY = motif['event_info'].menu_item_value_scale[2],
+							r =      motif['event_info'].menu_item_value_font[4],
+							g =      motif['event_info'].menu_item_value_font[5],
+							b =      motif['event_info'].menu_item_value_font[6],
+							height = motif['event_info'].menu_item_value_font[7],
+							defsc =  motif.defaultEvent,
+						})
+						t[i].vardata:draw()
+					end
+				end
+			end
+		end
+		--draw menu cursor
+		if motif['event_info'].menu_boxcursor_visible == 1 and not main.fadeActive then
+			local src, dst = main.f_boxcursorAlpha(
+				motif['event_info'].menu_boxcursor_alpharange[1],
+				motif['event_info'].menu_boxcursor_alpharange[2],
+				motif['event_info'].menu_boxcursor_alpharange[3],
+				motif['event_info'].menu_boxcursor_alpharange[4],
+				motif['event_info'].menu_boxcursor_alpharange[5],
+				motif['event_info'].menu_boxcursor_alpharange[6]
+			)
+			rect_boxcursor:update({
+				x1 =    motif['event_info'].menu_pos[1] + motif['event_info'].menu_boxcursor_coords[1] + (cursorPosY - 1) * motif['event_info'].menu_item_spacing[1],
+				y1 =    motif['event_info'].menu_pos[2] + motif['event_info'].menu_boxcursor_coords[2] + (cursorPosY - 1) * motif['event_info'].menu_item_spacing[2],
+				x2 =    motif['event_info'].menu_boxcursor_coords[3] - motif['event_info'].menu_boxcursor_coords[1] + 1,
+				y2 =    motif['event_info'].menu_boxcursor_coords[4] - motif['event_info'].menu_boxcursor_coords[2] + 1,
+				r =     motif['event_info'].menu_boxcursor_col[1],
+				g =     motif['event_info'].menu_boxcursor_col[2],
+				b =     motif['event_info'].menu_boxcursor_col[3],
+				src =   src,
+				dst =   dst,
+				defsc = motif.defaultEvent,
+			})
+			rect_boxcursor:draw()
+		end
+		--draw scroll arrows
+		if #t > motif['event_info'].menu_window_visibleitems then
+			if item > cursorPosY then
+				animUpdate(motif['event_info'].menu_arrow_up_data)
+				animDraw(motif['event_info'].menu_arrow_up_data)
+			end
+			if item >= cursorPosY and item + motif['event_info'].menu_window_visibleitems - cursorPosY < #t then
+				animUpdate(motif['event_info'].menu_arrow_down_data)
+				animDraw(motif['event_info'].menu_arrow_down_data)
+			end
+		end
+		--draw credits text
+		if motif.attract_mode.enabled == 1 and main.credits ~= -1 then
+			txt_attract_credits:update({text = main.f_extractText(motif.attract_mode.credits_text, main.credits)[1]})
+			txt_attract_credits:draw()
+		end
+		--draw layerno = 1 backgrounds
+		bgDraw(motif['eventbgdef'].bg, 1)
+		--draw footer overlay
+		if motif['event_info'].footer_overlay_window ~= nil then
+			overlay_footer:draw()
+		end
+		--draw other text
+		--if t[item].itemname ~= 'back' then
+			txt_infoEvent:draw()
+			txt_infoEvent:update({text = t[item].info})
+			txt_hiscoreEvent:draw()
+		--end
+		--draw fadein / fadeout
+		main.f_fadeAnim(main.fadeGroup)
+--;---------------------------------------------------------------------------------------------------------------------
 		cursorPosY, moveTxt, item = main.f_menuCommonCalc(t, item, cursorPosY, moveTxt, 'event_info', {'$U'}, {'$D'})
 		if main.close and not main.fadeActive then
 			main.f_bgReset(motif[main.background].bg)
@@ -307,12 +537,15 @@ function f_events()
 			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
 			main.close = false
 			break
-		elseif esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'})) then
+		--Back Button
+		--elseif esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'})) then
+		elseif esc() or main.f_input(main.t_players, {'m'}) then
 			sndPlay(motif.files.snd_data, motif.event_info.cancel_snd[1], motif.event_info.cancel_snd[2])
 			main.f_fadeReset('fadeout', motif.event_info)
 			main.close = true
+		--Start Button
 		elseif main.f_input(main.t_players, {'pal', 's'}) then
-			if t[item].unlock then --If the event is unlocked
+			if t[item].unlock == "true" then --If the event is unlocked
 				sndPlay(motif.files.snd_data, motif[main.group].cursor_done_snd[1], motif[main.group].cursor_done_snd[2])
 				--START EVENT
 				main.f_playerInput(main.playerInput, 1)
@@ -320,10 +553,15 @@ function f_events()
 				main.selectMenu[1] = false
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				main.luaPath = t[item].path
-				--main.txt_mainSelect:update({text = 'TEST'})
+				main.txt_mainSelect:update({text = 'EVENT MATCH'})
 				start.f_selectMode()
 				main.f_cmdBufReset()
+				if motif.music.event_bgm ~= '' then
+					main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
+				end
 			end
 		end
+		main.f_cmdInput()
+		main.f_refresh()
 	end
 end
