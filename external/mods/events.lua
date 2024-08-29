@@ -15,21 +15,24 @@ Add Events Mode Entry for Main Menus
  ;
  ;Declaring events consists of setting up following parameters:
  ; - id
- ;   IKEMEN feature: Set to name that should be returned by GameMode trigger.
+ ;   Set to name that should be returned by GameMode trigger.
  ;   This parameter also initiates new events declaration, so it has to be
  ;   assigned before any other parameter used by the same event. All events should
  ;   have unique id names.
  ;
  ; - name
- ;   IKEMEN feature: Set to name that should be displayed in Events Mode submenu.
+ ;   Set to name that should be displayed in Events Mode submenu.
+ ;
+ ; - description
+ ;   Set to description that should be displayed in Events Mode submenu.
  ;
  ; - path
- ;   IKEMEN feature: Path to file with lua extension (relative to game
+ ;   Path to file with lua extension (relative to game
  ;   directory), containing event mode custom fight coded in Lua language.
  ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
  ;
  ; - unlock
- ;   IKEMEN feature: Pure Lua code, executed exactly as is, each time upon
+ ;   Pure Lua code, executed exactly as is, each time upon
  ;   loading main menu. If it evaluates to boolean 'true' the event will be
  ;   selectable from events mode submenu, or hidden on 'false'. Default: true.
  ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#lua_unlock
