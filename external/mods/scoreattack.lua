@@ -46,7 +46,7 @@ fadein.time = 32
 fadein.col = 0,0,0
 fadein.anim = -1
 fadeout.time = 64
-fadeout.col = 0, 0, 0
+fadeout.col = 0,0,0
 fadeout.anim = -1
 show.time = 300
 
@@ -193,14 +193,14 @@ end
 local t_base = {
 	enabled = 1,
 	sounds_enabled = 1,
-	fadein_time = 0,
+	fadein_time = 32,
 	fadein_col = {0, 0, 0},
 	fadein_anim = -1,
 	fadeout_time = 64,
 	fadeout_col = {0, 0, 0},
 	fadeout_anim = -1,
 	show_time = 300,
-	winstext_text = 'Score: %i',
+	winstext_text = 'Clear Score: %i',
 	winstext_offset = {159, 70},
 	winstext_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
 	winstext_scale = {1.0, 1.0},

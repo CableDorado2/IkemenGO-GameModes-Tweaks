@@ -33,24 +33,24 @@ record.timechallengecoop.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 enabled = 1
 sounds.enabled = 1
 
-fadein.time = 0
-fadein.col = 0, 0, 0
+fadein.time = 32
+fadein.col = 0,0,0
 fadein.anim = -1
 fadeout.time = 64
-fadeout.col = 0, 0, 0
+fadeout.col = 0,0,0
 fadeout.anim = -1
 show.time = 300
 
 winstext.text = "Clear Time: %m:%s.%x"
 winstext.offset = 159,70
-winstext.font = 3, 0, 0
-winstext.scale = 1.0, 1.0
+winstext.font = 3,0,0
+winstext.scale = 1.0,1.0
 winstext.displaytime = -1
 winstext.layerno = 2
 
-;overlay.window = 0, 0, 320, 240
-overlay.col = 0, 0, 0
-overlay.alpha = 20, 100
+;overlay.window = 0,0,320,240
+overlay.col = 0,0,0
+overlay.alpha = 20,100
 
 p1.state = 175, 170
 p1.win.state = 180
@@ -167,7 +167,7 @@ end
 local t_base = {
 	enabled = 1,
 	sounds_enabled = 1,
-	fadein_time = 0,
+	fadein_time = 32,
 	fadein_col = {0, 0, 0},
 	fadein_anim = -1,
 	fadeout_time = 64,
