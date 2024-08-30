@@ -4,29 +4,29 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 
 Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2024-08-14 Nightly Build**.
 
-##  _Events Mode_
+##  _Events Mode (New)_
 A Portal to any custom game mode...
 
-##  _Time Attack_
-A
+##  _Time Attack (Tweaks)_
+Comparison Video
 
-##  _Score Attack_
-A
+##  _Score Attack (New)_
+Showcase Video
 
-##  _Time Challenge_
-A
+##  _Time Challenge (Tweaks)_
+Comparison Video
 
-##  _Score Challenge_
-A
+##  _Score Challenge (Tweaks)_
+Comparison Video
 
-##  _Boss Rush_
-A
+##  _Boss Rush (Tweaks)_
+Comparison Video
 
-##  _Bonus Rush_
-A
+##  _Bonus Rush (New)_
+Showcase Video
 
-##  _VS 100 Kumite_
-A
+##  _VS 100 Kumite (Tweaks)_
+Comparison Video
 
 ##  _Installation:_
 - Extract archive content into "**./external/mods**" directory
