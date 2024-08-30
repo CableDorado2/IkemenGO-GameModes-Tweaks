@@ -14,8 +14,7 @@ CD2's Tweaks:
 - Removed MatchNo in VS Screen
 - Rank Display Enabled
 - Adds a Co-Op Variant
-- Adds Boss Fight game mode (defeat a boss character selected)
-  detectable by GameMode trigger as boss and bosscoop.
+- Adds Boss Fight game mode (defeat a boss character selected) detectable by GameMode trigger as boss and bosscoop. TODO
 - t_bossChars renamed to t_bossRushChars to allow Single Boss Fight variant like Bonus Games
 ]]
 
@@ -42,11 +41,11 @@ bossrush.maxmatches =
 menu.itemname.bossrush = "BOSS RUSH"
 menu.itemname.bossrushcoop = "BOSS RUSH CO-OP"
 
-menu.itemname.bossfight = "BOSS FIGHT"
-menu.itemname.bossfight.back = "BACK" ; boss characters menu items are automatically added before bossfight.back
+menu.itemname.bossfight = "BOSS FIGHT" ;TODO
+menu.itemname.bossfight.back = "BACK" ;TODO boss characters menu items are automatically added before bossfight.back
 
-menu.itemname.bossfightcoop = "BOSS FIGHT CO-OP"
-menu.itemname.bossfightcoop.back = "BACK" ; boss characters menu items are automatically added before bossfightcoop.back
+menu.itemname.bossfightcoop = "BOSS FIGHT CO-OP" ;TODO
+menu.itemname.bossfightcoop.back = "BACK" ; TODO boss characters menu items are automatically added before bossfightcoop.back
 
 [Boss Rush Results Screen]
 enabled = 1
