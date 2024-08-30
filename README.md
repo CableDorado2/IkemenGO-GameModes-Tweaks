@@ -1,4 +1,4 @@
-# Ikemen GO - Custom Game Modes [CD2's Tweaks]
+# Ikemen GO - Custom Game Modes
 
 External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves and adds Game Modes.
 
