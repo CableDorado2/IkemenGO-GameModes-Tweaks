@@ -252,4 +252,4 @@ start.t_resultData.scorechallengecoop = start.t_resultData.scorechallenge
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scorechallenge = {mode = 'scorechallenge', data = 'score', title = motif.select_info.title_scorechallenge_text}
-main.t_hiscoreData.scorechallengecoop = {mode = 'scorechallengecoop', data = 'score', title = 'Score Challenge Co-Op'}
+main.t_hiscoreData.scorechallengecoop = {mode = 'scorechallengecoop', data = 'score', title = 'Score Challenge CO-OP'}

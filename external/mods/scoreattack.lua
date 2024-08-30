@@ -301,6 +301,6 @@ start.t_resultData.scoreattackcoop = start.t_resultData.scoreattack --Reuse abov
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scoreattack = {mode = 'scoreattack', data = 'score', title = motif.select_info.title_scoreattack_text}
-main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = 'Score Attack Co-Op'}
+main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = 'Score Attack CO-OP'}
 
 if main.t_selOptions.scoreattackmaxmatches == nil then main.t_selOptions.scoreattackmaxmatches = {6, 1, 1, 0, 0, 0, 0, 0, 0, 0} end
