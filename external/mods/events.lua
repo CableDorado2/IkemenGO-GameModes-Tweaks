@@ -42,11 +42,13 @@ Add Events Mode Entry for Main Menus
 [EventsMode]
 id = event1
 name = Trouble Dude
+description = Event 1 Description
 path = data/events/event1.lua
 unlock = true
 
 id = event2
 name = Lord of the Temple
+description = Event 2 Description
 path = data/events/event2.lua
 unlock = true
 
@@ -211,7 +213,7 @@ local t_base = {
 	cursor_move_snd = {100, 0},
 	cursor_done_snd = {100, 1},
 	cancel_snd = {100, 2},
-	--menu_itemname_back = 'Back',
+	menu_itemname_back = 'Back',
 }
 if motif.event_info == nil then
 	motif.event_info = {}
@@ -306,15 +308,17 @@ local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defs
 
 function f_events()
 	sndPlay(motif.files.snd_data, motif.event_info.cursor_done_snd[1], motif.event_info.cursor_done_snd[2])
-	f_loadEvents()
 	local cursorPosY = 1
 	local moveTxt = 0
 	local item = 1
 	local t = {}
+	f_loadEvents() --Load select.def events data
 	for k, v in ipairs(t_selEventMode) do
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, info = v.description, path = v.path, unlock = v.unlock})
 	end
-	--table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
+	if #t_selEventMode == 0 then --If there is not event data
+		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
+	end
 	main.f_bgReset(motif.eventbgdef.bg)
 	main.f_fadeReset('fadein', motif.event_info)
 	if motif.music.event_bgm ~= '' then
@@ -524,12 +528,15 @@ function f_events()
 		if motif['event_info'].footer_overlay_window ~= nil then
 			overlay_footer:draw()
 		end
-		--draw other text
-		--if t[item].itemname ~= 'back' then
+		--draw other text only if there is event data stored in select.def
+		if t[item].itemname ~= 'back' then
+			txt_titleEvent:update({text = motif.event_info.title_text})
 			txt_infoEvent:draw()
 			txt_infoEvent:update({text = t[item].info})
 			txt_hiscoreEvent:draw()
-		--end
+		else
+			txt_titleEvent:update({text = "NO EVENT DATA"})
+		end
 		--draw fadein / fadeout
 		main.f_fadeAnim(main.fadeGroup)
 --;---------------------------------------------------------------------------------------------------------------------
@@ -541,8 +548,7 @@ function f_events()
 			main.close = false
 			break
 		--Back Button
-		--elseif esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'})) then
-		elseif esc() or main.f_input(main.t_players, {'m'}) then
+		elseif esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'})) then
 			sndPlay(motif.files.snd_data, motif.event_info.cancel_snd[1], motif.event_info.cancel_snd[2])
 			main.f_fadeReset('fadeout', motif.event_info)
 			main.close = true
