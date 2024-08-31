@@ -30,4 +30,4 @@ Comparison Video
 
 ##  _Installation:_
 - Extract archive content into "**./external/mods**" directory
-- Edit select.def or system.def depeding of mod loaded
+- Edit select.def or system.def depending of mod loaded
