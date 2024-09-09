@@ -20,11 +20,10 @@ Comparison Video
 Comparison Video
 
 ##  _Boss Rush (Tweaks)_
-Comparison Video
+https://github.com/user-attachments/assets/60dc5431-4a9a-434b-9eea-327b6c9b38a8
 
 ##  _Bonus Rush (New)_
-Showcase Video
-
+https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
 
 ##  _VS 100 Kumite (Tweaks)_
 Comparison Video
