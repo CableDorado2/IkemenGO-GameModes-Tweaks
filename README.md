@@ -11,7 +11,7 @@ A Portal to any custom game mode...
 Comparison Video
 
 ##  _Score Attack (New)_
-Showcase Video
+https://github.com/user-attachments/assets/99e5b26e-de09-4ebd-aa53-3cd9f521bddd
 
 ##  _Time Challenge (Tweaks)_
 Comparison Video
@@ -24,6 +24,7 @@ Comparison Video
 
 ##  _Bonus Rush (New)_
 Showcase Video
+
 
 ##  _VS 100 Kumite (Tweaks)_
 Comparison Video
