@@ -122,6 +122,7 @@ cancel.snd = 100,2
 
 ;Event select screen background
 [EventBGdef]
+spr = ""
 bgclearcolor = 0,0,0
 
 [EventBG 1]
@@ -530,10 +531,20 @@ function f_events()
 		end
 		--draw other text only if there is event data stored in select.def
 		if t[item].itemname ~= 'back' then
+			local eventNo = t[item].itemname
 			txt_titleEvent:update({text = motif.event_info.title_text})
 			txt_infoEvent:draw()
 			txt_infoEvent:update({text = t[item].info})
 			txt_hiscoreEvent:draw()
+			if stats.modes ~= nil and stats.modes[eventNo] ~= nil then
+				if stats.modes[eventNo].score ~= nil then --If there is hiscore data detected
+					txt_hiscoreEvent:update({text = motif.event_info.hiscore_text..stats.modes[eventNo].score})
+				else --If there is not hiscore data detected
+					txt_hiscoreEvent:update({text = motif.event_info.hiscore_text})
+				end
+			else --If there is not event data detected
+				txt_hiscoreEvent:update({text = motif.event_info.hiscore_text})
+			end
 		else
 			txt_titleEvent:update({text = "NO EVENT DATA"})
 		end
@@ -560,10 +571,27 @@ function f_events()
 				main.f_playerInput(main.playerInput, 1)
 				main.continueScreen = true
 				main.selectMenu[1] = false
+				--[[
+				main.lifebar.p1score = true
+				main.hiscoreScreen = false
+				main.rankingCondition = true
+				main.resultsTable = motif.bonus_rush_results_screen
+				start.t_sortRanking.event2 = start.t_sortRanking.survival
+				start.t_clearCondition.event2 = function() return winnerteam() == 1 end
+				main.t_hiscoreData.event2 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
+				]]
+				main.txt_mainSelect:update({text = 'EVENT MATCH'})
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				main.luaPath = t[item].path
-				main.txt_mainSelect:update({text = 'EVENT MATCH'})
+				hook.run("main.t_itemname")
 				start.f_selectMode()
+				if winnerteam() == 1 then --Save Score Data only if you complete event
+					if stats.modes[t[item].itemname].score == nil then stats.modes[t[item].itemname].score = 0 end --If there is not score data, create one
+					if score() > stats.modes[t[item].itemname].score then --Update Hiscore only if is greater than the previous one
+						stats.modes[t[item].itemname].score = score()
+					end
+					saveEventData()
+				end
 				main.f_cmdBufReset()
 				if motif.music.event_bgm ~= '' then
 					main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
@@ -573,4 +601,9 @@ function f_events()
 		main.f_cmdInput()
 		main.f_refresh()
 	end
+end
+
+function saveEventData()
+	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
+	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
 end
