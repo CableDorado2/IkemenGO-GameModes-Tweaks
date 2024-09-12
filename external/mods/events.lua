@@ -4,9 +4,12 @@ Version: 1.0
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 Description:
-Add Events Mode Entry for Main Menus
+Adds a Custom Game Mode entry (Events) to the Main Menu.
+This Module is a "Portal" to any Custom Game Mode in Full Games...
 ===================================================================
 ]]
+
+nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 
 --[[Example SELECT.DEF parameters assignments
 ;-------------------------------------------------------------------------------
@@ -21,21 +24,21 @@ Add Events Mode Entry for Main Menus
  ;   have unique id names.
  ;
  ; - name
- ;   Set to name that should be displayed in Events Mode submenu.
+ ;   Set to name that should be displayed for item in Events Mode submenu.
  ;
  ; - description
- ;   Set to description that should be displayed in Events Mode submenu.
+ ;   Set to description that should be displayed for item in Events Mode submenu.
  ;
  ; - path
- ;   Path to file with lua extension (relative to game
- ;   directory), containing event mode custom fight coded in Lua language.
+ ;   Path to file with lua extension (relative to game directory)
+ ;   containing event mode custom fight coded in Lua language.
  ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
  ;
  ; - unlock
- ;   Pure Lua code, executed exactly as is, each time upon
- ;   loading main menu. If it evaluates to boolean 'true' the event will be
- ;   selectable from events mode submenu, or hidden on 'false'. Default: true.
- ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#lua_unlock
+ ;   Pure Lua code, executed exactly as is, each time upon loading events menu.
+ ;   If it evaluates to boolean 'true' the event will be selectable from
+ ;   events mode submenu, or hidden on 'false'. Default: true.
+ ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
  ;
  ;Examples:
  
@@ -85,7 +88,7 @@ info.font = 2,0,1
 info.scale = 1.0, 1.0
 hiscore.offset = 80,180
 hiscore.font = 3,0,1
-hiscore.text = "HIGH SCORE:"
+hiscore.text = "HIGH SCORE: "
 hiscore.scale = 1.0, 1.0
 menu.uselocalcoord = 0
 menu.pos = 85,33
@@ -221,9 +224,12 @@ if motif.event_info == nil then
 end
 motif.event_info = main.f_tableMerge(t_base, motif.event_info)
 
---If not defined, [EventBGdef] group defaults to [OptionBGdef].
+--If not defined [EventBGdef]
 if motif.eventbgdef == nil then
-	motif.eventbgdef = {spr = '', bgclearcolor = {0, 0, 0},} --motif.optionbgdef --reuse options data causes black screen in both..
+	motif.eventbgdef = {
+		spr = '',
+		bgclearcolor = {0, 0, 0},
+	}
 end
 
 -- This code creates data out of optional [EventBGdef] sff file.
@@ -271,7 +277,6 @@ function f_loadEvents()
 	content = content:gsub('([^\r\n;]*)%s*;[^\r\n]*', '%1')
 	content = content:gsub('\n%s*\n', '\n')
 	for line in content:gmatch('[^\r\n]+') do
-	--for line in io.lines("data/select.def") do
 		local lineCase = line:lower()
 		if lineCase:match('^%s*%[%s*eventsmode%s*%]') then
 			row = 0
@@ -331,10 +336,10 @@ function f_events()
 --;---------------------------------------------------------------------------------------------------------------------
 		--draw clearcolor
 		if not skipClear then
-		clearColor(motif['eventbgdef'].bgclearcolor[1], motif['eventbgdef'].bgclearcolor[2], motif['eventbgdef'].bgclearcolor[3])
+			clearColor(motif['eventbgdef'].bgclearcolor[1], motif['eventbgdef'].bgclearcolor[2], motif['eventbgdef'].bgclearcolor[3])
 		end
 		--draw layerno = 0 backgrounds
-		bgDraw(motif['eventbgdef'].bg, 0)
+		bgDraw(motif['eventbgdef'].bg, falseBool)
 		--draw menu box
 		if motif['event_info'].menu_boxbg_visible == 1 then
 			rect_boxbg:update({
@@ -524,7 +529,7 @@ function f_events()
 			txt_attract_credits:draw()
 		end
 		--draw layerno = 1 backgrounds
-		bgDraw(motif['eventbgdef'].bg, 1)
+		bgDraw(motif['eventbgdef'].bg, trueBool)
 		--draw footer overlay
 		if motif['event_info'].footer_overlay_window ~= nil then
 			overlay_footer:draw()
@@ -552,6 +557,7 @@ function f_events()
 		main.f_fadeAnim(main.fadeGroup)
 --;---------------------------------------------------------------------------------------------------------------------
 		cursorPosY, moveTxt, item = main.f_menuCommonCalc(t, item, cursorPosY, moveTxt, 'event_info', {'$U'}, {'$D'})
+		--Close Screen
 		if main.close and not main.fadeActive then
 			main.f_bgReset(motif[main.background].bg)
 			main.f_fadeReset('fadein', motif[main.group])
@@ -563,7 +569,7 @@ function f_events()
 			sndPlay(motif.files.snd_data, motif.event_info.cancel_snd[1], motif.event_info.cancel_snd[2])
 			main.f_fadeReset('fadeout', motif.event_info)
 			main.close = true
-		--Start Button
+		--Accept Button
 		elseif main.f_input(main.t_players, {'pal', 's'}) then
 			if t[item].unlock == "true" then --If the event is unlocked
 				sndPlay(motif.files.snd_data, motif[main.group].cursor_done_snd[1], motif[main.group].cursor_done_snd[2])
@@ -576,9 +582,9 @@ function f_events()
 				main.hiscoreScreen = false
 				main.rankingCondition = true
 				main.resultsTable = motif.bonus_rush_results_screen
-				start.t_sortRanking.event2 = start.t_sortRanking.survival
-				start.t_clearCondition.event2 = function() return winnerteam() == 1 end
-				main.t_hiscoreData.event2 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
+				start.t_sortRanking.event1 = start.t_sortRanking.survival
+				start.t_clearCondition.event1 = function() return winnerteam() == 1 end
+				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
 				]]
 				main.txt_mainSelect:update({text = 'EVENT MATCH'})
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
@@ -606,4 +612,12 @@ end
 function saveEventData()
 	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
 	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
+end
+
+if nightlyVer then --To configure argument for bgDraw function
+	trueBool = 1
+	falseBool = 0
+else
+	trueBool = true
+	falseBool = false
 end
