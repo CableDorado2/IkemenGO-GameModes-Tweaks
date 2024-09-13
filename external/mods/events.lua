@@ -9,7 +9,7 @@ This Module is a "Portal" to any Custom Game Mode in Full Games...
 ===================================================================
 ]]
 
-nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
+nightlyVer = false --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 
 --[[Example SELECT.DEF parameters assignments
 ;-------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ id = event2
 name = Lord of the Temple
 description = Event 2 Description
 path = data/events/event2.lua
-unlock = true
+unlock = stats.modes ~= nil and stats.modes.event1 ~= nil and stats.modes.event1.score ~= nil and stats.modes.event1.score > 0
 
 ]]
 
@@ -79,7 +79,7 @@ fadein.col = 0,0,0
 fadeout.time = 10
 fadeout.col = 0,0,0
 title.offset = 159,15
-title.font = 2,0,0
+title.font = 3,5,0
 title.scale = 1.0, 1.0
 title.text = "EVENT SELECT"
 hiscore.offset = 80,180
@@ -119,11 +119,11 @@ cursor.move.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
 ;Event Info text
-info.offset = 80,200
+info.offset = 40,200
 info.spacing = 0,0
 info.font = 2,0,1
 info.scale = 1.0, 1.0
-info.window = 18,171, 301,228
+info.window = 0,171, 301,228
 info.textwrap = w
 info.delay = 2
 
@@ -169,11 +169,11 @@ local t_base = {
 	fadeout_col = {0, 0, 0},
 	fadeout_anim = -1,
 	title_offset = {159, 15},
-	title_font = {'f-6x9.def', 0, 0, 255, 255, 255, -1},
+	title_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
 	title_scale = {1.0, 1.0},
 	title_text = 'EVENT SELECT',
 	hiscore_offset = {80, 180},
-	hiscore_font = {'jg.fnt ', 0, 1, 255, 255, 255, -1},
+	hiscore_font = {'jg.fnt', 5, 1, 255, 255, 255, -1},
 	hiscore_scale = {1.0, 1.0},
 	hiscore_text = 'HIGH SCORE: ',
 	menu_uselocalcoord = 0,
@@ -219,12 +219,13 @@ local t_base = {
 	cursor_done_snd = {100, 1},
 	cancel_snd = {100, 2},
 	menu_itemname_back = 'Back',
-	info_offset = {80, 200},
+	info_offset = {40, 200},
 	info_spacing = {0, 0},
 	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
 	info_scale = {1.0, 1.0},
 	info_delay = 2,
 	info_textwrap = 'w',
+	info_window = {0, 171, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]}
 }
 if motif.event_info == nil then
 	motif.event_info = {}
