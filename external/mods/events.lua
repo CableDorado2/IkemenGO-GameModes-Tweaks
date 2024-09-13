@@ -35,7 +35,7 @@ nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adju
  ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
  ;
  ; - unlock
- ;   Pure Lua code, executed exactly as is, each time upon loading events menu.
+ ;   Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
  ;   If it evaluates to boolean 'true' the event will be selectable from
  ;   events mode submenu, or hidden on 'false'. Default: true.
  ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
@@ -47,7 +47,6 @@ id = event1
 name = Trouble Dude
 description = Event 1 Description
 path = data/events/event1.lua
-unlock = true
 
 id = event2
 name = Lord of the Temple
@@ -83,9 +82,6 @@ title.offset = 159,15
 title.font = 2,0,0
 title.scale = 1.0, 1.0
 title.text = "EVENT SELECT"
-info.offset = 80,200
-info.font = 2,0,1
-info.scale = 1.0, 1.0
 hiscore.offset = 80,180
 hiscore.font = 3,0,1
 hiscore.text = "HIGH SCORE: "
@@ -122,6 +118,14 @@ menu.title.uppercase = 1
 cursor.move.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
+;Event Info text
+info.offset = 80,200
+info.spacing = 0,0
+info.font = 2,0,1
+info.scale = 1.0, 1.0
+info.window = 18,171, 301,228
+info.textwrap = w
+info.delay = 2
 
 ;Event select screen background
 [EventBGdef]
@@ -168,9 +172,6 @@ local t_base = {
 	title_font = {'f-6x9.def', 0, 0, 255, 255, 255, -1},
 	title_scale = {1.0, 1.0},
 	title_text = 'EVENT SELECT',
-	info_offset = {80, 200},
-	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
-	info_scale = {1.0, 1.0},
 	hiscore_offset = {80, 180},
 	hiscore_font = {'jg.fnt ', 0, 1, 255, 255, 255, -1},
 	hiscore_scale = {1.0, 1.0},
@@ -218,6 +219,12 @@ local t_base = {
 	cursor_done_snd = {100, 1},
 	cancel_snd = {100, 2},
 	menu_itemname_back = 'Back',
+	info_offset = {80, 200},
+	info_spacing = {0, 0},
+	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
+	info_scale = {1.0, 1.0},
+	info_delay = 2,
+	info_textwrap = 'w',
 }
 if motif.event_info == nil then
 	motif.event_info = {}
@@ -294,10 +301,12 @@ function f_loadEvents()
 			end
 		end
 	end
-	for k, v in ipairs(t_selEventMode) do --Check Events Unlocks
-		main.t_unlockLua.modes[v.name] = v.unlock
+	for k, v in ipairs(t_selEventMode) do --Set Events Unlock Condition
+		main.t_unlockLua.modes[v.id] = v.unlock
 	end
+	main.f_unlock(false) --Check Events Unlocks
 	if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
+	if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 end
 
 main.t_itemname.events = function()
@@ -309,8 +318,12 @@ local rect_boxbg = rect:create({})
 local t_menuWindowEvent = main.f_menuWindow(motif.event_info)
 
 local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
-local txt_infoEvent = main.f_createTextImg(motif.event_info, 'info', {defsc = motif.defaultEvent})
 local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defsc = motif.defaultEvent})
+local txt_infoEvent = main.f_createTextImg(motif.event_info, 'info', {defsc = motif.defaultEvent})
+
+function f_resetEventInfoTxt()
+infoTextCnt = 0
+end
 
 function f_events()
 	sndPlay(motif.files.snd_data, motif.event_info.cursor_done_snd[1], motif.event_info.cursor_done_snd[2])
@@ -318,6 +331,7 @@ function f_events()
 	local moveTxt = 0
 	local item = 1
 	local t = {}
+	f_resetEventInfoTxt()
 	f_loadEvents() --Load select.def events data
 	for k, v in ipairs(t_selEventMode) do
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, info = v.description, path = v.path, unlock = v.unlock})
@@ -332,7 +346,6 @@ function f_events()
 	end
 	main.close = false
 	while true do
-		--f_menuCommonDraw(t, item, cursorPosY, moveTxt, 'event_info', 'eventbgdef', txt_titleEvent, motif.defaultEvent, {txt_infoEvent, txt_hiscoreEvent})
 --;---------------------------------------------------------------------------------------------------------------------
 		--draw clearcolor
 		if not skipClear then
@@ -364,6 +377,8 @@ function f_events()
 			items_shown = #t
 		end
 		for i = 1, items_shown do
+			local unlockText = ""
+			if main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = "???" end --Contidion to Show Unlocked Text
 			if i > item - cursorPosY then
 				if i == item then
 					--Draw active item background
@@ -377,7 +392,7 @@ function f_events()
 							font =   motif['event_info'].menu_item_selected_active_font[1],
 							bank =   motif['event_info'].menu_item_selected_active_font[2],
 							align =  motif['event_info'].menu_item_selected_active_font[3],
-							text =   t[i].displayname,
+							text =   unlockText,
 							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
 							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
 							scaleX = motif['event_info'].menu_item_selected_active_scale[1],
@@ -394,7 +409,7 @@ function f_events()
 							font =   motif['event_info'].menu_item_active_font[1],
 							bank =   motif['event_info'].menu_item_active_font[2],
 							align =  motif['event_info'].menu_item_active_font[3],
-							text =   t[i].displayname,
+							text =   unlockText,
 							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_active_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
 							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_active_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
 							scaleX = motif['event_info'].menu_item_active_scale[1],
@@ -437,7 +452,7 @@ function f_events()
 							font =   motif['event_info'].menu_item_selected_font[1],
 							bank =   motif['event_info'].menu_item_selected_font[2],
 							align =  motif['event_info'].menu_item_selected_font[3],
-							text =   t[i].displayname,
+							text =   unlockText,
 							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_selected_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
 							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_selected_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
 							scaleX = motif['event_info'].menu_item_selected_scale[1],
@@ -454,7 +469,7 @@ function f_events()
 							font =   motif['event_info'].menu_item_font[1],
 							bank =   motif['event_info'].menu_item_font[2],
 							align =  motif['event_info'].menu_item_font[3],
-							text =   t[i].displayname,
+							text =   unlockText,
 							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
 							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
 							scaleX = motif['event_info'].menu_item_scale[1],
@@ -536,10 +551,32 @@ function f_events()
 		end
 		--draw other text only if there is event data stored in select.def
 		if t[item].itemname ~= 'back' then
-			local eventNo = t[item].itemname
 			txt_titleEvent:update({text = motif.event_info.title_text})
-			txt_infoEvent:draw()
-			txt_infoEvent:update({text = t[item].info})
+			local eventNo = t[item].itemname
+			local cdText = ""
+			--Set text data
+			if t[item].info ~= "" and main.t_unlockLua.modes[t[item].itemname] == nil then cdText = t[item].info else cdText = "???" end
+			--draw description text
+			infoTextEnd = main.f_textRender(
+				txt_infoEvent,
+				cdText,
+				infoTextCnt,
+				motif.event_info.info_offset[1],
+				motif.event_info.info_offset[2],
+				motif.event_info.info_spacing[1],
+				motif.event_info.info_spacing[2],
+				main.font_def[motif.event_info.info_font[1] .. motif.event_info.info_font[7]],
+				motif.event_info.info_delay,
+				main.f_lineLength(
+					motif.event_info.info_offset[1],
+					motif.info.localcoord[1],
+					motif.event_info.info_font[3],
+					motif.event_info.info_window,
+					motif.event_info.info_textwrap:match('[wl]')
+				)
+			)
+			if not infoTextEnd then infoTextCnt = infoTextCnt + 1 end
+			--draw hiscore text
 			txt_hiscoreEvent:draw()
 			if stats.modes ~= nil and stats.modes[eventNo] ~= nil then
 				if stats.modes[eventNo].score ~= nil then --If there is hiscore data detected
@@ -557,6 +594,10 @@ function f_events()
 		main.f_fadeAnim(main.fadeGroup)
 --;---------------------------------------------------------------------------------------------------------------------
 		cursorPosY, moveTxt, item = main.f_menuCommonCalc(t, item, cursorPosY, moveTxt, 'event_info', {'$U'}, {'$D'})
+		--Cursor Move
+		if commandGetState(main.t_cmd[main.playerInput], '$U') or commandGetState(main.t_cmd[main.playerInput], '$D') then
+			f_resetEventInfoTxt()
+		end
 		--Close Screen
 		if main.close and not main.fadeActive then
 			main.f_bgReset(motif[main.background].bg)
@@ -571,7 +612,7 @@ function f_events()
 			main.close = true
 		--Accept Button
 		elseif main.f_input(main.t_players, {'pal', 's'}) then
-			if t[item].unlock == "true" then --If the event is unlocked
+			if main.t_unlockLua.modes[t[item].itemname] == nil then --If the event is unlocked
 				sndPlay(motif.files.snd_data, motif[main.group].cursor_done_snd[1], motif[main.group].cursor_done_snd[2])
 				--START EVENT
 				main.f_playerInput(main.playerInput, 1)
@@ -598,7 +639,10 @@ function f_events()
 					end
 					saveEventData()
 				end
+				main.f_unlock(false) --Check Events Unlocks
+				if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 				main.f_cmdBufReset()
+				f_resetEventInfoTxt()
 				if motif.music.event_bgm ~= '' then
 					main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
 				end
