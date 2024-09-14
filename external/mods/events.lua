@@ -9,7 +9,7 @@ This Module is a "Portal" to any Custom Game Mode in Full Games...
 ===================================================================
 ]]
 
-nightlyVer = false --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
+nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 
 --[[Example SELECT.DEF parameters assignments
 ;-------------------------------------------------------------------------------
@@ -28,6 +28,12 @@ nightlyVer = false --Indicates if you are using Nightly IkemenGO version, to adj
  ;
  ; - description
  ;   Set to description that should be displayed for item in Events Mode submenu.
+ ;
+ ; - characterselect
+ ;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
+ ;
+ ; - singlemode
+ ;   If it Evalues to boolean "true" Single Team mode will be selectable for the Event Selected.
  ;
  ; - path
  ;   Path to file with lua extension (relative to game directory)
@@ -59,7 +65,6 @@ unlock = stats.modes ~= nil and stats.modes.event1 ~= nil and stats.modes.event1
 --[[Example SYSTEM.DEF parameters assignments
 
 [Music]
-
 ;Music to play at event mode screen.
 event.bgm = ""
 event.bgm.volume = 100
@@ -68,9 +73,12 @@ event.bgm.loopstart = 0
 event.bgm.loopend = 0
 
 [Title Info]
-
 ;Event Mode
 menu.itemname.events = "EVENTS"
+
+[Select Info]
+;Text rendered using title element
+title.events.text = "Event Match"
 
 ;Events select screen definition
 [Event Info]
@@ -158,6 +166,11 @@ if motif.music.event_bgm_loopstart == nil then
 end
 if motif.music.event_bgm_loopend == nil then
 	motif.music.event_bgm_loopend = 0
+end
+
+-- [Select Info] default parameters. Displayed in select screen.
+if motif.select_info.title_events_text == nil then
+	motif.select_info.title_events_text = "EVENT MATCH"
 end
 
 --[Event Info] default parameters (used for rendering event select screen assets)
@@ -295,12 +308,21 @@ function f_loadEvents()
 			local param, value = line:match('^%s*(.-)%s*=%s*(.-)%s*$')
 			if param ~= nil and value ~= nil and param ~= '' and value ~= '' then
 				if param:match('^id$') then --Generate Table to manage each event
-					table.insert(t_selEventMode, {id = value, name = '', description = '', path = '', unlock = 'true'})
+					table.insert(t_selEventMode, {id = value, name = '', description = '', path = '', unlock = 'true', characterselect = false, singlemode = false, simulmode = false, tagmode = false, turnsmode = false, ratiomode = false})
 				elseif t_selEventMode[#t_selEventMode][param] ~= nil then
 					t_selEventMode[#t_selEventMode][param] = value
 				end
 			end
 		end
+	end
+	for i=1, #t_selEventMode do --Convert String stored to Boolean
+		local target = "true"
+		if t_selEventMode[i].characterselect == target then t_selEventMode[i].characterselect = true end
+		if t_selEventMode[i].singlemode == target then t_selEventMode[i].singlemode = true end
+		if t_selEventMode[i].simulmode == target then t_selEventMode[i].simulmode = true end
+		if t_selEventMode[i].tagmode == target then t_selEventMode[i].tagmode = true end
+		if t_selEventMode[i].turnsmode == target then t_selEventMode[i].turnsmode = true end
+		if t_selEventMode[i].ratiomode == target then t_selEventMode[i].ratiomode = true end
 	end
 	for k, v in ipairs(t_selEventMode) do --Set Events Unlock Condition
 		main.t_unlockLua.modes[v.id] = v.unlock
@@ -335,11 +357,12 @@ function f_events()
 	f_resetEventInfoTxt()
 	f_loadEvents() --Load select.def events data
 	for k, v in ipairs(t_selEventMode) do
-		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, info = v.description, path = v.path, unlock = v.unlock})
+		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, info = v.description, path = v.path, unlock = v.unlock, charsel = v.characterselect, single = v.singlemode, simul = v.simulmode, tag = v.tagmode, turns = v.turnsmode, ratio = v.ratiomode})
 	end
 	if #t_selEventMode == 0 then --If there is not event data
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
 	end
+	if main.debugLog then main.f_printTable(t, 'debug/t_eventsMenu.txt') end
 	main.f_bgReset(motif.eventbgdef.bg)
 	main.f_fadeReset('fadein', motif.event_info)
 	if motif.music.event_bgm ~= '' then
@@ -616,9 +639,15 @@ function f_events()
 			if main.t_unlockLua.modes[t[item].itemname] == nil then --If the event is unlocked
 				sndPlay(motif.files.snd_data, motif[main.group].cursor_done_snd[1], motif[main.group].cursor_done_snd[2])
 				--START EVENT
+				main.txt_mainSelect:update({text = motif.select_info.title_events_text}) --Character Select Title
 				main.f_playerInput(main.playerInput, 1)
 				main.continueScreen = true
-				main.selectMenu[1] = false
+				main.selectMenu[1] = t[item].charsel --Enable or Disable Character Select for Event Selected
+				main.teamMenu[1].single = t[item].single
+				main.teamMenu[1].simul = t[item].simul
+				main.teamMenu[1].tag = t[item].tag
+				main.teamMenu[1].turns = t[item].turns
+				main.teamMenu[1].ratio = t[item].ratio
 				--[[
 				main.lifebar.p1score = true
 				main.hiscoreScreen = false
@@ -628,13 +657,13 @@ function f_events()
 				start.t_clearCondition.event1 = function() return winnerteam() == 1 end
 				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
 				]]
-				main.txt_mainSelect:update({text = 'EVENT MATCH'})
+				if stats.modes[t[item].itemname].score == nil then stats.modes[t[item].itemname].score = 0 end --If there is not score data, create one
+				saveEventData()
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				main.luaPath = t[item].path
 				hook.run("main.t_itemname")
 				start.f_selectMode()
 				if winnerteam() == 1 then --Save Score Data only if you complete event
-					if stats.modes[t[item].itemname].score == nil then stats.modes[t[item].itemname].score = 0 end --If there is not score data, create one
 					if score() > stats.modes[t[item].itemname].score then --Update Hiscore only if is greater than the previous one
 						stats.modes[t[item].itemname].score = score()
 					end

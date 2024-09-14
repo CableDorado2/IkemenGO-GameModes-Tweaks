@@ -39,6 +39,11 @@ bonusrush.maxmatches =
 menu.itemname.bonusrush = "BONUS RUSH"
 menu.itemname.bonusrushcoop = "BONUS RUSH CO-OP"
 
+[Select Info]
+title.bonuscoop.text = "Bonus Cooperative"
+title.bonusrush.text = "Bonus Rush"
+title.bonusrushcoop.text = "Bonus Rush Cooperative"
+
 [Bonus Rush Results Screen]
 enabled = 1
 sounds.enabled = 1

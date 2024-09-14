@@ -21,6 +21,10 @@ CD2's Tweaks:
 menu.itemname.vs100kumite = "VS 100 KUMITE"
 menu.itemname.vs100kumitecoop = "VS 100 KUMITE CO-OP"
 
+[Select Info]
+title.vs100kumite.text = "VS 100 Kumite"
+title.vs100kumitecoop.text = "VS 100 Kumite Cooperative"
+
 [VS100 Kumite Results Screen]
 enabled = 1
 sounds.enabled = 1

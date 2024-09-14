@@ -20,10 +20,11 @@ CD2's Tweaks:
 ; Example system.def parameters assignments
 
 [Title Info]
-menu.itemname.timeattack = "TIME ATTACK"
 menu.itemname.timeattackcoop = "TIME ATTACK CO-OP"
 
 [Select Info]
+title.timeattackcoop.text = "Time Attack Cooperative"
+
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
 record.font = 3,0,0

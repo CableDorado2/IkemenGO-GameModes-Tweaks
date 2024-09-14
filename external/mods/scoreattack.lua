@@ -30,6 +30,9 @@ menu.itemname.scoreattack = "SCORE ATTACK"
 menu.itemname.scoreattackcoop = "SCORE ATTACK CO-OP"
 
 [Select Info]
+title.scoreattack.text = "Score Attack"
+title.scoreattackcoop.text = "Score Attack Cooperative"
+
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
 record.font = 3,0,0

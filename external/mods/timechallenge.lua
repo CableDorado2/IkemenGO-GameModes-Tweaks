@@ -21,6 +21,9 @@ menu.itemname.timechallenge = "TIME CHALLENGE"
 menu.itemname.timechallengecoop = "TIME CHALLENGE CO-OP"
 
 [Select Info]
+title.timechallenge.text = "Time Challenge"
+title.timechallengecoop.text = "Time Challenge Cooperative"
+
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
 record.font = 3,0,0
@@ -265,4 +268,4 @@ start.t_resultData.timechallengecoop = start.t_resultData.timechallenge
 --;===========================================================
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.timechallenge = {mode = 'timechallenge', data = 'time', title = motif.select_info.title_timechallenge_text}
-main.t_hiscoreData.timechallengecoop = {mode = 'timechallengecoop', data = 'time', title = 'Time Challenge Co-Op'}
+main.t_hiscoreData.timechallengecoop = {mode = 'timechallengecoop', data = 'time', title = 'Time Challenge CO-OP'}

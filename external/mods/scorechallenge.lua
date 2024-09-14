@@ -21,6 +21,9 @@ menu.itemname.scorechallenge = "SCORE CHALLENGE"
 menu.itemname.scorechallengecoop = "SCORE CHALLENGE CO-OP"
 
 [Select Info]
+title.scorechallenge.text = "Score Challenge"
+title.scorechallengecoop.text = "Score Challenge Cooperative"
+
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
 record.font = 3,0,0

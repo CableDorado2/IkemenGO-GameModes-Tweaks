@@ -47,6 +47,12 @@ menu.itemname.bossfight.back = "BACK" ;TODO boss characters menu items are autom
 menu.itemname.bossfightcoop = "BOSS FIGHT CO-OP" ;TODO
 menu.itemname.bossfightcoop.back = "BACK" ; TODO boss characters menu items are automatically added before bossfightcoop.back
 
+[Select Info]
+title.boss.text = "Boss Fight"
+title.bosscoop.text = "Boss Fight Cooperative"
+title.bossrush.text = "Boss Rush"
+title.bossrushcoop.text = "Boss Rush Cooperative"
+
 [Boss Rush Results Screen]
 enabled = 1
 sounds.enabled = 1
