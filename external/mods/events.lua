@@ -31,9 +31,32 @@ nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adju
  ;
  ; - characterselect
  ;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
+ ;   Default: false.
  ;
  ; - singlemode
- ;   If it Evalues to boolean "true" Single Team mode will be selectable for the Event Selected.
+ ;   If it Evalues to boolean "true" Single Team mode will be selectable
+ ;   when Character Select is Enabled for Event Selected.
+ ;   Default: false.
+ ;
+ ; - simulmode
+ ;   If it Evalues to boolean "true" Simul Team mode will be selectable
+ ;   when Character Select is Enabled for Event Selected.
+ ;   Default: false.
+ ;
+ ; - tagmode
+ ;   If it Evalues to boolean "true" Tag Team mode will be selectable
+ ;   when Character Select is Enabled for Event Selected.
+ ;   Default: false.
+ ;
+ ; - turnsmode
+ ;   If it Evalues to boolean "true" Turns Team mode will be selectable
+ ;   when Character Select is Enabled for Event Selected.
+ ;   Default: false.
+ ;
+ ; - ratiomode
+ ;   If it Evalues to boolean "true" Ratio Team mode will be selectable
+ ;   when Character Select is Enabled for Event Selected.
+ ;   Default: false.
  ;
  ; - path
  ;   Path to file with lua extension (relative to game directory)
@@ -55,10 +78,16 @@ description = Event 1 Description
 path = data/events/event1.lua
 
 id = event2
-name = Lord of the Temple
+name = All-Star Match 1
 description = Event 2 Description
+characterselect = true
+singlemode = true
+simulmode = true
+tagmode = true
+turnsmode = true
+ratiomode = true
 path = data/events/event2.lua
-unlock = stats.modes ~= nil and stats.modes.event1 ~= nil and stats.modes.event1.score ~= nil and stats.modes.event1.score > 0
+unlock = stats.modes.event1.score > 0
 
 ]]
 
@@ -170,7 +199,7 @@ end
 
 -- [Select Info] default parameters. Displayed in select screen.
 if motif.select_info.title_events_text == nil then
-	motif.select_info.title_events_text = "EVENT MATCH"
+	motif.select_info.title_events_text = "Event Match"
 end
 
 --[Event Info] default parameters (used for rendering event select screen assets)
@@ -327,9 +356,7 @@ function f_loadEvents()
 	for k, v in ipairs(t_selEventMode) do --Set Events Unlock Condition
 		main.t_unlockLua.modes[v.id] = v.unlock
 	end
-	main.f_unlock(false) --Check Events Unlocks
 	if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
-	if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 end
 
 main.t_itemname.events = function()
@@ -361,10 +388,23 @@ function f_events()
 	end
 	if #t_selEventMode == 0 then --If there is not event data
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
+	else --If there is event data
+	--Initialize Statistics
+		if stats.modes == nil then stats.modes = {} end
+		for i=1, #t do
+			if stats.modes[t[i].itemname] == nil then --Create Event Data
+				stats.modes[t[i].itemname] = {playtime = 0, score = 0}
+			end
+		end
+		saveEventData()
+		main.f_unlock(false) --Check Events Unlocks
+		if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 	end
 	if main.debugLog then main.f_printTable(t, 'debug/t_eventsMenu.txt') end
 	main.f_bgReset(motif.eventbgdef.bg)
 	main.f_fadeReset('fadein', motif.event_info)
+	local backupSelSong = motif.music.select_bgm
+	local backupTitleSong = motif.music.title_bgm
 	if motif.music.event_bgm ~= '' then
 		main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
 	end
@@ -626,6 +666,7 @@ function f_events()
 		if main.close and not main.fadeActive then
 			main.f_bgReset(motif[main.background].bg)
 			main.f_fadeReset('fadein', motif[main.group])
+			motif.music.title_bgm = backupTitleSong
 			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
 			main.close = false
 			break
@@ -657,11 +698,13 @@ function f_events()
 				start.t_clearCondition.event1 = function() return winnerteam() == 1 end
 				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
 				]]
-				if stats.modes[t[item].itemname].score == nil then stats.modes[t[item].itemname].score = 0 end --If there is not score data, create one
-				saveEventData()
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				main.luaPath = t[item].path
 				hook.run("main.t_itemname")
+				if motif.music.event_bgm ~= "" then --Keep playing Event Menu BGM in Character Select
+					motif.music.select_bgm = motif.music.event_bgm
+					motif.music.title_bgm = motif.music.event_bgm
+				end
 				start.f_selectMode()
 				if winnerteam() == 1 then --Save Score Data only if you complete event
 					if score() > stats.modes[t[item].itemname].score then --Update Hiscore only if is greater than the previous one
@@ -673,8 +716,11 @@ function f_events()
 				if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 				main.f_cmdBufReset()
 				f_resetEventInfoTxt()
-				if motif.music.event_bgm ~= '' then
-					main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
+				if motif.music.event_bgm ~= "" then
+					motif.music.select_bgm = backupSelSong --Restore Character Select BGM
+					if not t[item].charsel then --Play Event Select BGM
+						main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
+					end
 				end
 			end
 		end
