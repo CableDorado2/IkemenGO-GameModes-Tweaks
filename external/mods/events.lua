@@ -404,7 +404,16 @@ function f_events()
 	main.f_bgReset(motif.eventbgdef.bg)
 	main.f_fadeReset('fadein', motif.event_info)
 	local backupSelSong = motif.music.select_bgm
+	local backupSelLoop = motif.music.select_bgm_loop
+	local backupSelVolume = motif.music.select_bgm_volume
+	local backupSelLoopStart = motif.music.select_bgm_loopstart
+	local backupSelLoopEnd = motif.music.select_bgm_loopend
+	--
 	local backupTitleSong = motif.music.title_bgm
+	local backupTitleLoop = motif.music.title_bgm_loop
+	local backupTitleVolume = motif.music.title_bgm_volume
+	local backupTitleLoopStart = motif.music.title_bgm_loopstart
+	local backupTitleLoopEnd = motif.music.title_bgm_loopend
 	if motif.music.event_bgm ~= '' then
 		main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
 	end
@@ -667,6 +676,10 @@ function f_events()
 			main.f_bgReset(motif[main.background].bg)
 			main.f_fadeReset('fadein', motif[main.group])
 			motif.music.title_bgm = backupTitleSong
+			motif.music.title_bgm_loop = backupTitleLoop
+			motif.music.title_bgm_volume = backupTitleVolume
+			motif.music.title_bgm_loopstart = backupTitleLoopStart
+			motif.music.title_bgm_loopend = backupTitleLoopEnd
 			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
 			main.close = false
 			break
@@ -699,8 +712,8 @@ function f_events()
 				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
 				]]
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
-				main.luaPath = t[item].path
 				hook.run("main.t_itemname")
+				main.luaPath = t[item].path
 				if motif.music.event_bgm ~= "" then --Keep playing Event Menu BGM in Character Select
 					motif.music.select_bgm = motif.music.event_bgm
 					motif.music.title_bgm = motif.music.event_bgm
@@ -718,6 +731,10 @@ function f_events()
 				f_resetEventInfoTxt()
 				if motif.music.event_bgm ~= "" then
 					motif.music.select_bgm = backupSelSong --Restore Character Select BGM
+					motif.music.select_bgm_loop = backupSelLoop
+					motif.music.select_bgm_volume = backupSelVolume
+					motif.music.select_bgm_loopstart = backupSelLoopStart
+					motif.music.select_bgm_loopend = backupSelLoopEnd
 					if not t[item].charsel then --Play Event Select BGM
 						main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
 					end
