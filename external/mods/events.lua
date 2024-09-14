@@ -11,6 +11,12 @@ This Module is a "Portal" to any Custom Game Mode in Full Games...
 
 nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 
+--[[TODO: Make it so when a character uses the parameter:
+charname, unlock = gamemode() ~= "id of some event declared"
+locks the character when character select is enabled.
+It currently lock the character when returning from character select and re-entering...
+]]
+
 --[[Example SELECT.DEF parameters assignments
 ;-------------------------------------------------------------------------------
  ;Events Mode custom fights declaration. Assigned events are selectable via Events Mode
