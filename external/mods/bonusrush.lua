@@ -1,5 +1,5 @@
---[[	   				   BONUS RUSH MODULE
-==========================================================================
+--[[	   				         BONUS RUSH MODULE
+==================================================================================================
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 
@@ -7,12 +7,11 @@ Description:
 Based on official Boss Rush Module this one implements BONUS RUSH game mode
 (defeat all opponents that are consider bonuses).
 
-(Includes a Co-Op Variant)
+(Includes Co-Op and Netplay Variant)
 
-This mode is detectable by GameMode trigger as bonusrush and bonusrushcoop.
-Only characters with select.def "bonus = 1" parameter assigned are valid for
-this mode.
-=============================================================================
+This mode is detectable by GameMode trigger as bonusrush, bonusrushcoop and netplaybonusrushcoop.
+Only characters with select.def "bonus = 1" parameter assigned are valid for this mode.
+==================================================================================================
 ]]
 
 --[[
@@ -39,10 +38,13 @@ bonusrush.maxmatches =
 menu.itemname.bonusrush = "BONUS RUSH"
 menu.itemname.bonusrushcoop = "BONUS RUSH CO-OP"
 
+menu.itemname.server.netplaybonusrushcoop = "BONUS RUSH CO-OP"
+
 [Select Info]
 title.bonuscoop.text = "Bonus Cooperative"
 title.bonusrush.text = "Bonus Rush"
 title.bonusrushcoop.text = "Bonus Rush Cooperative"
+title.netplaybonusrushcoop.text = "Online Bonus Rush"
 
 [Bonus Rush Results Screen]
 enabled = 1
@@ -145,6 +147,36 @@ main.t_itemname.bonusrushcoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.netplaybonusrushcoop = function()
+	main.rankDisplay = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.elimination = true
+	main.exitSelect = true
+	main.hiscoreScreen = true
+	main.coop = true
+	main.lifebar.p1score = true
+	main.makeRoster = true
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.rankingCondition = true
+	main.resultsTable = motif.bonus_rush_results_screen
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.versusScreen = false
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	main.txt_mainSelect:update({text = motif.select_info.title_netplaybonusrushcoop_text})
+	setGameMode('netplaybonusrushcoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
 main.t_itemname.bonus = function(t, item)
 	main.f_playerInput(main.playerInput, 1)
 	main.rankDisplay = true
@@ -206,6 +238,10 @@ end
 
 if motif.select_info.title_bonusrushcoop_text == nil then
 	motif.select_info.title_bonusrushcoop_text = 'Bonus Rush Cooperative'
+end
+
+if motif.select_info.title_netplaybonusrushcoop_text == nil then
+	motif.select_info.title_netplaybonusrushcoop_text = 'Online Bonus Rush'
 end
 
 if motif.select_info.title_bonuscoop_text == nil then
@@ -281,16 +317,19 @@ start.t_makeRoster.bonusrush = function()
 end
 
 start.t_makeRoster.bonusrushcoop = start.t_makeRoster.bonusrush
+start.t_makeRoster.netplaybonusrushcoop = start.t_makeRoster.bonusrush
 
 -- start.t_sortRanking is a table storing functions with ranking sorting logic
 -- used by start.f_storeStats function, depending on game mode. Here we're
 -- reusing logic already declared for survival mode (refer to start.lua)
 start.t_sortRanking.bonusrush = start.t_sortRanking.survival
 start.t_sortRanking.bonusrushcoop = start.t_sortRanking.survival
+start.t_sortRanking.netplaybonusrushcoop = start.t_sortRanking.survival
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.bonusrush = function() return winnerteam() == 1 end
 start.t_clearCondition.bonusrushcoop = function() return winnerteam() == 1 end
+start.t_clearCondition.netplaybonusrushcoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -308,6 +347,7 @@ start.t_resultData.bonusrush = function()
 end
 
 start.t_resultData.bonusrushcoop = start.t_resultData.bonusrush
+start.t_resultData.netplaybonusrushcoop = start.t_resultData.bonusrush
 
 --;===========================================================
 --; main.lua
@@ -315,6 +355,7 @@ start.t_resultData.bonusrushcoop = start.t_resultData.bonusrush
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.bonusrush = {mode = 'bonusrush', data = 'score', title = motif.select_info.title_bonusrush_text}
 main.t_hiscoreData.bonusrushcoop = {mode = 'bonusrushcoop', data = 'score', title = motif.select_info.title_bonusrushcoop_text}
+main.t_hiscoreData.netplaybonusrushcoop = {mode = 'netplaybonusrushcoop', data = 'score', title = motif.select_info.title_netplaybonusrushcoop_text}
 
 main.t_bonusRushChars = {}
 

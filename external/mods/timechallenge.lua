@@ -5,12 +5,12 @@ opponent beating previous time record). Up to release 0.97 this mode was part
 of the default scripts distributed with engine, now it's used as a showcase
 how to implement full fledged mode with Ikemen GO external modules feature,
 without conflicting with default scripts. More info:
-https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as timechallenge and timechallengecoop
+https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#external-modules
+This mode is detectable by GameMode trigger as timechallenge, timechallengecoop and netplaytimechallengecoop
 
 CD2's Tweaks:
 - Team Mode Enabled
-- Adds a Co-Op Variant
+- Adds Co-Op and Netplay Variant
 ]]
 
 --[[
@@ -20,9 +20,12 @@ CD2's Tweaks:
 menu.itemname.timechallenge = "TIME CHALLENGE"
 menu.itemname.timechallengecoop = "TIME CHALLENGE CO-OP"
 
+menu.itemname.server.netplaytimechallengecoop = "TIME CHALLENGE CO-OP"
+
 [Select Info]
 title.timechallenge.text = "Time Challenge"
 title.timechallengecoop.text = "Time Challenge Cooperative"
+title.netplaytimechallengecoop.text = "Online Time Challenge"
 
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
@@ -31,6 +34,7 @@ record.scale = 1.0, 1.0
 ; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.timechallenge.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 record.timechallengecoop.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
+record.netplaytimechallengecoop.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 
 [Time Challenge Results Screen]
 enabled = 1
@@ -141,6 +145,39 @@ main.t_itemname.timechallengecoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.netplaytimechallengecoop = function()
+	main.hiscoreScreen = true
+	main.coop = true
+	main.lifebar.p2aiLevel = true
+	main.lifebar.timer = true
+	main.matchWins.draw = {0, 0}
+	main.matchWins.simul = {1, 1}
+	main.matchWins.single = {1, 1}
+	main.matchWins.tag = {1, 1}
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.rankDisplay = true
+	main.rankingCondition = true
+	main.resultsTable = motif.time_challenge_results_screen
+	if main.roundTime == -1 then
+		main.roundTime = 99
+	end
+	main.selectMenu[2] = true
+	main.stageMenu = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
+	main.teamMenu[2].tag = true
+	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
+	main.versusScreen = true
+	main.txt_mainSelect:update({text = motif.select_info.title_netplaytimechallengecoop_text})
+	setGameMode('netplaytimechallengecoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
 --;===========================================================
 --; motif.lua
 --;===========================================================
@@ -157,12 +194,20 @@ if motif.select_info.title_timechallengecoop_text == nil then
 	motif.select_info.title_timechallengecoop_text = 'Time Challenge Cooperative'
 end
 
+if motif.select_info.title_netplaytimechallengecoop_text == nil then
+	motif.select_info.title_netplaytimechallengecoop_text = 'Online Time Challenge'
+end
+
 if motif.select_info.record_timechallenge_text == nil then
 	motif.select_info.record_timechallenge_text = '- BEST RECORD -\n%c %m:%s.%x: %n'
 end
 
 if motif.select_info.record_timechallengecoop_text == nil then
 	motif.select_info.record_timechallengecoop_text = '- BEST RECORD -\n%c %m:%s.%x: %n'
+end
+
+if motif.select_info.record_netplaytimechallengecoop_text == nil then
+	motif.select_info.record_netplaytimechallengecoop_text = '- BEST RECORD -\n%c %m:%s.%x: %n'
 end
 
 -- [Time Challenge Results Screen] default parameters. Works similarly to
@@ -236,10 +281,12 @@ end
 -- reusing logic already declared for timeattack mode (refer to start.lua)
 start.t_sortRanking.timechallenge = start.t_sortRanking.timeattack
 start.t_sortRanking.timechallengecoop = start.t_sortRanking.timeattack
+start.t_sortRanking.netplaytimechallengecoop = start.t_sortRanking.timeattack
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.timechallenge = function() return winnerteam() == 1 end
 start.t_clearCondition.timechallengecoop = function() return winnerteam() == 1 end
+start.t_clearCondition.netplaytimechallengecoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -262,6 +309,7 @@ start.t_resultData.timechallenge = function()
 end
 
 start.t_resultData.timechallengecoop = start.t_resultData.timechallenge
+start.t_resultData.netplaytimechallengecoop = start.t_resultData.timechallenge
 
 --;===========================================================
 --; main.lua
@@ -269,3 +317,4 @@ start.t_resultData.timechallengecoop = start.t_resultData.timechallenge
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.timechallenge = {mode = 'timechallenge', data = 'time', title = motif.select_info.title_timechallenge_text}
 main.t_hiscoreData.timechallengecoop = {mode = 'timechallengecoop', data = 'time', title = 'Time Challenge CO-OP'}
+main.t_hiscoreData.netplaytimechallengecoop = {mode = 'netplaytimechallengecoop', data = 'time', title = title_netplaytimechallengecoop_text}

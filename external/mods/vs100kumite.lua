@@ -6,12 +6,12 @@ matches). Up to release 0.97 this mode was part of the default scripts
 distributed with engine, now it's used as a showcase how to implement full
 fledged mode with Ikemen GO external modules feature, without conflicting
 with default scripts. More info:
-https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as vs100kumite and vs100kumitecoop
+https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#external-modules
+This mode is detectable by GameMode trigger as vs100kumite, vs100kumitecoop and netplayvs100kumitecoop
 
 CD2's Tweaks:
 - MatchNo now is displayed in VS Screen
-- Adds a Co-Op Variant
+- Adds Co-Op and Netplay Variant
 ]]
 
 --[[
@@ -21,9 +21,12 @@ CD2's Tweaks:
 menu.itemname.vs100kumite = "VS 100 KUMITE"
 menu.itemname.vs100kumitecoop = "VS 100 KUMITE CO-OP"
 
+menu.itemname.server.netplayvs100kumitecoop = "VS 100 KUMITE CO-OP"
+
 [Select Info]
 title.vs100kumite.text = "VS 100 Kumite"
 title.vs100kumitecoop.text = "VS 100 Kumite Cooperative"
+title.netplayvs100kumitecoop.text = "Online VS 100 Kumite"
 
 [VS100 Kumite Results Screen]
 enabled = 1
@@ -147,6 +150,44 @@ main.t_itemname.vs100kumitecoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.netplayvs100kumitecoop = function()
+	main.coop = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.exitSelect = true
+	main.forceRosterSize = true
+	main.hiscoreScreen = true
+	main.lifebar.match = true
+	main.lifebar.p2aiLevel = true
+	main.makeRoster = true
+	main.matchWins.draw = {0, 0}
+	main.matchWins.simul = {1, 1}
+	main.matchWins.single = {1, 1}
+	main.matchWins.tag = {1, 1}
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.rankDisplay = true
+	main.resultsTable = motif.vs100_kumite_results_screen
+	main.rotationChars = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
+	main.teamMenu[2].tag = true
+	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	main.versusScreen = true
+	main.versusMatchNo = true
+	main.txt_mainSelect:update({text = motif.select_info.title_netplayvs100kumitecoop_text})
+	setGameMode('netplayvs100kumitecoop')
+	return start.f_selectMode
+end
+
 --;===========================================================
 --; motif.lua
 --;===========================================================
@@ -161,6 +202,10 @@ end
 
 if motif.select_info.title_vs100kumitecoop_text == nil then
 	motif.select_info.title_vs100kumitecoop_text = 'VS 100 Kumite Cooperative'
+end
+
+if motif.select_info.title_netplayvs100kumitecoop_text == nil then
+	motif.select_info.title_netplayvs100kumitecoop_text = 'Online VS 100 Kumite'
 end
 
 -- [VS100 Kumite Results Screen] default parameters. Works similarly to
@@ -242,16 +287,19 @@ start.t_makeRoster.vs100kumite = function()
 end
 
 start.t_makeRoster.vs100kumitecoop = start.t_makeRoster.vs100kumite
+start.t_makeRoster.netplayvs100kumitecoop = start.t_makeRoster.vs100kumite
 
 -- start.t_sortRanking is a table storing functions with ranking sorting logic
 -- used by start.f_storeStats function, depending on game mode. Here we're
 -- reusing logic already declared for survival mode (refer to start.lua)
 start.t_sortRanking.vs100kumite = start.t_sortRanking.survival
 start.t_sortRanking.vs100kumitecoop = start.t_sortRanking.survival
+start.t_sortRanking.netplayvs100kumitecoop = start.t_sortRanking.survival
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.vs100kumite = function() return true end
 start.t_clearCondition.vs100kumitecoop = function() return true end
+start.t_clearCondition.netplayvs100kumitecoop = function() return true end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -274,6 +322,7 @@ start.t_resultData.vs100kumite = function()
 end
 
 start.t_resultData.vs100kumitecoop = start.t_resultData.vs100kumite
+start.t_resultData.netplayvs100kumitecoop = start.t_resultData.vs100kumite
 
 --;===========================================================
 --; main.lua
@@ -281,3 +330,4 @@ start.t_resultData.vs100kumitecoop = start.t_resultData.vs100kumite
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.vs100kumite = {mode = 'vs100kumite', data = 'win', title = motif.select_info.title_vs100kumite_text}
 main.t_hiscoreData.vs100kumitecoop = {mode = 'vs100kumitecoop', data = 'win', title = motif.select_info.title_vs100kumitecoop_text}
+main.t_hiscoreData.netplayvs100kumitecoop = {mode = 'netplayvs100kumitecoop', data = 'win', title = motif.select_info.title_netplayvs100kumitecoop_text}

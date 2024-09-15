@@ -1,14 +1,14 @@
---[[	   					SCORE ATTACK MODULE
-=================================================================================
+--[[	   					       SCORE ATTACK MODULE
+=======================================================================================================
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 
 Description:
-This module implements SCORE ATTACK game mode with a Co-Op variant
+This module implements SCORE ATTACK game mode with Co-Op and Netplay variant
 (defeat opponents beating previous score record).
 
-This mode is detectable by GameMode trigger as scoreattack and scoreattackcoop.
-=================================================================================
+This mode is detectable by GameMode trigger as scoreattack, scoreattackcoop and netplayscoreattackcoop.
+=======================================================================================================
 ]]
 
 --[[
@@ -29,9 +29,12 @@ scoreattack.maxmatches =
 menu.itemname.scoreattack = "SCORE ATTACK"
 menu.itemname.scoreattackcoop = "SCORE ATTACK CO-OP"
 
+menu.itemname.server.netplayscoreattackcoop = "SCORE ATTACK CO-OP"
+
 [Select Info]
 title.scoreattack.text = "Score Attack"
 title.scoreattackcoop.text = "Score Attack Cooperative"
+title.netplayscoreattackcoop.text = "Online Score Attack"
 
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
@@ -40,6 +43,7 @@ record.scale = 1.0, 1.0
 ; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.scoreattack.text = "- BEST RECORD -\n%c %p PTS: %n"
 record.scoreattackcoop.text = "- BEST RECORD -\n%c %p PTS: %n"
+record.netplayscoreattackcoop.text = "- BEST RECORD -\n%c %p PTS: %n"
 
 [Score Attack Results Screen]
 enabled = 1
@@ -167,6 +171,46 @@ main.t_itemname.scoreattackcoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.netplayscoreattackcoop = function()
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.elimination = true
+	main.exitSelect = true
+	main.hiscoreScreen = true
+	main.quickContinue = true
+	main.coop = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
+	main.rankDisplay = true
+	main.makeRoster = true
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.resultsTable = motif.score_attack_results_screen
+	main.stageOrder = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
+	main.teamMenu[2].tag = true
+	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
+	main.versusScreen = true
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	--main.stageMenu = true
+	--main.continueScreen = true
+	--main.resetScore = true
+	--main.rankingCondition = true
+	main.txt_mainSelect:update({text = motif.select_info.title_netplayscoreattackcoop_text})
+	setGameMode('netplayscoreattackcoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
 --;===========================================================
 --; motif.lua
 --;===========================================================
@@ -183,12 +227,20 @@ if motif.select_info.title_scoreattackcoop_text == nil then
 	motif.select_info.title_scoreattackcoop_text = 'Score Attack Cooperative'
 end
 
+if motif.select_info.title_netplayscoreattackcoop_text == nil then
+	motif.select_info.title_netplayscoreattackcoop_text = 'Online Score Attack'
+end
+
 if motif.select_info.record_scoreattack_text == nil then
 	motif.select_info.record_scoreattack_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
 
 if motif.select_info.record_scoreattackcoop_text == nil then
 	motif.select_info.record_scoreattackcoop_text = '- BEST RECORD -\n%c %p PTS: %n'
+end
+
+if motif.select_info.record_netplayscoreattackcoop_text == nil then
+	motif.select_info.record_netplayscoreattackcoop_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
 
 -- [Score Attack Results Screen] default parameters. Works similarly to
@@ -261,20 +313,24 @@ end
 -- by start.f_makeRoster function, depending on game mode.
 start.t_makeRoster.scoreattack = start.t_makeRoster.arcade
 start.t_makeRoster.scoreattackcoop = start.t_makeRoster.arcade
+start.t_makeRoster.netplayscoreattackcoop = start.t_makeRoster.arcade
 
 -- start.t_aiRampData is a table storing functions returning variable data used
 -- by start.f_aiRamp function, depending on game mode.
 start.t_aiRampData.scoreattack = start.t_aiRampData.arcade
 start.t_aiRampData.scoreattackcoop = start.t_aiRampData.arcade
+start.t_aiRampData.netplayscoreattackcoop = start.t_aiRampData.arcade
 
 -- start.t_sortRanking is a table storing functions with ranking sorting logic
 -- used by start.f_storeStats function, depending on game mode.
 start.t_sortRanking.scoreattack = function(t, a, b) return t[b].score < t[a].score end
 start.t_sortRanking.scoreattackcoop = start.t_sortRanking.scoreattack --Reuse above data
+start.t_sortRanking.netplayscoreattackcoop = start.t_sortRanking.scoreattack
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.scoreattack = function() return winnerteam() == 1 end
 start.t_clearCondition.scoreattackcoop = function() return winnerteam() == 1 end
+start.t_clearCondition.netplayscoreattackcoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -298,6 +354,7 @@ start.t_resultData.scoreattack = function()
 end
 
 start.t_resultData.scoreattackcoop = start.t_resultData.scoreattack --Reuse above data
+start.t_resultData.netplayscoreattackcoop = start.t_resultData.scoreattack
 
 --;===========================================================
 --; main.lua
@@ -305,5 +362,6 @@ start.t_resultData.scoreattackcoop = start.t_resultData.scoreattack --Reuse abov
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scoreattack = {mode = 'scoreattack', data = 'score', title = motif.select_info.title_scoreattack_text}
 main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = 'Score Attack CO-OP'}
+main.t_hiscoreData.netplayscoreattackcoop = {mode = 'netplayscoreattackcoop', data = 'score', title = motif.select_info.title_netplayscoreattackcoop_text}
 
 if main.t_selOptions.scoreattackmaxmatches == nil then main.t_selOptions.scoreattackmaxmatches = {6, 1, 1, 0, 0, 0, 0, 0, 0, 0} end

@@ -5,12 +5,12 @@ opponent beating previous score record). Up to release 0.97 this mode was
 part of the default scripts distributed with engine, now it's used as a
 showcase how to implement full fledged mode with Ikemen GO external modules
 feature, without conflicting with default scripts. More info:
-https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as scorechallenge and scorechallengecoop
+https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#external-modules
+This mode is detectable by GameMode trigger as scorechallenge, scorechallengecoop and netplayscorechallengecoop
 
 CD2's Tweaks:
 - Team Mode Enabled
-- Adds a Co-Op Variant
+- Adds Co-Op and Netplay Variant
 ]]
 
 --[[
@@ -20,9 +20,12 @@ CD2's Tweaks:
 menu.itemname.scorechallenge = "SCORE CHALLENGE"
 menu.itemname.scorechallengecoop = "SCORE CHALLENGE CO-OP"
 
+menu.itemname.server.netplayscorechallengecoop = "SCORE CHALLENGE CO-OP"
+
 [Select Info]
 title.scorechallenge.text = "Score Challenge"
 title.scorechallengecoop.text = "Score Challenge Cooperative"
+title.netplayscorechallengecoop.text = "Online Score Challenge"
 
 ; Displaying game mode record directly in select screen
 record.offset = 159,39
@@ -31,6 +34,7 @@ record.scale = 1.0, 1.0
 ; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.scorechallenge.text = "- BEST RECORD -\n%c %p PTS: %n"
 record.scorechallengecoop.text = "- BEST RECORD -\n%c %p PTS: %n"
+record.netplayscorechallengecoop.text = "- BEST RECORD -\n%c %p PTS: %n"
 
 [Score Challenge Results Screen]
 enabled = 1
@@ -127,6 +131,32 @@ main.t_itemname.scorechallengecoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.netplayscorechallengecoop = function()
+	main.hiscoreScreen = true
+	main.coop = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.rankDisplay = true
+	main.rankingCondition = true
+	main.resultsTable = motif.score_challenge_results_screen
+	main.selectMenu[2] = true
+	main.stageMenu = true
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
+	main.teamMenu[2].tag = true
+	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
+	main.versusScreen = true
+	main.txt_mainSelect:update({text = motif.select_info.title_netplayscorechallengecoop_text})
+	setGameMode('netplayscorechallengecoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
 --;===========================================================
 --; motif.lua
 --;===========================================================
@@ -143,12 +173,20 @@ if motif.select_info.title_scorechallengecoop_text == nil then
 	motif.select_info.title_scorechallengecoop_text = 'Score Challenge Cooperative'
 end
 
+if motif.select_info.title_netplayscorechallengecoop_text == nil then
+	motif.select_info.title_netplayscorechallengecoop_text = 'Online Score Challenge'
+end
+
 if motif.select_info.record_scorechallenge_text == nil then
 	motif.select_info.record_scorechallenge_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
 
 if motif.select_info.record_scorechallengecoop_text == nil then
 	motif.select_info.record_scorechallengecoop_text = '- BEST RECORD -\n%c %p PTS: %n'
+end
+
+if motif.select_info.record_netplayscorechallengecoop_text == nil then
+	motif.select_info.record_netplayscorechallengecoop_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
 
 -- [Score Challenge Results Screen] default parameters. Works similarly to
@@ -222,10 +260,12 @@ end
 -- reusing logic already declared for arcade mode (refer to start.lua)
 start.t_sortRanking.scorechallenge = start.t_sortRanking.arcade
 start.t_sortRanking.scorechallengecoop = start.t_sortRanking.arcade
+start.t_sortRanking.netplayscorechallengecoop = start.t_sortRanking.arcade
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.scorechallenge = function() return winnerteam() == 1 end
 start.t_clearCondition.scorechallengecoop = function() return winnerteam() == 1 end
+start.t_clearCondition.netplayscorechallengecoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -249,6 +289,7 @@ start.t_resultData.scorechallenge = function()
 end
 
 start.t_resultData.scorechallengecoop = start.t_resultData.scorechallenge
+start.t_resultData.netplayscorechallengecoop = start.t_resultData.scorechallenge
 
 --;===========================================================
 --; main.lua
@@ -256,3 +297,4 @@ start.t_resultData.scorechallengecoop = start.t_resultData.scorechallenge
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scorechallenge = {mode = 'scorechallenge', data = 'score', title = motif.select_info.title_scorechallenge_text}
 main.t_hiscoreData.scorechallengecoop = {mode = 'scorechallengecoop', data = 'score', title = 'Score Challenge CO-OP'}
+main.t_hiscoreData.netplayscorechallengecoop = {mode = 'netplayscorechallengecoop', data = 'score', title = motif.select_info.title_netplayscorechallengecoop_text}

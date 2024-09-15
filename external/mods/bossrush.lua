@@ -5,15 +5,14 @@ that are consider bosses). Up to release 0.97 this mode was part of the
 default scripts distributed with engine, now it's used as a showcase how to
 implement full fledged mode with Ikemen GO external modules feature, without
 conflicting with default scripts. More info:
-https://github.com/K4thos/Ikemen_GO/wiki/Miscellaneous-Info#lua_modules
-This mode is detectable by GameMode trigger as bossrush and bossrushcoop.
-Only characters with select.def "boss = 1" parameter assigned are valid for
-this mode.
+https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#external-modules
+This mode is detectable by GameMode trigger as bossrush, bossrushcoop and netplaybossrushcoop.
+Only characters with select.def "boss = 1" parameter assigned are valid for this mode.
 
 CD2's Tweaks:
 - Removed MatchNo in VS Screen
 - Rank Display Enabled
-- Adds a Co-Op Variant
+- Adds Co-Op and Netplay Variant
 - Adds Boss Fight game mode (defeat a boss character selected) detectable by GameMode trigger as boss and bosscoop. TODO
 - t_bossChars renamed to t_bossRushChars to allow Single Boss Fight variant like Bonus Games
 ]]
@@ -41,6 +40,8 @@ bossrush.maxmatches =
 menu.itemname.bossrush = "BOSS RUSH"
 menu.itemname.bossrushcoop = "BOSS RUSH CO-OP"
 
+menu.itemname.server.netplaybossrushcoop = "BOSS RUSH CO-OP"
+
 menu.itemname.bossfight = "BOSS FIGHT" ;TODO
 menu.itemname.bossfight.back = "BACK" ;TODO boss characters menu items are automatically added before bossfight.back
 
@@ -48,10 +49,11 @@ menu.itemname.bossfightcoop = "BOSS FIGHT CO-OP" ;TODO
 menu.itemname.bossfightcoop.back = "BACK" ; TODO boss characters menu items are automatically added before bossfightcoop.back
 
 [Select Info]
-title.boss.text = "Boss Fight"
-title.bosscoop.text = "Boss Fight Cooperative"
 title.bossrush.text = "Boss Rush"
 title.bossrushcoop.text = "Boss Rush Cooperative"
+title.netplaybossrushcoop.text = "Online Boss Rush"
+title.boss.text = "Boss Fight" ;TODO
+title.bosscoop.text = "Boss Fight Cooperative" ;TODO
 
 [Boss Rush Results Screen]
 enabled = 1
@@ -164,6 +166,41 @@ main.t_itemname.bossrushcoop = function()
 	return start.f_selectMode
 end
 
+main.t_itemname.netplaybossrushcoop = function()
+	main.rankDisplay = true
+	main.charparam.ai = true
+	main.charparam.music = true
+	main.charparam.rounds = true
+	main.charparam.single = true
+	main.charparam.stage = true
+	main.charparam.time = true
+	main.elimination = true
+	main.exitSelect = true
+	main.hiscoreScreen = true
+	main.coop = true
+	main.lifebar.p1score = true
+	main.lifebar.p2aiLevel = true
+	main.makeRoster = true
+	main.numSimul = {2, math.min(4, config.Players)}
+	main.numTag = {2, math.min(4, config.Players)}
+	main.rankingCondition = true
+	main.resultsTable = motif.boss_rush_results_screen
+	main.teamMenu[1].simul = true
+	main.teamMenu[1].tag = true
+	main.teamMenu[2].single = true
+	main.teamMenu[2].simul = true
+	main.teamMenu[2].tag = true
+	main.teamMenu[2].turns = true
+	main.teamMenu[2].ratio = true
+	main.versusScreen = true
+	main.storyboard.gameover = true
+	--main.storyboard.credits = true
+	main.txt_mainSelect:update({text = motif.select_info.title_netplaybossrushcoop_text})
+	setGameMode('netplaybossrushcoop')
+	hook.run("main.t_itemname")
+	return start.f_selectMode
+end
+
 main.t_itemname.boss = function()
 	main.f_playerInput(main.playerInput, 1)
 	main.t_pIn[2] = 1
@@ -234,6 +271,10 @@ end
 
 if motif.select_info.title_bossrushcoop_text == nil then
 	motif.select_info.title_bossrushcoop_text = 'Boss Rush Cooperative'
+end
+
+if motif.select_info.title_netplaybossrushcoop_text == nil then
+	motif.select_info.title_netplaybossrushcoop_text = 'Online Boss Rush'
 end
 
 if motif.select_info.title_boss_text == nil then
@@ -313,16 +354,19 @@ start.t_makeRoster.bossrush = function()
 end
 
 start.t_makeRoster.bossrushcoop = start.t_makeRoster.bossrush
+start.t_makeRoster.netplaybossrushcoop = start.t_makeRoster.bossrush
 
 -- start.t_sortRanking is a table storing functions with ranking sorting logic
 -- used by start.f_storeStats function, depending on game mode. Here we're
 -- reusing logic already declared for survival mode (refer to start.lua)
 start.t_sortRanking.bossrush = start.t_sortRanking.survival
 start.t_sortRanking.bossrushcoop = start.t_sortRanking.survival
+start.t_sortRanking.netplaybossrushcoop = start.t_sortRanking.survival
 
 -- as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.bossrush = function() return winnerteam() == 1 end
 start.t_clearCondition.bossrushcoop = function() return winnerteam() == 1 end
+start.t_clearCondition.netplaybossrushcoop = function() return winnerteam() == 1 end
 
 -- start.t_resultData is a table storing functions used for setting variables
 -- stored in start.t_result table, returning boolean depending on various
@@ -340,6 +384,7 @@ start.t_resultData.bossrush = function()
 end
 
 start.t_resultData.bossrushcoop = start.t_resultData.bossrush
+start.t_resultData.netplaybossrushcoop = start.t_resultData.bossrush
 
 --;===========================================================
 --; main.lua
@@ -347,6 +392,7 @@ start.t_resultData.bossrushcoop = start.t_resultData.bossrush
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.bossrush = {mode = 'bossrush', data = 'score', title = motif.select_info.title_bossrush_text}
 main.t_hiscoreData.bossrushcoop = {mode = 'bossrushcoop', data = 'score', title = motif.select_info.title_bossrushcoop_text}
+main.t_hiscoreData.netplaybossrushcoop = {mode = 'netplaybossrushcoop', data = 'score', title = motif.select_info.title_netplaybossrushcoop_text}
 
 main.t_bossRushChars = {}
 
