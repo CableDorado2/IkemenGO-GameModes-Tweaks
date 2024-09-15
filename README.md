@@ -5,7 +5,8 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2024-08-14 Nightly Build**.
 
 ##  _Events Mode (New)_
-A Portal to any custom game mode...
+A "Portal" to any custom game mode➤https://www.youtube.com/watch?v=1FcPYB-RuoI
+[![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
 
 ##  _Score Attack (New)_
 https://github.com/user-attachments/assets/99e5b26e-de09-4ebd-aa53-3cd9f521bddd
@@ -24,4 +25,4 @@ https://github.com/user-attachments/assets/4b814aba-2a4a-4538-b5fd-2902a2a7d863
 
 ##  _Installation:_
 - Extract archive content into "**./external/mods**" directory
-- Edit select.def or system.def depending of mod loaded
+- Edit select.def or system.def depending of module installed
