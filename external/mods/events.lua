@@ -5,7 +5,6 @@ Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 Description:
 Adds a Custom Game Mode entry (Events) to the Main Menu.
-This Module is a "Portal" to any Custom Game Mode in Full Games...
 ===================================================================
 ]]
 
