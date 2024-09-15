@@ -132,12 +132,11 @@ main.t_itemname.scorechallengecoop = function()
 end
 
 main.t_itemname.netplayscorechallengecoop = function()
-	main.hiscoreScreen = true
 	main.coop = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.rankDisplay = true
 	main.rankingCondition = true
 	main.resultsTable = motif.score_challenge_results_screen
@@ -297,4 +296,3 @@ start.t_resultData.netplayscorechallengecoop = start.t_resultData.scorechallenge
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scorechallenge = {mode = 'scorechallenge', data = 'score', title = motif.select_info.title_scorechallenge_text}
 main.t_hiscoreData.scorechallengecoop = {mode = 'scorechallengecoop', data = 'score', title = 'Score Challenge CO-OP'}
-main.t_hiscoreData.netplayscorechallengecoop = {mode = 'netplayscorechallengecoop', data = 'score', title = motif.select_info.title_netplayscorechallengecoop_text}

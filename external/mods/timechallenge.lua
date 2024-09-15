@@ -146,7 +146,6 @@ main.t_itemname.timechallengecoop = function()
 end
 
 main.t_itemname.netplaytimechallengecoop = function()
-	main.hiscoreScreen = true
 	main.coop = true
 	main.lifebar.p2aiLevel = true
 	main.lifebar.timer = true
@@ -154,8 +153,8 @@ main.t_itemname.netplaytimechallengecoop = function()
 	main.matchWins.simul = {1, 1}
 	main.matchWins.single = {1, 1}
 	main.matchWins.tag = {1, 1}
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.rankDisplay = true
 	main.rankingCondition = true
 	main.resultsTable = motif.time_challenge_results_screen
@@ -317,4 +316,3 @@ start.t_resultData.netplaytimechallengecoop = start.t_resultData.timechallenge
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.timechallenge = {mode = 'timechallenge', data = 'time', title = motif.select_info.title_timechallenge_text}
 main.t_hiscoreData.timechallengecoop = {mode = 'timechallengecoop', data = 'time', title = 'Time Challenge CO-OP'}
-main.t_hiscoreData.netplaytimechallengecoop = {mode = 'netplaytimechallengecoop', data = 'time', title = title_netplaytimechallengecoop_text}

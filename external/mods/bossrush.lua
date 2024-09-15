@@ -176,13 +176,12 @@ main.t_itemname.netplaybossrushcoop = function()
 	main.charparam.time = true
 	main.elimination = true
 	main.exitSelect = true
-	main.hiscoreScreen = true
 	main.coop = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
 	main.makeRoster = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.rankingCondition = true
 	main.resultsTable = motif.boss_rush_results_screen
 	main.teamMenu[1].simul = true
@@ -392,7 +391,6 @@ start.t_resultData.netplaybossrushcoop = start.t_resultData.bossrush
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.bossrush = {mode = 'bossrush', data = 'score', title = motif.select_info.title_bossrush_text}
 main.t_hiscoreData.bossrushcoop = {mode = 'bossrushcoop', data = 'score', title = motif.select_info.title_bossrushcoop_text}
-main.t_hiscoreData.netplaybossrushcoop = {mode = 'netplaybossrushcoop', data = 'score', title = motif.select_info.title_netplaybossrushcoop_text}
 
 main.t_bossRushChars = {}
 

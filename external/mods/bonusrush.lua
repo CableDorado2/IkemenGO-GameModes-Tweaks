@@ -157,12 +157,11 @@ main.t_itemname.netplaybonusrushcoop = function()
 	main.charparam.time = true
 	main.elimination = true
 	main.exitSelect = true
-	main.hiscoreScreen = true
 	main.coop = true
 	main.lifebar.p1score = true
 	main.makeRoster = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.rankingCondition = true
 	main.resultsTable = motif.bonus_rush_results_screen
 	main.teamMenu[1].simul = true
@@ -355,7 +354,6 @@ start.t_resultData.netplaybonusrushcoop = start.t_resultData.bonusrush
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.bonusrush = {mode = 'bonusrush', data = 'score', title = motif.select_info.title_bonusrush_text}
 main.t_hiscoreData.bonusrushcoop = {mode = 'bonusrushcoop', data = 'score', title = motif.select_info.title_bonusrushcoop_text}
-main.t_hiscoreData.netplaybonusrushcoop = {mode = 'netplaybonusrushcoop', data = 'score', title = motif.select_info.title_netplaybonusrushcoop_text}
 
 main.t_bonusRushChars = {}
 

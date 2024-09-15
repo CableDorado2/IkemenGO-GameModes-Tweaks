@@ -147,7 +147,6 @@ main.t_itemname.netplaytimeattackcoop = function()
 	main.charparam.stage = true
 	main.charparam.time = true
 	main.exitSelect = true
-	main.hiscoreScreen = true
 	main.coop = true
 	main.continueScreen = true
 	main.lifebar.timer = true
@@ -158,8 +157,8 @@ main.t_itemname.netplaytimeattackcoop = function()
 	main.matchWins.tag = {1, 1}
 	main.makeRoster = true
 	main.quickContinue = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.resetScore = true
 	if main.roundTime == -1 then
 		main.roundTime = 99
@@ -229,4 +228,3 @@ start.t_resultData.netplaytimeattackcoop = start.t_resultData.timeattack
 --; main.lua
 --;===========================================================
 main.t_hiscoreData.timeattackcoop = {mode = 'timeattackcoop', data = 'time', title = motif.select_info.title_timeattackcoop_text}
-main.t_hiscoreData.netplaytimeattackcoop = {mode = 'netplaytimeattackcoop', data = 'time', title = motif.select_info.title_netplaytimeattackcoop_text}

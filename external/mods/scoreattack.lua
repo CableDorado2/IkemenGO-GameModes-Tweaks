@@ -180,15 +180,14 @@ main.t_itemname.netplayscoreattackcoop = function()
 	main.charparam.time = true
 	main.elimination = true
 	main.exitSelect = true
-	main.hiscoreScreen = true
 	main.quickContinue = true
 	main.coop = true
 	main.lifebar.p1score = true
 	main.lifebar.p2aiLevel = true
 	main.rankDisplay = true
 	main.makeRoster = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.resultsTable = motif.score_attack_results_screen
 	main.stageOrder = true
 	main.teamMenu[1].simul = true
@@ -362,6 +361,5 @@ start.t_resultData.netplayscoreattackcoop = start.t_resultData.scoreattack
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scoreattack = {mode = 'scoreattack', data = 'score', title = motif.select_info.title_scoreattack_text}
 main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = 'Score Attack CO-OP'}
-main.t_hiscoreData.netplayscoreattackcoop = {mode = 'netplayscoreattackcoop', data = 'score', title = motif.select_info.title_netplayscoreattackcoop_text}
 
 if main.t_selOptions.scoreattackmaxmatches == nil then main.t_selOptions.scoreattackmaxmatches = {6, 1, 1, 0, 0, 0, 0, 0, 0, 0} end

@@ -159,7 +159,6 @@ main.t_itemname.netplayvs100kumitecoop = function()
 	main.charparam.time = true
 	main.exitSelect = true
 	main.forceRosterSize = true
-	main.hiscoreScreen = true
 	main.lifebar.match = true
 	main.lifebar.p2aiLevel = true
 	main.makeRoster = true
@@ -167,8 +166,8 @@ main.t_itemname.netplayvs100kumitecoop = function()
 	main.matchWins.simul = {1, 1}
 	main.matchWins.single = {1, 1}
 	main.matchWins.tag = {1, 1}
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	main.numSimul = {2, 2}
+	main.numTag = {2, 2}
 	main.rankDisplay = true
 	main.resultsTable = motif.vs100_kumite_results_screen
 	main.rotationChars = true
@@ -330,4 +329,3 @@ start.t_resultData.netplayvs100kumitecoop = start.t_resultData.vs100kumite
 -- Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.vs100kumite = {mode = 'vs100kumite', data = 'win', title = motif.select_info.title_vs100kumite_text}
 main.t_hiscoreData.vs100kumitecoop = {mode = 'vs100kumitecoop', data = 'win', title = motif.select_info.title_vs100kumitecoop_text}
-main.t_hiscoreData.netplayvs100kumitecoop = {mode = 'netplayvs100kumitecoop', data = 'win', title = motif.select_info.title_netplayvs100kumitecoop_text}
