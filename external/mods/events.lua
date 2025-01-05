@@ -1,16 +1,16 @@
 --[[	   				  EVENTS MODULE
 ===================================================================
-Version: 1.0
+Version: 1.02
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 Description:
 Adds a Custom Game Mode entry (Events) to the Main Menu.
 ===================================================================
 ]]
-
 nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 
---[[TODO: Make it so when a character uses the parameter:
+--[[
+TODO: Make it so when a character uses the parameter:
 charname, unlock = gamemode() ~= "id of some event declared"
 locks the character when character select is enabled.
 It currently lock the character when returning from character select and re-entering...
@@ -18,63 +18,64 @@ It currently lock the character when returning from character select and re-ente
 
 --[[Example SELECT.DEF parameters assignments
 ;-------------------------------------------------------------------------------
- ;Events Mode custom fights declaration. Assigned events are selectable via Events Mode
- ;submenu ('menu.itemname.events' parameter in screenpack DEF file)
- ;
- ;Declaring events consists of setting up following parameters:
- ; - id
- ;   Set to name that should be returned by GameMode trigger.
- ;   This parameter also initiates new events declaration, so it has to be
- ;   assigned before any other parameter used by the same event. All events should
- ;   have unique id names.
- ;
- ; - name
- ;   Set to name that should be displayed for item in Events Mode submenu.
- ;
- ; - description
- ;   Set to description that should be displayed for item in Events Mode submenu.
- ;
- ; - characterselect
- ;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
- ;   Default: false.
- ;
- ; - singlemode
- ;   If it Evalues to boolean "true" Single Team mode will be selectable
- ;   when Character Select is Enabled for Event Selected.
- ;   Default: false.
- ;
- ; - simulmode
- ;   If it Evalues to boolean "true" Simul Team mode will be selectable
- ;   when Character Select is Enabled for Event Selected.
- ;   Default: false.
- ;
- ; - tagmode
- ;   If it Evalues to boolean "true" Tag Team mode will be selectable
- ;   when Character Select is Enabled for Event Selected.
- ;   Default: false.
- ;
- ; - turnsmode
- ;   If it Evalues to boolean "true" Turns Team mode will be selectable
- ;   when Character Select is Enabled for Event Selected.
- ;   Default: false.
- ;
- ; - ratiomode
- ;   If it Evalues to boolean "true" Ratio Team mode will be selectable
- ;   when Character Select is Enabled for Event Selected.
- ;   Default: false.
- ;
- ; - path
- ;   Path to file with lua extension (relative to game directory)
- ;   containing event mode custom fight coded in Lua language.
- ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
- ;
- ; - unlock
- ;   Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
- ;   If it evaluates to boolean 'true' the event will be selectable from
- ;   events mode submenu, or hidden on 'false'. Default: true.
- ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
- ;
- ;Examples:
+;Events Mode custom fights declaration. Assigned events are selectable via Events Mode
+;submenu ('menu.itemname.events' parameter in screenpack DEF file)
+
+;Declaring events consists of setting up following parameters:
+
+; - id
+;   Set to name that should be returned by GameMode trigger.
+;   This parameter also initiates new events declaration, so it has to be
+;   assigned before any other parameter used by the same event. All events should
+;   have unique id names.
+
+; - name
+;   Set to name that should be displayed for item in Events Mode submenu.
+
+; - description
+;   Set to description that should be displayed for item in Events Mode submenu.
+
+; - characterselect
+;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
+;   Default: false.
+
+; - singlemode
+;   If it Evalues to boolean "true" Single Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - simulmode
+;   If it Evalues to boolean "true" Simul Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - tagmode
+;   If it Evalues to boolean "true" Tag Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - turnsmode
+;   If it Evalues to boolean "true" Turns Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - ratiomode
+;   If it Evalues to boolean "true" Ratio Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - path
+;   Path to file with lua extension (relative to game directory)
+;   containing event mode custom fight coded in Lua language.
+;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
+
+; - unlock
+;   Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
+;   If it evaluates to boolean 'true' the event will be selectable from
+;   events mode submenu, or hidden on 'false'. Default: true.
+;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
+
+;Examples:
  
 [EventsMode]
 id = event1
@@ -114,53 +115,34 @@ menu.itemname.events = "EVENTS"
 ;Text rendered using title element
 title.events.text = "Event Match"
 
-;Events select screen definition
-[Event Info]
-fadein.time = 10
+;-------------------------------------------------------------------------------
+[Event Info] ;Events select screen definition
+fadein.time = 20
 fadein.col = 0,0,0
-fadeout.time = 10
+;fadein.anim = -1
+
+fadeout.time = 20
 fadeout.col = 0,0,0
+;fadeout.anim = -1
+
+cursor.move.snd = 100,0
+cursor.done.snd = 100,1
+cancel.snd = 100,2
+
+menu.uselocalcoord = 1
+menu.pos = 85,33
+menu.title.uppercase = 1
+
 title.offset = 159,15
 title.font = 3,0,0
 title.scale = 1.0, 1.0
 title.text = "EVENT SELECT"
+
 hiscore.offset = 80,180
 hiscore.font = 3,5,1
 hiscore.text = "HIGH SCORE: "
 hiscore.scale = 1.0, 1.0
-menu.uselocalcoord = 0
-menu.pos = 85,33
-menu.item.offset = 0,0
-menu.item.font = 2,0,1
-menu.item.scale = 1.0, 1.0
-menu.item.active.offset = 0,0
-menu.item.active.font = 2,0,1
-menu.item.active.scale = 1.0, 1.0
-menu.item.spacing = 0,14
-;menu.window.margins.y = 0,0
-menu.window.visibleitems = 10
-menu.boxcursor.visible = 1
-menu.boxcursor.coords = -5, -10, 154, 3
-menu.boxcursor.col = 255, 255, 255
-menu.boxcursor.alpharange = 10, 40, 2, 255, 255, 0
-menu.boxbg.visible = 1
-menu.boxbg.col = 0,0,0
-menu.boxbg.alpha = 0,128
-;menu.arrow.up.anim =
-menu.arrow.up.spr = 400,0
-menu.arrow.up.offset = 157,-10
-menu.arrow.up.facing = 1
-menu.arrow.up.scale = 0.5, 0.5
-;menu.arrow.down.anim =
-menu.arrow.down.spr = 401,0
-menu.arrow.down.offset = 157,124
-menu.arrow.down.facing = 1
-menu.arrow.down.scale = 0.5, 0.5
-menu.title.uppercase = 1
-cursor.move.snd = 100,0
-cursor.done.snd = 100,1
-cancel.snd = 100,2
-;Event Info text
+
 info.offset = 40,200
 info.spacing = 0,0
 info.font = 2,0,1
@@ -169,8 +151,40 @@ info.window = 0,171, 301,228
 info.textwrap = w
 info.delay = 2
 
-;Event select screen background
-[EventBGdef]
+menu.item.offset = 0,0
+menu.item.font = 2,0,1
+menu.item.scale = 1.0, 1.0
+menu.item.active.offset = 0,0
+menu.item.active.font = 2,0,1
+menu.item.active.scale = 1.0, 1.0
+menu.item.spacing = 0,14
+
+;menu.window.margins.y = 0,0
+menu.window.visibleitems = 10
+
+menu.boxcursor.visible = 1
+menu.boxcursor.coords = -5, -10, 154, 3
+menu.boxcursor.col = 255, 255, 255
+menu.boxcursor.alpharange = 10, 40, 2, 255, 255, 0
+
+menu.boxbg.visible = 1
+menu.boxbg.col = 0,0,0
+menu.boxbg.alpha = 0,128
+
+;menu.arrow.up.anim = -1
+menu.arrow.up.spr = 400,0
+menu.arrow.up.offset = 157,-10
+menu.arrow.up.facing = 1
+menu.arrow.up.scale = 0.5, 0.5
+
+;menu.arrow.down.anim = -1
+menu.arrow.down.spr = 401,0
+menu.arrow.down.offset = 157,124
+menu.arrow.down.facing = 1
+menu.arrow.down.scale = 0.5, 0.5
+
+;-------------------------------------------------------------------------------
+[EventBGdef] ;Event select screen background
 spr = ""
 bgclearcolor = 0,0,0
 
@@ -184,7 +198,7 @@ velocity = -1, -1
 ]]
 
 --===================================================================================
---								MOTIF STUFF
+--								  MOTIF STUFF
 --===================================================================================
 if motif.music.event_bgm == nil then
 	motif.music.event_bgm = ""
@@ -212,19 +226,36 @@ local t_base = {
 	fadein_time = 10,
 	fadein_col = {0, 0, 0},
 	fadein_anim = -1,
+	
 	fadeout_time = 10,
 	fadeout_col = {0, 0, 0},
 	fadeout_anim = -1,
+	
+	cursor_move_snd = {100, 0},
+	cursor_done_snd = {100, 1},
+	cancel_snd = {100, 2},
+	
 	title_offset = {159, 15},
 	title_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
 	title_scale = {1.0, 1.0},
 	title_text = 'EVENT SELECT',
+	
 	hiscore_offset = {80, 180},
 	hiscore_font = {'jg.fnt', 5, 1, 255, 255, 255, -1},
 	hiscore_scale = {1.0, 1.0},
 	hiscore_text = 'HIGH SCORE: ',
+	
+	info_offset = {40, 200},
+	info_spacing = {0, 0},
+	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
+	info_scale = {1.0, 1.0},
+	info_delay = 2,
+	info_textwrap = 'w',
+	info_window = {0, 171, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
+	
 	menu_uselocalcoord = 0,
 	menu_pos = {85, 33},
+	
 	--menu_bg_<itemname>_anim = -1,
 	--menu_bg_<itemname>_spr = {},
 	--menu_bg_<itemname>_offset = {0, 0},
@@ -235,6 +266,7 @@ local t_base = {
 	--menu_bg_active_<itemname>_offset = {0, 0},
 	--menu_bg_active_<itemname>_facing = 1,
 	--menu_bg_active_<itemname>_scale = {1.0, 1.0},
+	
 	menu_item_offset = {0, 0},
 	menu_item_font = {'f-6x9.def', 0, 1, 191, 191, 191, -1},
 	menu_item_scale = {1.0, 1.0},
@@ -242,37 +274,33 @@ local t_base = {
 	menu_item_active_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
 	menu_item_active_scale = {1.0, 1.0},
 	menu_item_spacing = {0, 14},
+	
+	menu_title_uppercase = 1,	
+	menu_itemname_back = 'Back',
+	
 	menu_window_margins_y = {0, 0},
 	menu_window_visibleitems = 10,
+	
 	menu_boxcursor_visible = 1,
 	menu_boxcursor_coords = {-5, -10, 154, 3},
 	menu_boxcursor_col = {255, 255, 255},
 	menu_boxcursor_alpharange = {10, 40, 2, 255, 255, 0},
+	
 	menu_boxbg_visible = 1,
 	menu_boxbg_col = {0, 0, 0},
 	menu_boxbg_alpha = {0, 128},
+	
 	menu_arrow_up_anim = -1,
 	menu_arrow_up_spr = {},
 	menu_arrow_up_offset = {0, 0},
 	menu_arrow_up_facing = 1,
 	menu_arrow_up_scale = {1.0, 1.0},
+	
 	menu_arrow_down_anim = -1,
 	menu_arrow_down_spr = {},
 	menu_arrow_down_offset = {0, 0},
 	menu_arrow_down_facing = 1,
-	menu_arrow_down_scale = {1.0, 1.0},
-	menu_title_uppercase = 1,
-	cursor_move_snd = {100, 0},
-	cursor_done_snd = {100, 1},
-	cancel_snd = {100, 2},
-	menu_itemname_back = 'Back',
-	info_offset = {40, 200},
-	info_spacing = {0, 0},
-	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
-	info_scale = {1.0, 1.0},
-	info_delay = 2,
-	info_textwrap = 'w',
-	info_window = {0, 171, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]}
+	menu_arrow_down_scale = {1.0, 1.0},	
 }
 if motif.event_info == nil then
 	motif.event_info = {}
@@ -320,11 +348,14 @@ end
 motif.defaultEvent = motif.event_info.menu_uselocalcoord == 0
 
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
-
 --===================================================================================
 --									MENU LOGIC
 --===================================================================================
-function f_loadEvents()
+local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
+local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defsc = motif.defaultEvent})
+local txt_infoEvent = main.f_createTextImg(motif.event_info, 'info', {defsc = motif.defaultEvent})
+
+local function f_loadEvents()
 	t_selEventMode = {}
 	local section = 0
 	local row = 0
@@ -364,20 +395,21 @@ function f_loadEvents()
 	if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
 end
 
-main.t_itemname.events = function()
-	return f_events() --Go to below function (that contains a custom sub-menu) when you enter in main menu item
+local function saveEventData()
+	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
+	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
 end
 
 local rect_boxcursor = rect:create({})
 local rect_boxbg = rect:create({})
 local t_menuWindowEvent = main.f_menuWindow(motif.event_info)
 
-local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
-local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defsc = motif.defaultEvent})
-local txt_infoEvent = main.f_createTextImg(motif.event_info, 'info', {defsc = motif.defaultEvent})
-
-function f_resetEventInfoTxt()
+local function f_resetEventInfoTxt()
 infoTextCnt = 0
+end
+
+main.t_itemname.events = function()
+	return f_events() --Go to below function (that contains a custom sub-menu) when you enter in main menu item
 end
 
 function f_events()
@@ -425,13 +457,13 @@ function f_events()
 	main.close = false
 	while true do
 --;---------------------------------------------------------------------------------------------------------------------
-		--draw clearcolor
+	--draw clearcolor
 		if not skipClear then
 			clearColor(motif['eventbgdef'].bgclearcolor[1], motif['eventbgdef'].bgclearcolor[2], motif['eventbgdef'].bgclearcolor[3])
 		end
-		--draw layerno = 0 backgrounds
+	--draw layerno = 0 backgrounds
 		bgDraw(motif['eventbgdef'].bg, falseBool)
-		--draw menu box
+	--draw menu box
 		if motif['event_info'].menu_boxbg_visible == 1 then
 			rect_boxbg:update({
 				x1 =    motif['event_info'].menu_pos[1] + motif['event_info'].menu_boxcursor_coords[1],
@@ -447,24 +479,24 @@ function f_events()
 			})
 			rect_boxbg:draw()
 		end
-		--draw title
+	--draw title
 		txt_titleEvent:draw()
-		--draw menu items
+	--draw menu items
 		local items_shown = item + motif['event_info'].menu_window_visibleitems - cursorPosY
 		if items_shown > #t or (motif['event_info'].menu_window_visibleitems > 0 and items_shown < #t and (motif['event_info'].menu_window_margins_y[1] ~= 0 or motif['event_info'].menu_window_margins_y[2] ~= 0)) then
 			items_shown = #t
 		end
 		for i = 1, items_shown do
 			local unlockText = ""
-			if main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = "???" end --Contidion to Show Unlocked Text
+			if main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = "???" end --Condition to Show Unlocked Text
 			if i > item - cursorPosY then
 				if i == item then
-					--Draw active item background
+				--Draw active item background
 					if t[i].paramname ~= nil then
 						animDraw(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
 						animUpdate(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
 					end
-					--Draw active item font
+				--Draw active item font
 					if t[i].selected then
 						t[i].data:update({
 							font =   motif['event_info'].menu_item_selected_active_font[1],
@@ -519,12 +551,12 @@ function f_events()
 						t[i].vardata:draw()
 					end
 				else
-					--Draw not active item background
+				--Draw not active item background
 					if t[i].paramname ~= nil then
 						animDraw(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
 						animUpdate(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
 					end
-					--Draw not active item font
+				--Draw not active item font
 					if t[i].selected then
 						t[i].data:update({
 							font =   motif['event_info'].menu_item_selected_font[1],
@@ -581,7 +613,7 @@ function f_events()
 				end
 			end
 		end
-		--draw menu cursor
+	--draw menu cursor
 		if motif['event_info'].menu_boxcursor_visible == 1 and not main.fadeActive then
 			local src, dst = main.f_boxcursorAlpha(
 				motif['event_info'].menu_boxcursor_alpharange[1],
@@ -605,7 +637,7 @@ function f_events()
 			})
 			rect_boxcursor:draw()
 		end
-		--draw scroll arrows
+	--draw scroll arrows
 		if #t > motif['event_info'].menu_window_visibleitems then
 			if item > cursorPosY then
 				animUpdate(motif['event_info'].menu_arrow_up_data)
@@ -616,25 +648,23 @@ function f_events()
 				animDraw(motif['event_info'].menu_arrow_down_data)
 			end
 		end
-		--draw credits text
+	--draw credits text
 		if motif.attract_mode.enabled == 1 and main.credits ~= -1 then
 			txt_attract_credits:update({text = main.f_extractText(motif.attract_mode.credits_text, main.credits)[1]})
 			txt_attract_credits:draw()
 		end
-		--draw layerno = 1 backgrounds
-		bgDraw(motif['eventbgdef'].bg, trueBool)
-		--draw footer overlay
+	--draw footer overlay
 		if motif['event_info'].footer_overlay_window ~= nil then
 			overlay_footer:draw()
 		end
-		--draw other text only if there is event data stored in select.def
+	--draw other text only if there is event data stored in select.def
 		if t[item].itemname ~= 'back' then
 			txt_titleEvent:update({text = motif.event_info.title_text})
 			local eventNo = t[item].itemname
 			local cdText = ""
-			--Set text data
+		--Set text data
 			if t[item].info ~= "" and main.t_unlockLua.modes[t[item].itemname] == nil then cdText = t[item].info else cdText = "???" end
-			--draw description text
+		--draw description text
 			infoTextEnd = main.f_textRender(
 				txt_infoEvent,
 				cdText,
@@ -654,7 +684,7 @@ function f_events()
 				)
 			)
 			if not infoTextEnd then infoTextCnt = infoTextCnt + 1 end
-			--draw hiscore text
+		--draw hiscore text
 			txt_hiscoreEvent:draw()
 			if stats.modes ~= nil and stats.modes[eventNo] ~= nil then
 				if stats.modes[eventNo].score ~= nil then --If there is hiscore data detected
@@ -668,15 +698,17 @@ function f_events()
 		else
 			txt_titleEvent:update({text = "NO EVENT DATA"})
 		end
-		--draw fadein / fadeout
-		main.f_fadeAnim(main.fadeGroup)
+	--draw layerno = 1 backgrounds
+		bgDraw(motif['eventbgdef'].bg, trueBool)
+	--draw fadein / fadeout
+		main.f_fadeAnim(motif.event_info)
 --;---------------------------------------------------------------------------------------------------------------------
 		cursorPosY, moveTxt, item = main.f_menuCommonCalc(t, item, cursorPosY, moveTxt, 'event_info', {'$U'}, {'$D'})
-		--Cursor Move
+	--Cursor Move
 		if commandGetState(main.t_cmd[main.playerInput], '$U') or commandGetState(main.t_cmd[main.playerInput], '$D') then
 			f_resetEventInfoTxt()
 		end
-		--Close Screen
+	--Close Screen
 		if main.close and not main.fadeActive then
 			main.f_bgReset(motif[main.background].bg)
 			main.f_fadeReset('fadein', motif[main.group])
@@ -688,16 +720,16 @@ function f_events()
 			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
 			main.close = false
 			break
-		--Back Button
+	--Back Button
 		elseif esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'})) then
 			sndPlay(motif.files.snd_data, motif.event_info.cancel_snd[1], motif.event_info.cancel_snd[2])
 			main.f_fadeReset('fadeout', motif.event_info)
 			main.close = true
-		--Accept Button
+	--Accept Button
 		elseif main.f_input(main.t_players, {'pal', 's'}) then
 			if main.t_unlockLua.modes[t[item].itemname] == nil then --If the event is unlocked
 				sndPlay(motif.files.snd_data, motif[main.group].cursor_done_snd[1], motif[main.group].cursor_done_snd[2])
-				--START EVENT
+			--START EVENT
 				main.txt_mainSelect:update({text = motif.select_info.title_events_text}) --Character Select Title
 				main.f_playerInput(main.playerInput, 1)
 				main.continueScreen = true
@@ -707,7 +739,7 @@ function f_events()
 				main.teamMenu[1].tag = t[item].tag
 				main.teamMenu[1].turns = t[item].turns
 				main.teamMenu[1].ratio = t[item].ratio
-				--[[
+			--[[
 				main.lifebar.p1score = true
 				main.hiscoreScreen = false
 				main.rankingCondition = true
@@ -715,7 +747,7 @@ function f_events()
 				start.t_sortRanking.event1 = start.t_sortRanking.survival
 				start.t_clearCondition.event1 = function() return winnerteam() == 1 end
 				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
-				]]
+			--]]
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				hook.run("main.t_itemname")
 				main.luaPath = t[item].path
@@ -723,6 +755,7 @@ function f_events()
 					motif.music.select_bgm = motif.music.event_bgm
 					motif.music.title_bgm = motif.music.event_bgm
 				end
+				main.f_fadeReset('fadeout', motif.event_info)
 				start.f_selectMode()
 				if winnerteam() == 1 then --Save Score Data only if you complete event
 					if score() > stats.modes[t[item].itemname].score then --Update Hiscore only if is greater than the previous one
@@ -744,16 +777,12 @@ function f_events()
 						main.f_playBGM(false, motif.music.event_bgm, motif.music.event_bgm_loop, motif.music.event_bgm_volume, motif.music.event_bgm_loopstart, motif.music.event_bgm_loopend)
 					end
 				end
+				main.f_fadeAnim(motif.select_info) --fadein / fadeout
 			end
 		end
 		main.f_cmdInput()
 		main.f_refresh()
 	end
-end
-
-function saveEventData()
-	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
-	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
 end
 
 if nightlyVer then --To configure argument for bgDraw function
