@@ -4,6 +4,10 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 
 Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2024-08-14 Nightly Build**.
 
+##  _Gallery Mode (New)_
+A Custom Gallery Mode entry for the Main Menu➤https://www.youtube.com/watch?v=DD5PvthonTU
+[![Alt text](https://i.ytimg.com/vi/DD5PvthonTU/maxresdefault.jpg)](https://www.youtube.com/watch?v=DD5PvthonTU)
+
 ##  _Events Mode (New)_
 A "Portal" to any custom game mode➤https://www.youtube.com/watch?v=1FcPYB-RuoI
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
