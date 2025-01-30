@@ -50,7 +50,7 @@ preview.art.hiddencolumns = 0
 preview.art.rows = 3
 preview.art.hiddenrows = 1
 
-preview.art.offset = 600,520
+preview.art.offset = 1015,968
 preview.art.spacing = 950,218
 preview.art.scale = 0.0558, 0.0558
 preview.art.window = 0,22, 320,184
@@ -115,13 +115,21 @@ menu.pos = 0,0
 cursor.move.snd = 100,0
 cursor.done.snd = 100,2
 
-art.offset = 140,0
+art.offset = 159,120
 art.size = 894,894
 art.scale = 0.27, 0.27
 art.movespeed = 10
-art.movelimit = -700,-768, 1024,768
+art.movelimit = -320,-300, 420,640
 art.zoomspeed = 0.01
 art.zoomlimit = 0.21, 0.85
+
+zoomin.key = "y"
+zoomout.key = "x"
+next.key = "w"
+previous.key = "d"
+reset.key = "a"
+hide.key = "s"
+back.key = "b"
 
 info.offset = 5,230
 info.font = 2,0,1
@@ -201,7 +209,7 @@ preview.art.hiddencolumns = 0
 preview.art.rows = 3
 preview.art.hiddenrows = 2
 
-preview.art.offset = 515,463
+preview.art.offset = 950,910
 preview.art.spacing = 1000,280
 preview.art.scale = 0.167, 0.167
 preview.art.window = 0,40, 1280,600
@@ -266,13 +274,21 @@ menu.pos = 0,0
 cursor.move.snd = 100,0
 cursor.done.snd = 100,2
 
-art.offset = 400,0
+art.offset = 640,360
 art.size = 894,894
 art.scale = 0.727, 0.727
 art.movespeed = 14
-art.movelimit = -700,-768, 2400,1100
+art.movelimit = -700,-768, 1800,1100
 art.zoomspeed = 0.01
 art.zoomlimit = 0.5, 1.99
+
+zoomin.key = "y"
+zoomout.key = "x"
+next.key = "w"
+previous.key = "d"
+reset.key = "a"
+hide.key = "s"
+back.key = "b"
 
 info.offset = 10,690
 info.font = 2,0,1

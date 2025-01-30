@@ -1,6 +1,6 @@
 --[[					GALLERY MODULE
 ===================================================================
-Version: 1.0
+Version: 1.1
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-01-02 Nightly Build
 Description:
@@ -154,6 +154,14 @@ local t_base2 = {
 	art_movelimit = {0, 0, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
 	art_zoomspeed = 0.01,
 	art_zoomlimit = {0.05, 1.99},
+	
+	zoomin_key = 'y',
+	zoomout_key = 'x',
+	next_key = 'w',
+	previous_key = 'd',
+	reset_key = 'a',
+	hide_key = 's',
+	back_key = 'b',
 	
 	info_offset = {5, 230},
 	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
@@ -423,8 +431,10 @@ local function f_drawArtworkPreview(group, index, x, y, scaleX, scaleY, x1, y1, 
 	local scaleX = scaleX or 1
 	local scaleY = scaleY or 1
 	local anim = group .. ',' .. index .. ',' .. x .. ',' .. y .. ',' .. '-1'
+	--local anim = group .. ',' .. index .. ', 0,0, -1'
 	anim = animNew(motif.files.gallery_data, anim)
 	animSetScale(anim, scaleX, scaleY)
+	--animSetPos(anim, x, y)
 	animSetWindow(anim, x1, y1, x2, y2)
 	animUpdate(anim)
 	animDraw(anim)
@@ -754,9 +764,10 @@ local function f_previousArt(limit)
 end
 
 local function f_drawArtwork()
-local artPic = t_gallery[galleryCursor].spr[1] ..','.. t_gallery[galleryCursor].spr[2] ..','.. artPosX ..','.. artPosY ..','.. '-1'
+local artPic = t_gallery[galleryCursor].spr[1] ..','.. t_gallery[galleryCursor].spr[2] ..', 0,0, -1'
 artPic = animNew(motif.files.gallery_data, artPic)
 animSetScale(artPic, artScaleX, artScaleY)
+animSetPos(artPic, artPosX, artPosY)
 animUpdate(artPic)
 animDraw(artPic)
 end
@@ -842,12 +853,12 @@ function f_artMenu(artLimit)
 			main.close = false
 			break
 	--Back to Gallery Menu
-		elseif esc() or main.f_input(main.t_players, {'m'}) or commandGetState(main.t_cmd[main.playerInput], 'b') then
+		elseif esc() or main.f_input(main.t_players, {'m'}) or commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.back_key) then
 			sndPlay(motif.files.snd_data, motif.artviewer_info.cursor_done_snd[1], motif.artviewer_info.cursor_done_snd[2])
 			main.f_fadeReset('fadeout', motif.artviewer_info)
 			main.close = true
 	--NEXT ART PAGE
-		elseif (commandGetState(main.t_cmd[main.playerInput], 'w') or (commandGetState(main.t_cmd[main.playerInput], 'holdnext') and bufc >= 30)) and not main.fadeActive then
+		elseif (commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.next_key) or (commandGetState(main.t_cmd[main.playerInput], 'holdnext') and bufc >= 30)) and not main.fadeActive then
 			sndPlay(motif.files.snd_data, motif.artviewer_info.cursor_move_snd[1], motif.artviewer_info.cursor_move_snd[2])
 			f_nextArt(maxArt)
 		--If current item is not unlocked
@@ -856,7 +867,7 @@ function f_artMenu(artLimit)
 			end
 			f_resetArtPos()
 	--PREVIOUS ART PAGE
-		elseif (commandGetState(main.t_cmd[main.playerInput], 'd') or (commandGetState(main.t_cmd[main.playerInput], 'holdprevious') and bufb >= 30)) and not main.fadeActive then
+		elseif (commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.previous_key) or (commandGetState(main.t_cmd[main.playerInput], 'holdprevious') and bufb >= 30)) and not main.fadeActive then
 			sndPlay(motif.files.snd_data, motif.artviewer_info.cursor_move_snd[1], motif.artviewer_info.cursor_move_snd[2])
 			f_previousArt(maxArt)
 		--If current item is not unlocked
@@ -865,10 +876,10 @@ function f_artMenu(artLimit)
 			end
 			f_resetArtPos()
 	--RESET ART POSITION
-		elseif commandGetState(main.t_cmd[main.playerInput], 'a') and not main.fadeActive then
+		elseif commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.reset_key) and not main.fadeActive then
 			f_resetArtPos()
 	--HIDE MENU
-		elseif commandGetState(main.t_cmd[main.playerInput], 's') and not main.fadeActive then
+		elseif commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.hide_key) and not main.fadeActive then
 			if not hideMenu then hideMenu = true else hideMenu = false end
 		end
 	--MOVE UP ART
@@ -894,13 +905,13 @@ function f_artMenu(artLimit)
 			end
 		end
 	--ZOOM IN ART
-		if (commandGetState(main.t_cmd[main.playerInput], 'y') or (commandGetState(main.t_cmd[main.playerInput], 'holdy') and bufy >= 10)) and not main.fadeActive then
+		if (commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.zoomin_key) or (commandGetState(main.t_cmd[main.playerInput], 'holdy') and bufy >= 10)) and not main.fadeActive then
 			if artScaleX < t_gallery[galleryCursor].zoomlimit[2] and artScaleY < t_gallery[galleryCursor].zoomlimit[2] then
 				artScaleX = artScaleX + motif.artviewer_info.art_zoomspeed
 				artScaleY = artScaleY + motif.artviewer_info.art_zoomspeed
 			end
 	--ZOOM OUT ART
-		elseif (commandGetState(main.t_cmd[main.playerInput], 'x') or (commandGetState(main.t_cmd[main.playerInput], 'holdx') and bufx >= 10)) and not main.fadeActive then
+		elseif (commandGetState(main.t_cmd[main.playerInput], motif.artviewer_info.zoomout_key) or (commandGetState(main.t_cmd[main.playerInput], 'holdx') and bufx >= 10)) and not main.fadeActive then
 			if artScaleX > t_gallery[galleryCursor].zoomlimit[1] and artScaleY > t_gallery[galleryCursor].zoomlimit[1] then
 				artScaleX = artScaleX - motif.artviewer_info.art_zoomspeed
 				artScaleY = artScaleY - motif.artviewer_info.art_zoomspeed
@@ -961,10 +972,10 @@ main.f_commandAdd("holdd", "/D", 1, 1)
 main.f_commandAdd("holdr", "/F", 1, 1)
 main.f_commandAdd("holdl", "/B", 1, 1)
 
-main.f_commandAdd("holdprevious", "/d", 1, 1)
-main.f_commandAdd("holdnext", "/w", 1, 1)
-main.f_commandAdd("holdx", "/x", 1, 1)
-main.f_commandAdd("holdy", "/y", 1, 1)
+main.f_commandAdd("holdprevious", "/"..motif.artviewer_info.previous_key, 1, 1)
+main.f_commandAdd("holdnext", "/"..motif.artviewer_info.next_key, 1, 1)
+main.f_commandAdd("holdx", "/"..motif.artviewer_info.zoomout_key, 1, 1)
+main.f_commandAdd("holdy", "/"..motif.artviewer_info.zoomin_key, 1, 1)
 
 --Setup argument for bgDraw functions
 if nightlyVer then

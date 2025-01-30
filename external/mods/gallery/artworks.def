@@ -62,36 +62,31 @@
 id = Art 1
 spr = 1,1
 size = 600, 800
-pos = 190,0
 scale = 0.3, 0.3
 zoomlimit = 0.20, 1.20
-movelimit = -500,-700, 1500,1000
 info = Unofficial Artwork 1 of Kung Fu Man By act52
-previewpos = 630,455
+previewpos = 890,855
 previewspacing = 1000,185
 previewscale = 0.063, 0.063
 
 id = Art 2
 spr = 1,2
 size = 779, 1800
-pos = 590,0
+pos = 159,135
 scale = 0.15, 0.15
 zoomlimit = 0.10, 0.65
-movelimit = -590,-1500, 2500,2000
 info = Unofficial Artwork of Suave Dude By Koorogi
-previewpos = 1500,1030
+previewpos = 1900,1930
 previewspacing = 3000,420
 previewscale = 0.028, 0.028
 
 id = Art 3
 spr = 1,3
 size = 827, 1210
-pos = 365,0
 scale = 0.20, 0.20
 zoomlimit = 0.15, 0.60
-movelimit = -700,-1200, 1500,1000
 info = Mugen Satoru Louisa Riyu: The Kung Fu Girl By GrapplerGray1985
-previewpos = 965,695
+previewpos = 1335,1300
 previewspacing = 1650,284
 previewscale = 0.0415, 0.0415
 
@@ -110,12 +105,10 @@ info = Unofficial Artwork of Kung Fu Man By GrapplerGray1985
 id = Art 7
 spr = 1,7
 size = 352, 640
-pos = 225,0
 scale = 0.38, 0.38
 zoomlimit = 0.30, 0.80
-movelimit = -200,-600, 1000,600
 info = Unofficial Artwork 2 of Kung Fu Man By act52
-previewpos = 560,360
+previewpos = 725,680
 previewspacing = 940,145
 previewscale = 0.079, 0.079
 unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfmz ~= nil and stats.modes.arcade.clearcount.kfmz > 0
@@ -123,12 +116,11 @@ unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade
 id = Art 8
 spr = 1,8
 size = 600, 800
-pos = 190,0
 scale = 0.30, 0.30
 zoomlimit = 0.26,1.30
-movelimit = -500,-600, 900,600
+movelimit = -320,-480, 470,600
 info = Unofficial Artwork of Kung Fu Man By Esaka
-previewpos = 600,455
+previewpos = 890,855
 previewspacing = 1000,184
 previewscale = 0.063, 0.063
 unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil and stats.modes.arcade.clearcount.kfm720 > 0
