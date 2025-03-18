@@ -89,7 +89,7 @@ It currently lock the character when returning from character select and re-ente
 
 ; - lifebartimer (optional)
 ;   If it Evalues to boolean "true" Timer will be displayed in Lifebar.
-	Note: It will only be displayed if launchFight() round time is different than -1.
+;   Note: It will only be displayed if launchFight() round time is different than -1.
 ;   Default: false.
 
 ; - lifebarscorep1 (optional)
