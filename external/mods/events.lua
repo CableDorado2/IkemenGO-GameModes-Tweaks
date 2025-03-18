@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ===================================================================
-Version: 1.02
+Version: 1.1
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
 Description:
@@ -23,57 +23,94 @@ It currently lock the character when returning from character select and re-ente
 
 ;Declaring events consists of setting up following parameters:
 
-; - id
+; - id (required)
 ;   Set to name that should be returned by GameMode trigger.
 ;   This parameter also initiates new events declaration, so it has to be
 ;   assigned before any other parameter used by the same event. All events should
 ;   have unique id names.
 
-; - name
+; - name (required)
 ;   Set to name that should be displayed for item in Events Mode submenu.
 
-; - description
+; - description (optional)
 ;   Set to description that should be displayed for item in Events Mode submenu.
 
-; - characterselect
-;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
-;   Default: false.
-
-; - singlemode
-;   If it Evalues to boolean "true" Single Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
-
-; - simulmode
-;   If it Evalues to boolean "true" Simul Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
-
-; - tagmode
-;   If it Evalues to boolean "true" Tag Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
-
-; - turnsmode
-;   If it Evalues to boolean "true" Turns Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
-
-; - ratiomode
-;   If it Evalues to boolean "true" Ratio Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
-
-; - path
+; - path (required)
 ;   Path to file with lua extension (relative to game directory)
 ;   containing event mode custom fight coded in Lua language.
 ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
 
-; - unlock
+; - unlock (optional)
 ;   Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
 ;   If it evaluates to boolean 'true' the event will be selectable from
 ;   events mode submenu, or hidden on 'false'. Default: true.
 ;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
+
+; - characterselect (optional)
+;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
+;   Default: false.
+
+; - singlemode (optional)
+;   If it Evalues to boolean "true" Single Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - simulmode (optional)
+;   If it Evalues to boolean "true" Simul Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - tagmode (optional)
+;   If it Evalues to boolean "true" Tag Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - turnsmode (optional)
+;   If it Evalues to boolean "true" Turns Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - ratiomode (optional)
+;   If it Evalues to boolean "true" Ratio Team mode will be selectable
+;   when Character Select is Enabled for Event Selected.
+;   Default: false.
+
+; - lifebar (optional)
+;   If it Evalues to boolean "false" Lifebar will be disabled for the Match.
+;   Default: true.
+
+; - lifebarwincntp1 (optional)
+;   If it Evalues to boolean "true" Win Count for p1 side will be displayed in Lifebar.
+;   Default: false.
+
+; - lifebarwincntp2 (optional)
+;   If it Evalues to boolean "true" Win Count for p2 side will be displayed in Lifebar.
+;   Default: false.
+
+; - lifebartimer (optional)
+;   If it Evalues to boolean "true" Timer will be displayed in Lifebar.
+	Note: It will only be displayed if launchFight() round time is different than -1.
+;   Default: false.
+
+; - lifebarscorep1 (optional)
+;   If it Evalues to boolean "true" Score for p1 side will be displayed in Lifebar.
+;   Default: false.
+
+; - lifebarscorep2 (optional)
+;   If it Evalues to boolean "true" Score for p2 side will be displayed in Lifebar.
+;   Default: false.
+
+; - lifebarmatchno (optional)
+;   If it Evalues to boolean "true" Match Number will be displayed in Lifebar.
+;   Default: false.
+
+; - lifebarailevelp1 (optional)
+;   If it Evalues to boolean "true" AI Level for p1 side will be displayed in Lifebar.
+;   Default: false.
+
+; - lifebarailevelp2 (optional)
+;   If it Evalues to boolean "true" AI Level for p2 side will be displayed in Lifebar.
+;   Default: false.
 
 ;Examples:
  
@@ -86,14 +123,25 @@ path = data/events/event1.lua
 id = event2
 name = All-Star Match 1
 description = Event 2 Description
+path = data/events/event2.lua
+unlock = stats.modes.event1.score > 0
+
 characterselect = true
 singlemode = true
 simulmode = true
 tagmode = true
 turnsmode = true
 ratiomode = true
-path = data/events/event2.lua
-unlock = stats.modes.event1.score > 0
+
+lifebar = true
+lifebarmatchno = true
+lifebartimer = false
+lifebarscorep1 = true
+lifebarscorep2 = false
+lifebarailevelp1 = false
+lifebarailevelp2 = true
+lifebarwincntp1 = false
+lifebarwincntp2 = false
 
 ]]
 
@@ -373,7 +421,33 @@ local function f_loadEvents()
 			local param, value = line:match('^%s*(.-)%s*=%s*(.-)%s*$')
 			if param ~= nil and value ~= nil and param ~= '' and value ~= '' then
 				if param:match('^id$') then --Generate Table to manage each event
-					table.insert(t_selEventMode, {id = value, name = '', description = '', path = '', unlock = 'true', characterselect = false, singlemode = false, simulmode = false, tagmode = false, turnsmode = false, ratiomode = false})
+					table.insert(t_selEventMode,
+					--Default Values for each Event Added
+						{
+							id = value,
+							name = '',
+							description = '',
+							path = '',
+							unlock = 'true',
+						--character select vars
+							characterselect = false,
+							singlemode = false,
+							simulmode = false,
+							tagmode = false,
+							turnsmode = false,
+							ratiomode = false,
+						--match lifebars vars
+							lifebar = true,
+							lifebarmatchno = false,
+							lifebartimer = false,
+							lifebarwincntp1 = false,
+							lifebarwincntp2 = false,
+							lifebarscorep1 = false,
+							lifebarscorep2 = false,
+							lifebarailevelp1 = false,
+							lifebarailevelp2 = false
+						}
+					)
 				elseif t_selEventMode[#t_selEventMode][param] ~= nil then
 					t_selEventMode[#t_selEventMode][param] = value
 				end
@@ -381,13 +455,24 @@ local function f_loadEvents()
 		end
 	end
 	for i=1, #t_selEventMode do --Convert String stored to Boolean
-		local target = "true"
-		if t_selEventMode[i].characterselect == target then t_selEventMode[i].characterselect = true end
-		if t_selEventMode[i].singlemode == target then t_selEventMode[i].singlemode = true end
-		if t_selEventMode[i].simulmode == target then t_selEventMode[i].simulmode = true end
-		if t_selEventMode[i].tagmode == target then t_selEventMode[i].tagmode = true end
-		if t_selEventMode[i].turnsmode == target then t_selEventMode[i].turnsmode = true end
-		if t_selEventMode[i].ratiomode == target then t_selEventMode[i].ratiomode = true end
+		local settrue = "true"
+		local setfalse = "false"
+		if t_selEventMode[i].characterselect == settrue then t_selEventMode[i].characterselect = true end
+		if t_selEventMode[i].singlemode == settrue then t_selEventMode[i].singlemode = true end
+		if t_selEventMode[i].simulmode == settrue then t_selEventMode[i].simulmode = true end
+		if t_selEventMode[i].tagmode == settrue then t_selEventMode[i].tagmode = true end
+		if t_selEventMode[i].turnsmode == settrue then t_selEventMode[i].turnsmode = true end
+		if t_selEventMode[i].ratiomode == settrue then t_selEventMode[i].ratiomode = true end
+		
+		if t_selEventMode[i].lifebar == setfalse then t_selEventMode[i].lifebar = false end
+		if t_selEventMode[i].lifebarmatchno == settrue then t_selEventMode[i].lifebarmatchno = true end
+		if t_selEventMode[i].lifebartimer == settrue then t_selEventMode[i].lifebartimer = true end
+		if t_selEventMode[i].lifebarwincntp1 == settrue then t_selEventMode[i].lifebarwincntp1 = true end
+		if t_selEventMode[i].lifebarwincntp2 == settrue then t_selEventMode[i].lifebarwincntp2 = true end
+		if t_selEventMode[i].lifebarscorep1 == settrue then t_selEventMode[i].lifebarscorep1 = true end
+		if t_selEventMode[i].lifebarscorep2 == settrue then t_selEventMode[i].lifebarscorep2 = true end
+		if t_selEventMode[i].lifebarailevelp1 == settrue then t_selEventMode[i].lifebarailevelp1 = true end
+		if t_selEventMode[i].lifebarailevelp2 == settrue then t_selEventMode[i].lifebarailevelp2 = true end
 	end
 	for k, v in ipairs(t_selEventMode) do --Set Events Unlock Condition
 		main.t_unlockLua.modes[v.id] = v.unlock
@@ -421,7 +506,31 @@ function f_events()
 	f_resetEventInfoTxt()
 	f_loadEvents() --Load select.def events data
 	for k, v in ipairs(t_selEventMode) do
-		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = v.id, displayname = v.name, info = v.description, path = v.path, unlock = v.unlock, charsel = v.characterselect, single = v.singlemode, simul = v.simulmode, tag = v.tagmode, turns = v.turnsmode, ratio = v.ratiomode})
+		table.insert(t, {data = text:create({window = t_menuWindowEvent}),
+				itemname = v.id,
+				displayname = v.name,
+				info = v.description,
+				path = v.path,
+				unlock = v.unlock,
+				
+				charsel = v.characterselect,
+				single = v.singlemode,
+				simul = v.simulmode,
+				tag = v.tagmode,
+				turns = v.turnsmode,
+				ratio = v.ratiomode,
+				
+				lfbar = v.lifebar,
+				lfbarmatchno = v.lifebarmatchno,
+				lfbartimer = v.lifebartimer,
+				lfbarwinp1 = v.lifebarwincntp1,
+				lfbarwinp2 = v.lifebarwincntp2,
+				lfbarscorep1 = v.lifebarscorep1,
+				lfbarscorep2 = v.lifebarscorep2,
+				lfbaraip1 = v.lifebarailevelp1,
+				lfbaraip2 = v.lifebarailevelp2
+			}
+		)
 	end
 	if #t_selEventMode == 0 then --If there is not event data
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
@@ -732,15 +841,23 @@ function f_events()
 			--START EVENT
 				main.txt_mainSelect:update({text = motif.select_info.title_events_text}) --Character Select Title
 				main.f_playerInput(main.playerInput, 1)
-				main.continueScreen = true
 				main.selectMenu[1] = t[item].charsel --Enable or Disable Character Select for Event Selected
 				main.teamMenu[1].single = t[item].single
 				main.teamMenu[1].simul = t[item].simul
 				main.teamMenu[1].tag = t[item].tag
 				main.teamMenu[1].turns = t[item].turns
 				main.teamMenu[1].ratio = t[item].ratio
+			--which lifebar elements should be rendered				
+				main.lifebar.bars = t[item].lfbar --main.lifebar.active = t[item].lfbar
+				main.lifebar.match = t[item].lfbarmatchno
+				main.lifebar.timer = t[item].lfbartimer
+				main.lifebar.p1score = t[item].lfbarscorep1
+				main.lifebar.p2score = t[item].lfbarscorep2
+				main.lifebar.p1aiLevel = t[item].lfbaraip1
+				main.lifebar.p2aiLevel = t[item].lfbaraip2
+				main.lifebar.p1winCount = t[item].lfbarwinp1
+				main.lifebar.p2winCount = t[item].lfbarwinp2
 			--[[
-				main.lifebar.p1score = true
 				main.hiscoreScreen = false
 				main.rankingCondition = true
 				main.resultsTable = motif.bonus_rush_results_screen
@@ -748,6 +865,7 @@ function f_events()
 				start.t_clearCondition.event1 = function() return winnerteam() == 1 end
 				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
 			--]]
+				main.continueScreen = true
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				hook.run("main.t_itemname")
 				main.luaPath = t[item].path
