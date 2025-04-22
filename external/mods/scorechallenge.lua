@@ -271,7 +271,7 @@ start.t_clearCondition.netplayscorechallengecoop = function() return winnerteam(
 -- factors. It's used by start.f_resultInit function, depending on game mode.
 local txt_resultScoreChallenge = main.f_createTextImg(motif.score_challenge_results_screen, 'winstext')
 start.t_resultData.scorechallenge = function()
-	if winnerteam() ~= 1 or motif.score_challenge_results_screen.enabled == 0 then
+	if winnerteam() ~= 1 or motif.score_challenge_results_screen.enabled == 0 or scoretotal() <= start.f_lowestRankingData('score') then
 		return false
 	end
 	player(1)

@@ -292,7 +292,7 @@ start.t_clearCondition.netplaytimechallengecoop = function() return winnerteam()
 -- factors. It's used by start.f_resultInit function, depending on game mode.
 local txt_resultTimeChallenge = main.f_createTextImg(motif.time_challenge_results_screen, 'winstext')
 start.t_resultData.timechallenge = function()
-	if winnerteam() ~= 1 or motif.time_challenge_results_screen.enabled == 0 then
+	if winnerteam() ~= 1 or motif.time_challenge_results_screen.enabled == 0 or matchtime() / 60 >= start.f_lowestRankingData('time') then
 		return false
 	end
 	start.t_result.resultText = main.f_extractText(start.f_clearTimeText(main.resultsTable[start.t_result.prefix .. '_text'], timetotal() / 60))
