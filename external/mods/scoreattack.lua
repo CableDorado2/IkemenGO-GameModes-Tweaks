@@ -337,7 +337,7 @@ start.t_clearCondition.netplayscoreattackcoop = function() return winnerteam() =
 local txt_resultScoreAttack = main.f_createTextImg(motif.score_attack_results_screen, 'winstext')
 
 start.t_resultData.scoreattack = function()
-	if winnerteam() ~= 1 or matchno() < #start.t_roster or motif.score_attack_results_screen.enabled == 0 then
+	if winnerteam() ~= 1 or matchno() < #start.t_roster or motif.score_attack_results_screen.enabled == 0 or scoretotal() <= start.f_lowestRankingData('score') then
 		return false
 	end
 	start.t_result.resultText = main.f_extractText(main.resultsTable[start.t_result.prefix .. '_text'], scoretotal())
