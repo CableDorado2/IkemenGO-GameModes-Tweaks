@@ -1,13 +1,13 @@
 --[[					GALLERY MODULE
 ===================================================================
-Version: 1.1
+Version: 1.11
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-01-02 Nightly Build
 Description:
 Adds a Custom Gallery Mode entry to the Main Menu.
 ===================================================================
 ]]
-nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
+local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 --;===========================================================================================
 --; 							      MOTIF STUFF
 --;===========================================================================================
@@ -62,39 +62,39 @@ local t_base = {
 	preview_art_columns = 3,
 	preview_art_rows = 3,
 	preview_art_hiddencolumns = 0,
-	preview_art_hiddenrows = 0,
+	preview_art_hiddenrows = 1,
 	
-	preview_art_offset = {50, 50},
-	preview_art_spacing = {6, 6},
-	preview_art_scale = {1.0, 1.0},
-	preview_art_window = {0, 0, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
+	preview_art_offset = {1015, 968},
+	preview_art_spacing = {950, 218},
+	preview_art_scale = {0.0558, 0.0558},
+	preview_art_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
 	
 	preview_bg_anim = -1,
-	preview_bg_spr = {},
+	preview_bg_spr = {0, 0},
 	preview_bg_offset = {5, 13},
 	preview_bg_spacing = {6, 6},
 	preview_bg_facing = 1,
 	preview_bg_scale = {1.0, 1.0},
 	preview_bg_size = {96, 56},
-	preview_bg_window = {0, 0, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
+	preview_bg_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
 
 	preview_cursor_anim = -1,
-	preview_cursor_spr = {},
+	preview_cursor_spr = {0, 2},
 	preview_cursor_offset = {5, 13},
 	preview_cursor_spacing = {6, 6},
 	preview_cursor_facing = 1,
 	preview_cursor_scale = {1.0, 1.0},
 	preview_cursor_size = {96, 56},
-	preview_cursor_window = {0, 0, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
+	preview_cursor_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
 	
 	preview_unknown_anim = -1,
-	preview_unknown_spr = {},
+	preview_unknown_spr = {0, 1},
 	preview_unknown_offset = {6.9, 14.9},
 	preview_unknown_spacing = {12, 12},
 	preview_unknown_facing = 1,
 	preview_unknown_size = {90, 50},
 	preview_unknown_scale = {1.0, 1.0},
-	preview_unknown_window = {0, 0, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
+	preview_unknown_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
 }
 if motif.gallery_info == nil then
 	motif.gallery_info = {}
@@ -147,13 +147,13 @@ local t_base2 = {
 	cursor_move_snd = {100, 0},
 	cursor_done_snd = {100, 2},
 	
-	art_offset = {190, 0},
-	art_size = {120, 140},
-	art_scale = {0.3, 0.3},
+	art_offset = {159, 120},
+	art_size = {894, 894},
+	art_scale = {0.27, 0.27},
 	art_movespeed = 10,
-	art_movelimit = {0, 0, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
+	art_movelimit = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
 	art_zoomspeed = 0.01,
-	art_zoomlimit = {0.05, 1.99},
+	art_zoomlimit = {0.21, 0.85},
 	
 	zoomin_key = 'y',
 	zoomout_key = 'x',
@@ -174,16 +174,16 @@ local t_base2 = {
 	page_text = 'PAGE ',
 	
 	menu_arrow_left_anim = -1,
-	menu_arrow_left_spr = {},
-	menu_arrow_left_offset = {0, 0},
+	menu_arrow_left_spr = {402, 0},
+	menu_arrow_left_offset = {10, 120},
 	menu_arrow_left_facing = -1,
-	menu_arrow_left_scale = {1.0, 1.0},
+	menu_arrow_left_scale = {0.5, 0.5},
 	
 	menu_arrow_right_anim = -1,
-	menu_arrow_right_spr = {},
-	menu_arrow_right_offset = {0, 0},
+	menu_arrow_right_spr = {402, 0},
+	menu_arrow_right_offset = {310, 120},
 	menu_arrow_right_facing = 1,
-	menu_arrow_right_scale = {1.0, 1.0},
+	menu_arrow_right_scale = {0.5, 0.5},
 }
 if motif.artviewer_info == nil then
 	motif.artviewer_info = {}
@@ -229,6 +229,15 @@ end
 
 --disabled scaling if element uses default values (non-existing in mugen)
 motif.defaultgallery = motif.gallery_info.menu_uselocalcoord == 0
+
+--Setup argument for bgDraw functions
+if nightlyVer then
+	trueBool = 1
+	falseBool = 0
+else
+	trueBool = true
+	falseBool = false
+end
 
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 local t_debugTxT = {
@@ -965,7 +974,6 @@ function f_artMenu(artLimit)
 		main.f_refresh()
 	end
 end
-
 --Adds new commands for menu control
 main.f_commandAdd("holdu", "/U", 1, 1)
 main.f_commandAdd("holdd", "/D", 1, 1)
@@ -976,12 +984,3 @@ main.f_commandAdd("holdprevious", "/"..motif.artviewer_info.previous_key, 1, 1)
 main.f_commandAdd("holdnext", "/"..motif.artviewer_info.next_key, 1, 1)
 main.f_commandAdd("holdx", "/"..motif.artviewer_info.zoomout_key, 1, 1)
 main.f_commandAdd("holdy", "/"..motif.artviewer_info.zoomin_key, 1, 1)
-
---Setup argument for bgDraw functions
-if nightlyVer then
-	trueBool = 1
-	falseBool = 0
-else
-	trueBool = true
-	falseBool = false
-end
