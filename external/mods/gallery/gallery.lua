@@ -1,10 +1,9 @@
 --[[					GALLERY MODULE
 ===================================================================
-Version: 1.11
+Version: 1.12
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-01-02 Nightly Build
-Description:
-Adds a Custom Gallery Mode entry to the Main Menu.
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
+Description: Adds a Custom Gallery Mode entry to the Main Menu.
 ===================================================================
 ]]
 local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
@@ -28,8 +27,10 @@ if motif.music.gallery_bgm_loopend == nil then
 	motif.music.gallery_bgm_loopend = 0
 end
 
---[Gallery Info] default parameters (used for rendering gallery select screen assets)
+--[Gallery Info] default parameters (used for rendering gallery screen assets)
 local t_base = {
+	reload_enabled = 0,
+	
 	fadein_time = 20,
 	fadein_col = {0, 0, 0},
 	fadein_anim = -1,
@@ -239,7 +240,6 @@ else
 	falseBool = false
 end
 
-if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 local t_debugTxT = {
 debugcursor_offset = {10, 15},
 debugcursor_font = {'jg.fnt', 0, 1, 255, 255, 255, -1},
@@ -291,11 +291,18 @@ local txt_debugZoom = main.f_createTextImg(t_debugTxT, 'debugzoom', {defsc = mot
 local txt_debugPosX = main.f_createTextImg(t_debugTxT, 'debugxpos', {defsc = motif.defaultgallery})
 local txt_debugPosY = main.f_createTextImg(t_debugTxT, 'debugypos', {defsc = motif.defaultgallery})
 --;===========================================================================================
---; GALLERY MENU
+--; 								 GALLERY LOGIC
 --;===========================================================================================
 local txt_titleMenu = main.f_createTextImg(motif.gallery_info, 'title', {defsc = motif.defaultgallery})
 local txt_previewInfo = main.f_createTextImg(motif.gallery_info, 'info', {defsc = motif.defaultgallery})
 local txt_noData = "NO SPRITE DATA FOUND."
+
+local txt_pageInfo = main.f_createTextImg(motif.artviewer_info, 'page', {defsc = motif.defaultgallery})
+local txt_artInfo = main.f_createTextImg(motif.artviewer_info, 'info', {defsc = motif.defaultgallery})
+local artPosX = nil
+local artPosY = nil
+local artScaleX = nil
+local artScaleY = nil
 
 local function f_loadGallery() --Load def file which contains artworks data
 	t_gallery = {}
@@ -358,7 +365,7 @@ local function f_loadGallery() --Load def file which contains artworks data
 		motif.files.gallery_data = sffNew()
 	end
 end
-f_loadGallery()
+f_loadGallery() --Load gallery data (artworks.def & artworks.sff files) when engine starts
 
 local function f_saveData()
 	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
@@ -493,257 +500,6 @@ local function f_setCursorPos() --Used to calculate gallery cursor pos in galler
 	galleryCursor = (galleryCursorX+(motif.gallery_info.preview_art_columns+hiddenColumns)*galleryCursorY) + 1
 end
 
-main.t_itemname.gallery = function()
-	return f_galleryMenu()
-end
-
-function f_galleryMenu()
-	f_loadGallery() --Load each time that gallery is initialized
-	if #t_gallery == 0 then --If there is not gallery data
-		return
-	else --If there is gallery data
-		f_unlockGallery(false) --Check Gallery Unlocks
-		if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
-	end
-	main.f_bgReset(motif.gallerybgdef.bg)
-	main.f_fadeReset('fadein', motif.gallery_info)
-	main.close = false
-	sndPlay(motif.files.snd_data, motif.gallery_info.cursor_done_snd[1], motif.gallery_info.cursor_done_snd[2])
-	if motif.music.gallery_bgm ~= '' then
-		main.f_playBGM(false, motif.music.gallery_bgm, motif.music.gallery_bgm_loop, motif.music.gallery_bgm_volume, motif.music.gallery_bgm_loopstart, motif.music.gallery_bgm_loopend)
-	end
-	local bufu = 0
-	local bufd = 0
-	local bufr = 0
-	local bufl = 0
-	galleryCursorX = 0
-	galleryCursorY = 0
-	hiddenColumns = motif.gallery_info.preview_art_hiddencolumns
-	hiddenRows = motif.gallery_info.preview_art_hiddenrows
-	galleryMoveX = 0
-	galleryMoveY = 0
-	f_setCursorPos()
-	local slotMax = (motif.gallery_info.preview_art_columns + motif.gallery_info.preview_art_hiddencolumns)*(motif.gallery_info.preview_art_rows + motif.gallery_info.preview_art_hiddenrows)
-	local artMax = nil
-	if slotMax > #t_gallery then
-		artMax = #t_gallery --Set artworks loaded in t_gallery as slotMax amount to prevent issues
-	else
-		artMax = slotMax
-	end
-	local textData = nil
-	while true do
-	--Clear Color
-		if not skipClear then
-			clearColor(motif.gallerybgdef.bgclearcolor[1], motif.gallerybgdef.bgclearcolor[2], motif.gallerybgdef.bgclearcolor[3])
-		end
-	--Layerno = 0 backgrounds
-		bgDraw(motif.gallerybgdef.bg, falseBool)
-	--Draw Title Text
-		txt_titleMenu:draw()
-		txt_titleMenu:update({
-			x = motif.gallery_info.menu_pos[1] + motif.gallery_info.title_offset[1],
-			y = motif.gallery_info.menu_pos[2] + motif.gallery_info.title_offset[2]
-		})
-	--Draw Gallery Content
-		f_drawGallery(t_gallery, motif.gallery_info.preview_art_columns+hiddenColumns, motif.gallery_info.preview_art_rows+hiddenRows)
-	--Draw Gallery Cursor
-		main.f_animPosDraw(
-			motif.gallery_info.preview_cursor_data,
-			motif.gallery_info.menu_pos[1] + motif.gallery_info.preview_cursor_offset[1] + (galleryCursorX-galleryMoveX) * (motif.gallery_info.preview_cursor_size[1] + motif.gallery_info.preview_cursor_spacing[1]),
-			motif.gallery_info.menu_pos[2] + motif.gallery_info.preview_cursor_offset[2] + (galleryCursorY-galleryMoveY) * (motif.gallery_info.preview_cursor_size[2] + motif.gallery_info.preview_cursor_spacing[2]),
-			motif.gallery_info.preview_cursor_facing,
-			false
-		)
-		animSetWindow(motif.gallery_info.preview_cursor_data, motif.gallery_info.preview_cursor_window[1], motif.gallery_info.preview_cursor_window[2], motif.gallery_info.preview_cursor_window[3], motif.gallery_info.preview_cursor_window[4])
-	--Condition to Show Unlocked Text
-		if t_gallery[galleryCursor].spr[1] and t_gallery[galleryCursor].spr[2] ~= nil then
-			if main.t_unlockLua.gallery[t_gallery[galleryCursor].id] == nil then textData = t_gallery[galleryCursor].info else textData = motif.gallery_info.info_unknown_text end
-		else
-			textData = txt_noData
-		end
-	--Draw Artwork Info
-		txt_previewInfo:draw()
-		txt_previewInfo:update({
-			text = textData,
-			x = motif.gallery_info.menu_pos[1] + motif.gallery_info.info_offset[1],
-			y = motif.gallery_info.menu_pos[2] + motif.gallery_info.info_offset[2]
-		})
-	--[[Attract Credits/Coins
-		if motif.attract_mode.enabled == 1 and main.credits ~= -1 then
-			txt_attract_credits:update({text = main.f_extractText(motif.attract_mode.credits_text, main.credits)[1]})
-			txt_attract_credits:draw()
-		end
-	]]
-	--Layerno = 1 backgrounds
-		bgDraw(motif.gallerybgdef.bg, trueBool)
-	--Fadein/Fadeout
-		main.f_fadeAnim(motif.gallery_info)
-	--DEBUG STUFF
-	--[[
-		txt_debugCursor:draw()
-		txt_debugCursorX:draw()
-		txt_debugCursorY:draw()
-		txt_debugGalleryMoveX:draw()
-		txt_debugGalleryMoveY:draw()
-		txt_debugCursor:update({text = "ITEM: "..galleryCursor})
-		txt_debugCursorX:update({text = "CURSOR X: "..galleryCursorX})
-		txt_debugCursorY:update({text = "CURSOR Y: "..galleryCursorY})
-		txt_debugGalleryMoveX:update({text = "MOVE X: "..galleryMoveX})
-		txt_debugGalleryMoveY:update({text = "MOVE Y: "..galleryMoveY})
-	--]]
-	--Close Menu
-		if main.close and not main.fadeActive then
-			main.f_bgReset(motif.gallerybgdef.bg)
-			main.f_fadeReset('fadein', motif.gallery_info)
-			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
-			main.close = false
-			break
-	--Back To Main Menu
-		elseif esc() or main.f_input(main.t_players, {'m'}) then
-			sndPlay(motif.files.snd_data, motif.gallery_info.cancel_snd[1], motif.gallery_info.cancel_snd[2])
-			main.f_fadeReset('fadeout', motif.gallery_info)
-			main.close = true
-	--Start Artwork Viewer
-		elseif main.f_input(main.t_players, {'pal', 's'}) and not main.fadeActive then
-			--If the artwork is unlocked
-			if main.t_unlockLua.gallery[t_gallery[galleryCursor].id] == nil then
-				sndPlay(motif.files.snd_data, motif.gallery_info.cursor_done_snd[1], motif.gallery_info.cursor_done_snd[2])
-				main.f_fadeReset('fadeout', motif.gallery_info)
-				f_artMenu(artMax)
-				
-				f_setCursorPos() --Replace with a logic that calculates the new position of the cursor after having moved in artwork viewer...
-				
-				main.f_fadeAnim(motif.artviewer_info) --fadein / fadeout
-			end
-	--SCROLL LEFT (Cursor X - Previous Column)
-		elseif (commandGetState(main.t_cmd[main.playerInput], '$B') or (commandGetState(main.t_cmd[main.playerInput], 'holdl') and bufl >= 30)) and not main.fadeActive then
-			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
-			if galleryCursorX > 0 then
-				galleryCursorX = galleryCursorX - 1
-			--Hidden Columns Logic
-				if galleryMoveX > 0 then
-					galleryMoveX = galleryMoveX - 1
-				end
-			else --Wrap
-				galleryCursorX = motif.gallery_info.preview_art_columns-1 + hiddenColumns
-				--if hiddenColumns > 0 then
-					galleryMoveX = hiddenColumns
-				--end
-			end
-			f_setCursorPos() --Set New Cursor Pos
-		--Prevent fall out of t_gallery items
-			if galleryCursor > artMax then
-				while t_gallery[galleryCursor] == nil do
-					galleryCursorX = galleryCursorX - 1
-					if galleryMoveX > 0 then
-						galleryMoveX = galleryMoveX - 1
-					end
-					f_setCursorPos()
-				end
-			end
-	--SCROLL RIGHT (Cursor X - Next Column)
-		elseif (commandGetState(main.t_cmd[main.playerInput], '$F') or (commandGetState(main.t_cmd[main.playerInput], 'holdr') and bufr >= 30)) and not main.fadeActive then
-			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
-			if galleryCursorX < motif.gallery_info.preview_art_columns-1 + hiddenColumns then
-				galleryCursorX = galleryCursorX + 1
-			--Hidden Columns Logic
-				if galleryCursorX > motif.gallery_info.preview_art_columns-1 then
-					galleryMoveX = galleryMoveX + 1
-				end
-			else --Wrap
-				galleryCursorX = 0
-				galleryMoveX = 0
-			end
-			f_setCursorPos() --Set New Cursor Pos
-		--Prevent fall out of t_gallery items
-			if galleryCursor > artMax then
-				galleryCursorX = 0
-				galleryMoveX = 0
-				f_setCursorPos()
-			end
-	--SCROLL UP (Cursor Y - Previous Row)
-		elseif (commandGetState(main.t_cmd[main.playerInput], '$U') or (commandGetState(main.t_cmd[main.playerInput], 'holdu') and bufu >= 30)) and not main.fadeActive then
-			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
-			if galleryCursorY > 0 then
-				galleryCursorY = galleryCursorY - 1
-			--Hidden Rows Logic
-				if galleryMoveY > 0 then
-					galleryMoveY = galleryMoveY - 1
-				end
-			else --Wrap
-				galleryCursorY = motif.gallery_info.preview_art_rows-1 + hiddenRows
-				--if hiddenRows > 0 then
-					galleryMoveY = hiddenRows
-				--end
-			end
-			f_setCursorPos() --Set New Cursor Pos
-		--Prevent fall out of t_gallery items
-			if galleryCursor > artMax then
-				while t_gallery[galleryCursor] == nil do
-					galleryCursorY = galleryCursorY - 1
-					if galleryMoveY > 0 then
-						galleryMoveY = galleryMoveY - 1
-					end
-					f_setCursorPos()
-				end
-			end
-	--SCROLL DOWN (Cursor Y - Next Row)
-		elseif (commandGetState(main.t_cmd[main.playerInput], '$D') or (commandGetState(main.t_cmd[main.playerInput], 'holdd') and bufd >= 30)) and not main.fadeActive then
-			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
-			if galleryCursorY < motif.gallery_info.preview_art_rows-1 + hiddenRows then
-				galleryCursorY = galleryCursorY + 1
-			--Hidden Rows Logic
-				if galleryCursorY > motif.gallery_info.preview_art_rows-1 then
-					galleryMoveY = galleryMoveY + 1
-				end
-			else --Wrap
-				galleryCursorY = 0
-				galleryMoveY = 0
-			end
-			f_setCursorPos() --Set New Cursor Pos
-		--Prevent fall out of t_gallery items
-			if galleryCursor > artMax then
-				galleryCursorY = 0
-				galleryMoveY = 0
-				f_setCursorPos()
-			end
-		end
-	--VERTICAL BUF KEY CONTROL
-		if commandGetState(main.t_cmd[main.playerInput], 'holdu') then
-			bufd = 0
-			bufu = bufu + 1
-		elseif commandGetState(main.t_cmd[main.playerInput], 'holdd') then
-			bufu = 0
-			bufd = bufd + 1
-		else
-			bufu = 0
-			bufd = 0			
-		end
-	--HORIZONTAL BUF KEY CONTROL
-		if commandGetState(main.t_cmd[main.playerInput], 'holdr') then
-			bufl = 0
-			bufr = bufr + 1
-		elseif commandGetState(main.t_cmd[main.playerInput], 'holdl') then
-			bufr = 0
-			bufl = bufl + 1
-		else
-			bufr = 0
-			bufl = 0
-		end
-		main.f_cmdInput()
-		main.f_refresh()
-	end
-end
---;===========================================================================================
---; ARTWORK VIEWER MENU
---;===========================================================================================
-local txt_pageInfo = main.f_createTextImg(motif.artviewer_info, 'page', {defsc = motif.defaultgallery})
-local txt_artInfo = main.f_createTextImg(motif.artviewer_info, 'info', {defsc = motif.defaultgallery})
-local artPosX = nil
-local artPosY = nil
-local artScaleX = nil
-local artScaleY = nil
-
 local function f_getNewCursorPos() --Get new gallery cursor position when exit from artwork viewer (Unfinished)
 	galleryCursorX = (galleryCursor - 1) - motif.gallery_info.preview_art_columns*galleryCursorY
 	galleryCursorY = (galleryCursor - 1 - galleryCursorX) / motif.gallery_info.preview_art_columns
@@ -781,7 +537,7 @@ animUpdate(artPic)
 animDraw(artPic)
 end
 
-function f_artMenu(artLimit)
+local function f_artMenu(artLimit)
 	main.f_bgReset(motif.artviewerbgdef.bg)
 	main.f_fadeReset('fadein', motif.artviewer_info)
 	main.close = false
@@ -974,6 +730,243 @@ function f_artMenu(artLimit)
 		main.f_refresh()
 	end
 end
+
+local function f_galleryMenu()
+	if motif.gallery_info.reload_enabled == 1 then f_loadGallery() end --Reload gallery data (artworks.def & artworks.sff files) each time that gallery menu is initialized
+	if #t_gallery == 0 then --If there is not gallery data
+		return
+	else --If there is gallery data
+		f_unlockGallery(false) --Check Gallery Unlocks
+		if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
+	end
+	main.f_bgReset(motif.gallerybgdef.bg)
+	main.f_fadeReset('fadein', motif.gallery_info)
+	main.close = false
+	sndPlay(motif.files.snd_data, motif.gallery_info.cursor_done_snd[1], motif.gallery_info.cursor_done_snd[2])
+	if motif.music.gallery_bgm ~= '' then
+		main.f_playBGM(false, motif.music.gallery_bgm, motif.music.gallery_bgm_loop, motif.music.gallery_bgm_volume, motif.music.gallery_bgm_loopstart, motif.music.gallery_bgm_loopend)
+	end
+	local bufu = 0
+	local bufd = 0
+	local bufr = 0
+	local bufl = 0
+	galleryCursorX = 0
+	galleryCursorY = 0
+	hiddenColumns = motif.gallery_info.preview_art_hiddencolumns
+	hiddenRows = motif.gallery_info.preview_art_hiddenrows
+	galleryMoveX = 0
+	galleryMoveY = 0
+	f_setCursorPos()
+	local slotMax = (motif.gallery_info.preview_art_columns + motif.gallery_info.preview_art_hiddencolumns)*(motif.gallery_info.preview_art_rows + motif.gallery_info.preview_art_hiddenrows)
+	local artMax = nil
+	if slotMax > #t_gallery then
+		artMax = #t_gallery --Set artworks loaded in t_gallery as slotMax amount to prevent issues
+	else
+		artMax = slotMax
+	end
+	local textData = nil
+	while true do
+	--Clear Color
+		if not skipClear then
+			clearColor(motif.gallerybgdef.bgclearcolor[1], motif.gallerybgdef.bgclearcolor[2], motif.gallerybgdef.bgclearcolor[3])
+		end
+	--Layerno = 0 backgrounds
+		bgDraw(motif.gallerybgdef.bg, falseBool)
+	--Draw Title Text
+		txt_titleMenu:draw()
+		txt_titleMenu:update({
+			x = motif.gallery_info.menu_pos[1] + motif.gallery_info.title_offset[1],
+			y = motif.gallery_info.menu_pos[2] + motif.gallery_info.title_offset[2]
+		})
+	--Draw Gallery Content
+		f_drawGallery(t_gallery, motif.gallery_info.preview_art_columns+hiddenColumns, motif.gallery_info.preview_art_rows+hiddenRows)
+	--Draw Gallery Cursor
+		main.f_animPosDraw(
+			motif.gallery_info.preview_cursor_data,
+			motif.gallery_info.menu_pos[1] + motif.gallery_info.preview_cursor_offset[1] + (galleryCursorX-galleryMoveX) * (motif.gallery_info.preview_cursor_size[1] + motif.gallery_info.preview_cursor_spacing[1]),
+			motif.gallery_info.menu_pos[2] + motif.gallery_info.preview_cursor_offset[2] + (galleryCursorY-galleryMoveY) * (motif.gallery_info.preview_cursor_size[2] + motif.gallery_info.preview_cursor_spacing[2]),
+			motif.gallery_info.preview_cursor_facing,
+			false
+		)
+		animSetWindow(motif.gallery_info.preview_cursor_data, motif.gallery_info.preview_cursor_window[1], motif.gallery_info.preview_cursor_window[2], motif.gallery_info.preview_cursor_window[3], motif.gallery_info.preview_cursor_window[4])
+	--Condition to Show Unlocked Text
+		if t_gallery[galleryCursor].spr[1] and t_gallery[galleryCursor].spr[2] ~= nil then
+			if main.t_unlockLua.gallery[t_gallery[galleryCursor].id] == nil then textData = t_gallery[galleryCursor].info else textData = motif.gallery_info.info_unknown_text end
+		else
+			textData = txt_noData
+		end
+	--Draw Artwork Info
+		txt_previewInfo:draw()
+		txt_previewInfo:update({
+			text = textData,
+			x = motif.gallery_info.menu_pos[1] + motif.gallery_info.info_offset[1],
+			y = motif.gallery_info.menu_pos[2] + motif.gallery_info.info_offset[2]
+		})
+	--Attract Credits/Coins
+		if motif.attract_mode.enabled == 1 and main.credits ~= -1 then
+			txt_attract_credits:update({text = main.f_extractText(motif.attract_mode.credits_text, main.credits)[1]})
+			txt_attract_credits:draw()
+		end
+	--Layerno = 1 backgrounds
+		bgDraw(motif.gallerybgdef.bg, trueBool)
+	--Fadein/Fadeout
+		main.f_fadeAnim(motif.gallery_info)
+	--DEBUG STUFF
+	--[[
+		txt_debugCursor:draw()
+		txt_debugCursorX:draw()
+		txt_debugCursorY:draw()
+		txt_debugGalleryMoveX:draw()
+		txt_debugGalleryMoveY:draw()
+		txt_debugCursor:update({text = "ITEM: "..galleryCursor})
+		txt_debugCursorX:update({text = "CURSOR X: "..galleryCursorX})
+		txt_debugCursorY:update({text = "CURSOR Y: "..galleryCursorY})
+		txt_debugGalleryMoveX:update({text = "MOVE X: "..galleryMoveX})
+		txt_debugGalleryMoveY:update({text = "MOVE Y: "..galleryMoveY})
+	--]]
+	--Close Menu
+		if main.close and not main.fadeActive then
+			main.f_bgReset(motif.gallerybgdef.bg)
+			main.f_fadeReset('fadein', motif.gallery_info)
+			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
+			main.close = false
+			break
+	--Back To Main Menu
+		elseif esc() or main.f_input(main.t_players, {'m'}) then
+			sndPlay(motif.files.snd_data, motif.gallery_info.cancel_snd[1], motif.gallery_info.cancel_snd[2])
+			main.f_fadeReset('fadeout', motif.gallery_info)
+			main.close = true
+	--Start Artwork Viewer
+		elseif main.f_input(main.t_players, {'pal', 's'}) and not main.fadeActive then
+			--If the artwork is unlocked
+			if main.t_unlockLua.gallery[t_gallery[galleryCursor].id] == nil then
+				sndPlay(motif.files.snd_data, motif.gallery_info.cursor_done_snd[1], motif.gallery_info.cursor_done_snd[2])
+				main.f_fadeReset('fadeout', motif.gallery_info)
+				f_artMenu(artMax)
+				
+				f_setCursorPos() --Replace with a logic that calculates the new position of the cursor after having moved in artwork viewer...
+				
+				main.f_fadeAnim(motif.artviewer_info) --fadein / fadeout
+			end
+	--SCROLL LEFT (Cursor X - Previous Column)
+		elseif (commandGetState(main.t_cmd[main.playerInput], '$B') or (commandGetState(main.t_cmd[main.playerInput], 'holdl') and bufl >= 30)) and not main.fadeActive then
+			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
+			if galleryCursorX > 0 then
+				galleryCursorX = galleryCursorX - 1
+			--Hidden Columns Logic
+				if galleryMoveX > 0 then
+					galleryMoveX = galleryMoveX - 1
+				end
+			else --Wrap
+				galleryCursorX = motif.gallery_info.preview_art_columns-1 + hiddenColumns
+				--if hiddenColumns > 0 then
+					galleryMoveX = hiddenColumns
+				--end
+			end
+			f_setCursorPos() --Set New Cursor Pos
+		--Prevent fall out of t_gallery items
+			if galleryCursor > artMax then
+				while t_gallery[galleryCursor] == nil do
+					galleryCursorX = galleryCursorX - 1
+					if galleryMoveX > 0 then
+						galleryMoveX = galleryMoveX - 1
+					end
+					f_setCursorPos()
+				end
+			end
+	--SCROLL RIGHT (Cursor X - Next Column)
+		elseif (commandGetState(main.t_cmd[main.playerInput], '$F') or (commandGetState(main.t_cmd[main.playerInput], 'holdr') and bufr >= 30)) and not main.fadeActive then
+			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
+			if galleryCursorX < motif.gallery_info.preview_art_columns-1 + hiddenColumns then
+				galleryCursorX = galleryCursorX + 1
+			--Hidden Columns Logic
+				if galleryCursorX > motif.gallery_info.preview_art_columns-1 then
+					galleryMoveX = galleryMoveX + 1
+				end
+			else --Wrap
+				galleryCursorX = 0
+				galleryMoveX = 0
+			end
+			f_setCursorPos() --Set New Cursor Pos
+		--Prevent fall out of t_gallery items
+			if galleryCursor > artMax then
+				galleryCursorX = 0
+				galleryMoveX = 0
+				f_setCursorPos()
+			end
+	--SCROLL UP (Cursor Y - Previous Row)
+		elseif (commandGetState(main.t_cmd[main.playerInput], '$U') or (commandGetState(main.t_cmd[main.playerInput], 'holdu') and bufu >= 30)) and not main.fadeActive then
+			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
+			if galleryCursorY > 0 then
+				galleryCursorY = galleryCursorY - 1
+			--Hidden Rows Logic
+				if galleryMoveY > 0 then
+					galleryMoveY = galleryMoveY - 1
+				end
+			else --Wrap
+				galleryCursorY = motif.gallery_info.preview_art_rows-1 + hiddenRows
+				--if hiddenRows > 0 then
+					galleryMoveY = hiddenRows
+				--end
+			end
+			f_setCursorPos() --Set New Cursor Pos
+		--Prevent fall out of t_gallery items
+			if galleryCursor > artMax then
+				while t_gallery[galleryCursor] == nil do
+					galleryCursorY = galleryCursorY - 1
+					if galleryMoveY > 0 then
+						galleryMoveY = galleryMoveY - 1
+					end
+					f_setCursorPos()
+				end
+			end
+	--SCROLL DOWN (Cursor Y - Next Row)
+		elseif (commandGetState(main.t_cmd[main.playerInput], '$D') or (commandGetState(main.t_cmd[main.playerInput], 'holdd') and bufd >= 30)) and not main.fadeActive then
+			sndPlay(motif.files.snd_data, motif.gallery_info.cursor_move_snd[1], motif.gallery_info.cursor_move_snd[2])
+			if galleryCursorY < motif.gallery_info.preview_art_rows-1 + hiddenRows then
+				galleryCursorY = galleryCursorY + 1
+			--Hidden Rows Logic
+				if galleryCursorY > motif.gallery_info.preview_art_rows-1 then
+					galleryMoveY = galleryMoveY + 1
+				end
+			else --Wrap
+				galleryCursorY = 0
+				galleryMoveY = 0
+			end
+			f_setCursorPos() --Set New Cursor Pos
+		--Prevent fall out of t_gallery items
+			if galleryCursor > artMax then
+				galleryCursorY = 0
+				galleryMoveY = 0
+				f_setCursorPos()
+			end
+		end
+	--VERTICAL BUF KEY CONTROL
+		if commandGetState(main.t_cmd[main.playerInput], 'holdu') then
+			bufd = 0
+			bufu = bufu + 1
+		elseif commandGetState(main.t_cmd[main.playerInput], 'holdd') then
+			bufu = 0
+			bufd = bufd + 1
+		else
+			bufu = 0
+			bufd = 0			
+		end
+	--HORIZONTAL BUF KEY CONTROL
+		if commandGetState(main.t_cmd[main.playerInput], 'holdr') then
+			bufl = 0
+			bufr = bufr + 1
+		elseif commandGetState(main.t_cmd[main.playerInput], 'holdl') then
+			bufr = 0
+			bufl = bufl + 1
+		else
+			bufr = 0
+			bufl = 0
+		end
+		main.f_cmdInput()
+		main.f_refresh()
+	end
+end
 --Adds new commands for menu control
 main.f_commandAdd("holdu", "/U", 1, 1)
 main.f_commandAdd("holdd", "/D", 1, 1)
@@ -984,3 +977,8 @@ main.f_commandAdd("holdprevious", "/"..motif.artviewer_info.previous_key, 1, 1)
 main.f_commandAdd("holdnext", "/"..motif.artviewer_info.next_key, 1, 1)
 main.f_commandAdd("holdx", "/"..motif.artviewer_info.zoomout_key, 1, 1)
 main.f_commandAdd("holdy", "/"..motif.artviewer_info.zoomin_key, 1, 1)
+
+if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
+main.t_itemname.gallery = function()
+	return f_galleryMenu()
+end

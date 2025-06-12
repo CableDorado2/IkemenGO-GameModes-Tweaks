@@ -16,7 +16,9 @@ menu.itemname.gallery = "GALLERY" ;Ikemen feature
 ;------------------------------------------------------------------------------------------------------------------
 ;FOR SCREENPACKS BASED IN DEFAULT WINMUGEN MOTIF (localcoord = 320,240):
 ;------------------------------------------------------------------------------------------------------------------
-[Gallery Info] ;Gallery select screen definition
+[Gallery Info] ;Gallery screen definition
+reload.enabled = 0 ;Set to 1 to enable gallery data reload (artworks.def & artworks.sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
+
 fadein.time = 20
 fadein.col = 0,0,0
 ;fadein.anim = -1
@@ -82,7 +84,7 @@ preview.unknown.size = 90,50
 preview.unknown.scale = 1, 1
 preview.unknown.window = 0,22, 320,184
 ;-------------------------------------------------------------------------------
-[GalleryBGdef] ;Gallery select screen background
+[GalleryBGdef] ;Gallery screen background
 spr = ""
 bgclearcolor = 0,0,0
 
@@ -175,7 +177,9 @@ trans = add1
 ;------------------------------------------------------------------------------------------------------------------
 ;FOR SCREENPACKS BASED IN MUGEN1 MOTIF (localcoord = 1280,720):
 ;------------------------------------------------------------------------------------------------------------------
-[Gallery Info] ;Gallery select screen definition
+[Gallery Info] ;Gallery screen definition
+reload.enabled = 0 ;Set to 1 to enable gallery data reload (artworks.def & artworks.sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
+
 fadein.time = 20
 fadein.col = 0,0,0
 ;fadein.anim = -1
@@ -241,7 +245,7 @@ preview.unknown.size = 90,50
 preview.unknown.scale = 3, 3
 preview.unknown.window = 0,40, 1280,600
 ;-------------------------------------------------------------------------------
-[GalleryBGdef] ;Gallery select screen background
+[GalleryBGdef] ;Gallery screen background
 spr = ""
 bgclearcolor = 0,0,0
 
