@@ -2,7 +2,9 @@
 
 External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves and adds Game Modes.
 
-Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2024-08-14 Nightly Build**.
+> [!NOTE]
+> Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2024-08-14 Nightly Build**.
+> Operation on other versions is not guaranteed.
 
 ##  _Gallery Mode (New)_
 A Custom Gallery Mode entry for the Main Menu➤https://www.youtube.com/watch?v=DD5PvthonTU
@@ -28,5 +30,5 @@ https://github.com/user-attachments/assets/60dc5431-4a9a-434b-9eea-327b6c9b38a8
 https://github.com/user-attachments/assets/4b814aba-2a4a-4538-b5fd-2902a2a7d863
 
 ##  _Installation:_
-- Extract archive content into "**./external/mods**" directory
-- Edit select.def or system.def depending of module installed
+- Extract archive content into "**./external/mods**" directory.
+- Edit select.def or system.def depending of module installed.
