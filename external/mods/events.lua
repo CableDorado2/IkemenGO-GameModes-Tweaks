@@ -3,8 +3,7 @@
 Version: 1.2
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
-Description:
-Adds a Custom Game Mode entry (Events) to the Main Menu.
+Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 ===================================================================
 ]]
 local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
@@ -480,10 +479,8 @@ else
 	trueBool = true
 	falseBool = false
 end
-
-if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 --===================================================================================
---									MENU LOGIC
+--								 EVENTS MENU LOGIC
 --===================================================================================
 local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
 local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defsc = motif.defaultEvent})
@@ -987,6 +984,7 @@ local function f_events()
 	end
 end
 
+if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when you enter in main menu item
 end
