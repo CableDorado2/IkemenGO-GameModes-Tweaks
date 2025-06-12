@@ -1,21 +1,14 @@
 --[[	   				  EVENTS MODULE
 ===================================================================
-Version: 1.1
+Version: 1.2
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
 Description:
 Adds a Custom Game Mode entry (Events) to the Main Menu.
 ===================================================================
 ]]
-nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
-
---[[
-TODO: Make it so when a character uses the parameter:
-charname, unlock = gamemode() ~= "id of some event declared"
-locks the character when character select is enabled.
-It currently lock the character when returning from character select and re-entering...
-]]
-
+local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
+--TODO: Fix High Score.
 --[[Example SELECT.DEF parameters assignments
 ;-------------------------------------------------------------------------------
 ;Events Mode custom fights declaration. Assigned events are selectable via Events Mode
@@ -117,14 +110,14 @@ It currently lock the character when returning from character select and re-ente
 [EventsMode]
 id = event1
 name = Trouble Dude
-description = Event 1 Description
+description = Event 1 Description...
 path = data/events/event1.lua
 
 id = event2
 name = All-Star Match 1
-description = Event 2 Description
+description = Event 2 Description...
 path = data/events/event2.lua
-unlock = stats.modes.event1.score > 0
+unlock = stats.modes ~= nil and stats.modes.event1 ~= nil and stats.modes.event1.score > 0
 
 characterselect = true
 singlemode = true
@@ -142,7 +135,6 @@ lifebarailevelp1 = false
 lifebarailevelp2 = true
 lifebarwincntp1 = false
 lifebarwincntp2 = false
-
 ]]
 
 --[[Example SYSTEM.DEF parameters assignments
@@ -156,15 +148,19 @@ event.bgm.loopstart = 0
 event.bgm.loopend = 0
 
 [Title Info]
-;Event Mode
-menu.itemname.events = "EVENTS"
+;Events Mode
+menu.itemname.events = "EVENTS" ;Ikemen Feature
 
 [Select Info]
 ;Text rendered using title element
 title.events.text = "Event Match"
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------------------------------------------
+;FOR SCREENPACKS BASED IN DEFAULT WINMUGEN MOTIF (localcoord = 320,240):
+;------------------------------------------------------------------------------------------------------------------
 [Event Info] ;Events select screen definition
+reload.enabled = 0 ;Set to 1 to enable select.def events data reload, each time that events menu is initialized (for debug purposes), 0 to disable.
+
 fadein.time = 20
 fadein.col = 0,0,0
 ;fadein.anim = -1
@@ -188,7 +184,7 @@ title.text = "EVENT SELECT"
 
 hiscore.offset = 80,180
 hiscore.font = 3,5,1
-hiscore.text = "HIGH SCORE: "
+hiscore.text = "HIGH SCORE:"
 hiscore.scale = 1.0, 1.0
 
 info.offset = 40,200
@@ -202,18 +198,19 @@ info.delay = 2
 menu.item.offset = 0,0
 menu.item.font = 2,0,1
 menu.item.scale = 1.0, 1.0
+menu.item.spacing = 0,14
+
 menu.item.active.offset = 0,0
 menu.item.active.font = 2,0,1
 menu.item.active.scale = 1.0, 1.0
-menu.item.spacing = 0,14
 
 ;menu.window.margins.y = 0,0
 menu.window.visibleitems = 10
 
 menu.boxcursor.visible = 1
-menu.boxcursor.coords = -5, -10, 154, 3
-menu.boxcursor.col = 255, 255, 255
-menu.boxcursor.alpharange = 10, 40, 2, 255, 255, 0
+menu.boxcursor.coords = -5,-10, 154,3
+menu.boxcursor.col = 255,255,255
+menu.boxcursor.alpharange = 10,40,2, 255,255,0
 
 menu.boxbg.visible = 1
 menu.boxbg.col = 0,0,0
@@ -243,8 +240,87 @@ start = 0,0
 tile = 1,1
 velocity = -1, -1
 
-]]
+;------------------------------------------------------------------------------------------------------------------
+;FOR SCREENPACKS BASED IN MUGEN1 MOTIF (localcoord = 1280,720):
+;------------------------------------------------------------------------------------------------------------------
+[Event Info] ;Events select screen definition
+reload.enabled = 0 ;Set to 1 to enable select.def events data reload, each time that events menu is initialized (for debug purposes), 0 to disable.
 
+fadein.time = 20
+fadein.col = 0,0,0
+
+fadeout.time = 20
+fadeout.col = 0,0,0
+
+cursor.move.snd = 100,0
+cursor.done.snd = 100,1
+cancel.snd = 100,2
+
+title.offset = 640,38
+title.font = 4,0,0
+title.scale = 1.0, 1.0
+title.text = "EVENT SELECT"
+
+hiscore.offset = 400,530
+hiscore.font = 2,0,1
+hiscore.text = "HIGH SCORE:"
+hiscore.scale = 1.5, 1.5
+
+info.offset = 350,580
+info.spacing = 0,2
+info.font = 5,0,1
+info.window = 38,521, 1041,708
+info.textwrap = w
+info.delay = 0
+
+menu.uselocalcoord = 1
+menu.pos = 414,99
+menu.title.uppercase = 1
+
+menu.item.offset = 0,0
+menu.item.font = 7,0,1
+menu.item.scale = 1.0, 1.0
+menu.item.spacing = 0,42
+
+menu.item.active.offset = 0,0
+menu.item.active.font = 7,0,1
+menu.item.active.scale = 1.0, 1.0
+
+;menu.window.margins.y = 0,0
+menu.window.visibleitems = 10
+
+menu.boxcursor.visible = 1
+menu.boxcursor.coords = -15,-30, 462,11
+menu.boxcursor.col = 255,255,255
+menu.boxcursor.alpharange = 10,40,2, 255,255,0
+
+menu.boxbg.visible = 1
+menu.boxbg.col = 0,0,0
+menu.boxbg.alpha = 0,128
+
+;menu.arrow.up.anim = -1
+menu.arrow.up.spr = 400,0
+menu.arrow.up.offset = 470,-30
+menu.arrow.up.facing = 1
+
+;menu.arrow.down.anim = -1
+menu.arrow.down.spr = 401,0
+menu.arrow.down.offset = 470,372
+menu.arrow.down.facing = 1
+
+;-------------------------------------------------------------------------------
+[EventBGdef] ;Event select screen background
+spr = ""
+bgclearcolor = 0,0,0
+
+[EventBG 1]
+type  = normal
+spriteno = 100,0
+start = 0,0
+tile  = 1,1
+velocity = -1, -1
+
+]]
 --===================================================================================
 --								  MOTIF STUFF
 --===================================================================================
@@ -271,11 +347,13 @@ end
 
 --[Event Info] default parameters (used for rendering event select screen assets)
 local t_base = {
-	fadein_time = 10,
+	reload_enabled = 0,
+	
+	fadein_time = 20,
 	fadein_col = {0, 0, 0},
 	fadein_anim = -1,
 	
-	fadeout_time = 10,
+	fadeout_time = 20,
 	fadeout_col = {0, 0, 0},
 	fadeout_anim = -1,
 	
@@ -291,7 +369,7 @@ local t_base = {
 	hiscore_offset = {80, 180},
 	hiscore_font = {'jg.fnt', 5, 1, 255, 255, 255, -1},
 	hiscore_scale = {1.0, 1.0},
-	hiscore_text = 'HIGH SCORE: ',
+	hiscore_text = 'HIGH SCORE:',
 	
 	info_offset = {40, 200},
 	info_spacing = {0, 0},
@@ -301,8 +379,10 @@ local t_base = {
 	info_textwrap = 'w',
 	info_window = {0, 171, main.SP_Localcoord[1]-50, main.SP_Localcoord[2]},
 	
-	menu_uselocalcoord = 0,
+	menu_uselocalcoord = 1,
 	menu_pos = {85, 33},
+	menu_title_uppercase = 1,	
+	menu_itemname_back = 'Back',
 	
 	--menu_bg_<itemname>_anim = -1,
 	--menu_bg_<itemname>_spr = {},
@@ -318,13 +398,11 @@ local t_base = {
 	menu_item_offset = {0, 0},
 	menu_item_font = {'f-6x9.def', 0, 1, 191, 191, 191, -1},
 	menu_item_scale = {1.0, 1.0},
+	menu_item_spacing = {0, 14},
+	
 	menu_item_active_offset = {0, 0},
 	menu_item_active_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
 	menu_item_active_scale = {1.0, 1.0},
-	menu_item_spacing = {0, 14},
-	
-	menu_title_uppercase = 1,	
-	menu_itemname_back = 'Back',
 	
 	menu_window_margins_y = {0, 0},
 	menu_window_visibleitems = 10,
@@ -339,16 +417,16 @@ local t_base = {
 	menu_boxbg_alpha = {0, 128},
 	
 	menu_arrow_up_anim = -1,
-	menu_arrow_up_spr = {},
-	menu_arrow_up_offset = {0, 0},
+	menu_arrow_up_spr = {400, 0},
+	menu_arrow_up_offset = {157, -10},
 	menu_arrow_up_facing = 1,
-	menu_arrow_up_scale = {1.0, 1.0},
+	menu_arrow_up_scale = {0.5, 0.5},
 	
 	menu_arrow_down_anim = -1,
-	menu_arrow_down_spr = {},
-	menu_arrow_down_offset = {0, 0},
+	menu_arrow_down_spr = {401, 0},
+	menu_arrow_down_offset = {157, 124},
 	menu_arrow_down_facing = 1,
-	menu_arrow_down_scale = {1.0, 1.0},	
+	menu_arrow_down_scale = {0.5, 0.5},
 }
 if motif.event_info == nil then
 	motif.event_info = {}
@@ -395,6 +473,14 @@ end
 --disabled scaling if element uses default values (non-existing in mugen)
 motif.defaultEvent = motif.event_info.menu_uselocalcoord == 0
 
+if nightlyVer then --Setup argument for bgDraw function
+	trueBool = 1
+	falseBool = 0
+else
+	trueBool = true
+	falseBool = false
+end
+
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 --===================================================================================
 --									MENU LOGIC
@@ -402,6 +488,19 @@ if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 local txt_titleEvent = main.f_createTextImg(motif.event_info, 'title', {defsc = motif.defaultEvent})
 local txt_hiscoreEvent = main.f_createTextImg(motif.event_info, 'hiscore', {defsc = motif.defaultEvent})
 local txt_infoEvent = main.f_createTextImg(motif.event_info, 'info', {defsc = motif.defaultEvent})
+
+local rect_boxcursor = rect:create({})
+local rect_boxbg = rect:create({})
+local t_menuWindowEvent = main.f_menuWindow(motif.event_info)
+
+local function f_resetEventInfoTxt()
+infoTextCnt = 0
+end
+
+local function saveEventData()
+	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
+	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
+end
 
 local function f_loadEvents()
 	t_selEventMode = {}
@@ -474,37 +573,21 @@ local function f_loadEvents()
 		if t_selEventMode[i].lifebarailevelp1 == settrue then t_selEventMode[i].lifebarailevelp1 = true end
 		if t_selEventMode[i].lifebarailevelp2 == settrue then t_selEventMode[i].lifebarailevelp2 = true end
 	end
-	for k, v in ipairs(t_selEventMode) do --Set Events Unlock Condition
-		main.t_unlockLua.modes[v.id] = v.unlock
+	for k, v in ipairs(t_selEventMode) do
+		main.t_unlockLua.modes[v.id] = v.unlock --Set Events Unlock Condition
 	end
 	if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
 end
+f_loadEvents() --Load select.def events data when engine starts
 
-local function saveEventData()
-	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
-	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
-end
-
-local rect_boxcursor = rect:create({})
-local rect_boxbg = rect:create({})
-local t_menuWindowEvent = main.f_menuWindow(motif.event_info)
-
-local function f_resetEventInfoTxt()
-infoTextCnt = 0
-end
-
-main.t_itemname.events = function()
-	return f_events() --Go to below function (that contains a custom sub-menu) when you enter in main menu item
-end
-
-function f_events()
+local function f_events()
 	sndPlay(motif.files.snd_data, motif.event_info.cursor_done_snd[1], motif.event_info.cursor_done_snd[2])
 	local cursorPosY = 1
 	local moveTxt = 0
 	local item = 1
 	local t = {}
 	f_resetEventInfoTxt()
-	f_loadEvents() --Load select.def events data
+	if motif.event_info.reload_enabled == 1 then f_loadEvents() end --Reload select.def events data each time that events menu is initialized
 	for k, v in ipairs(t_selEventMode) do
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}),
 				itemname = v.id,
@@ -797,7 +880,7 @@ function f_events()
 			txt_hiscoreEvent:draw()
 			if stats.modes ~= nil and stats.modes[eventNo] ~= nil then
 				if stats.modes[eventNo].score ~= nil then --If there is hiscore data detected
-					txt_hiscoreEvent:update({text = motif.event_info.hiscore_text..stats.modes[eventNo].score})
+					txt_hiscoreEvent:update({text = motif.event_info.hiscore_text..' '..stats.modes[eventNo].score})
 				else --If there is not hiscore data detected
 					txt_hiscoreEvent:update({text = motif.event_info.hiscore_text})
 				end
@@ -874,6 +957,7 @@ function f_events()
 					motif.music.title_bgm = motif.music.event_bgm
 				end
 				main.f_fadeReset('fadeout', motif.event_info)
+				main.f_unlock(false) --To check Unlocks before enter in Character Select
 				start.f_selectMode()
 				if winnerteam() == 1 then --Save Score Data only if you complete event
 					if score() > stats.modes[t[item].itemname].score then --Update Hiscore only if is greater than the previous one
@@ -881,7 +965,7 @@ function f_events()
 					end
 					saveEventData()
 				end
-				main.f_unlock(false) --Check Events Unlocks
+				main.f_unlock(false) --To Check Unlocks after play events
 				if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 				main.f_cmdBufReset()
 				f_resetEventInfoTxt()
@@ -903,10 +987,6 @@ function f_events()
 	end
 end
 
-if nightlyVer then --To configure argument for bgDraw function
-	trueBool = 1
-	falseBool = 0
-else
-	trueBool = true
-	falseBool = false
+main.t_itemname.events = function()
+	return f_events() --Call above function (that contains a custom sub-menu) when you enter in main menu item
 end
