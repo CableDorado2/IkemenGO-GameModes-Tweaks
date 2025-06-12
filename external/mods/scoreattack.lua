@@ -1,50 +1,51 @@
 --[[	   					       SCORE ATTACK MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
-
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
 Description:
 This module implements SCORE ATTACK game mode with Co-Op and Netplay variant
 (defeat opponents beating previous score record).
 
-This mode is detectable by GameMode trigger as scoreattack, scoreattackcoop and netplayscoreattackcoop.
+This mode is detectable by GameMode trigger as: scoreattack, scoreattackcoop and netplayscoreattackcoop.
 =======================================================================================================
 ]]
+local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values to avoid issues.
 
---[[
-; select.def customization
+--[[select.def customization:
 
 [Options]
- ;IKEMEN feature: Maximum number of normal and ratio matches to fight before
- ;game ends in Score Attack mode. Can be left empty, if player is meant to fight
- ;against all characters (in such case order parameter is still respected)
+;IKEMEN feature: Maximum number of normal and ratio matches to fight before
+;game ends in Score Attack mode. Can be left empty, if player is meant to fight
+;against all characters (in such case order parameter is still respected).
 
-scoreattack.maxmatches = 
+scoreattack.maxmatches = 6,1,1,0,0,0,0,0,0,0
+
 ]]
 
---[[
-; Example system.def parameters assignments
-
+--[[Example system.def parameters assignments:
+;-------------------------------------------------------------------------------
 [Title Info]
-menu.itemname.scoreattack = "SCORE ATTACK"
-menu.itemname.scoreattackcoop = "SCORE ATTACK CO-OP"
+menu.itemname.scoreattack = "SCORE ATTACK" ;Ikemen Feature
+menu.itemname.scoreattackcoop = "SCORE ATTACK CO-OP" ;Ikemen Feature
+menu.itemname.server.netplayscoreattackcoop = "SCORE ATTACK CO-OP" ;Ikemen Feature
 
-menu.itemname.server.netplayscoreattackcoop = "SCORE ATTACK CO-OP"
-
+;-------------------------------------------------------------------------------
 [Select Info]
 title.scoreattack.text = "Score Attack"
 title.scoreattackcoop.text = "Score Attack Cooperative"
 title.netplayscoreattackcoop.text = "Online Score Attack"
 
-; Displaying game mode record directly in select screen
+;Displaying game mode record directly in select screen
 record.offset = 159,39
 record.font = 3,0,0
 record.scale = 1.0, 1.0
-; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
+
+;format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.scoreattack.text = "- BEST RECORD -\n%c %p PTS: %n"
 record.scoreattackcoop.text = "- BEST RECORD -\n%c %p PTS: %n"
 record.netplayscoreattackcoop.text = "- BEST RECORD -\n%c %p PTS: %n"
 
+;-------------------------------------------------------------------------------
 [Score Attack Results Screen]
 enabled = 1
 sounds.enabled = 1
@@ -52,40 +53,48 @@ sounds.enabled = 1
 fadein.time = 32
 fadein.col = 0,0,0
 fadein.anim = -1
+
 fadeout.time = 64
 fadeout.col = 0,0,0
 fadeout.anim = -1
+
 show.time = 300
 
 winstext.text = "Clear Score: %i"
 winstext.offset = 159,70
 winstext.font = 3,0,0
-winstext.scale = 1.0,1.0
+winstext.scale = 1.0, 1.0
 winstext.displaytime = -1
 winstext.layerno = 2
 
-;overlay.window = 0,0,320,240
+;overlay.window = 0,0, 320,240
 overlay.col = 0,0,0
 overlay.alpha = 20,100
 
 p1.state = 175,170
 p1.win.state = 180
+
 p2.state = 
 p2.win.state = 
+
 p1.teammate.state = 
 p1.teammate.win.state = 
+
 p2.teammate.state = 
 p2.teammate.win.state = 
 
+;-------------------------------------------------------------------------------
 [ScoreAttackResultsBGdef]
-; left blank (character and stage not covered)
-]]
+;left blank (character and stage not covered)
 
+]]
 --;===========================================================
 --; main.lua
 --;===========================================================
--- main.t_itemname is a table storing functions with general game mode
--- configuration (usually ending with start.f_selectMode function call).
+--[[
+main.t_itemname is a table storing functions with general game mode
+configuration (usually ending with start.f_selectMode function call).
+]]
 main.t_itemname.scoreattack = function()
 	main.f_playerInput(main.playerInput, 1)
 	main.t_pIn[2] = 1
@@ -147,8 +156,13 @@ main.t_itemname.scoreattackcoop = function()
 	main.lifebar.p2aiLevel = true
 	main.rankDisplay = true
 	main.makeRoster = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	if nightlyVer then
+		main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
+		main.numTag = {2, math.min(4, gameOption('Config.Players'))}
+	else
+		main.numSimul = {2, math.min(4, config.Players)}
+		main.numTag = {2, math.min(4, config.Players)}
+	end
 	main.resultsTable = motif.score_attack_results_screen
 	main.stageOrder = true
 	main.teamMenu[1].simul = true
@@ -209,15 +223,15 @@ main.t_itemname.netplayscoreattackcoop = function()
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
-
 --;===========================================================
 --; motif.lua
 --;===========================================================
--- Here we're expanding motif table with default values that will be used if
--- these parameters are not overridden by system.def parameter assignment.
--- (dots should not be used in variable names, so they have been changed to _)
-
--- [Select Info] default parameters. Displayed in select screen.
+--[[
+Here we're expanding motif table with default values that will be used if
+these parameters are not overridden by system.def parameter assignment.
+(dots should not be used in variable names, so they have been changed to _)
+]]
+--[Select Info] default parameters. Displayed in select screen.
 if motif.select_info.title_scoreattack_text == nil then
 	motif.select_info.title_scoreattack_text = 'Score Attack'
 end
@@ -241,9 +255,10 @@ end
 if motif.select_info.record_netplayscoreattackcoop_text == nil then
 	motif.select_info.record_netplayscoreattackcoop_text = '- BEST RECORD -\n%c %p PTS: %n'
 end
-
--- [Score Attack Results Screen] default parameters. Works similarly to
--- [Win Screen] (used for rendering mode results screen after last match)
+--[[
+[Score Attack Results Screen] default parameters. Works similarly to
+[Win Screen] (used for rendering mode results screen after last match)
+]]
 local t_base = {
 	enabled = 1,
 	sounds_enabled = 1,
@@ -277,13 +292,14 @@ if motif.score_attack_results_screen == nil then
 end
 motif.score_attack_results_screen = main.f_tableMerge(t_base, motif.score_attack_results_screen)
 
--- If not defined, [ScoreAttackResultsBGdef] group defaults to [WinBGdef].
+--If not defined, [ScoreAttackResultsBGdef] group defaults to [WinBGdef].
 if motif.scoreattackresultsbgdef == nil then
 	motif.scoreattackresultsbgdef = motif.winbgdef
 end
-
--- This code creates data out of optional [ScoreAttackResultsBGdef] sff file.
--- Defaults to motif.files.spr_data, defined in screenpack, if not declared.
+--[[
+This code creates data out of optional [ScoreAttackResultsBGdef] sff file.
+Defaults to motif.files.spr_data, defined in screenpack, if not declared.
+]]
 if motif.scoreattackresultsbgdef.spr ~= nil and motif.scoreattackresultsbgdef.spr ~= '' then
 	motif.scoreattackresultsbgdef.spr = searchFile(motif.scoreattackresultsbgdef.spr, {motif.fileDir, '', 'data/'})
 	motif.scoreattackresultsbgdef.spr_data = sffNew(motif.scoreattackresultsbgdef.spr)
@@ -291,51 +307,53 @@ else
 	motif.scoreattackresultsbgdef.spr = motif.files.spr
 	motif.scoreattackresultsbgdef.spr_data = motif.files.spr_data
 end
-
--- Background data generation.
--- Refer to official Elecbyte docs for information how to define backgrounds.
--- http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
+--[[Background data generation.
+Refer to official Elecbyte docs for information how to define backgrounds.
+http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
+]]
 motif.scoreattackresultsbgdef.bg = bgNew(motif.scoreattackresultsbgdef.spr_data, motif.def, 'scoreattackresultsbg')
 
--- fadein/fadeout anim data generation.
+--fadein/fadeout anim data generation.
 if motif.score_attack_results_screen.fadein_anim ~= -1 then
 	motif.f_loadSprData(motif.score_attack_results_screen, {s = 'fadein_'})
 end
 if motif.score_attack_results_screen.fadeout_anim ~= -1 then
 	motif.f_loadSprData(motif.score_attack_results_screen, {s = 'fadeout_'})
 end
-
 --;===========================================================
 --; start.lua
 --;===========================================================
--- start.t_makeRoster is a table storing functions returning table data used
--- by start.f_makeRoster function, depending on game mode.
+--[[
+start.t_makeRoster is a table storing functions returning table data used
+by start.f_makeRoster function, depending on game mode.
+]]
 start.t_makeRoster.scoreattack = start.t_makeRoster.arcade
 start.t_makeRoster.scoreattackcoop = start.t_makeRoster.arcade
 start.t_makeRoster.netplayscoreattackcoop = start.t_makeRoster.arcade
-
--- start.t_aiRampData is a table storing functions returning variable data used
--- by start.f_aiRamp function, depending on game mode.
+--[[
+start.t_aiRampData is a table storing functions returning variable data used
+by start.f_aiRamp function, depending on game mode.
+]]
 start.t_aiRampData.scoreattack = start.t_aiRampData.arcade
 start.t_aiRampData.scoreattackcoop = start.t_aiRampData.arcade
 start.t_aiRampData.netplayscoreattackcoop = start.t_aiRampData.arcade
-
--- start.t_sortRanking is a table storing functions with ranking sorting logic
--- used by start.f_storeStats function, depending on game mode.
+--[[
+start.t_sortRanking is a table storing functions with ranking sorting logic
+used by start.f_storeStats function, depending on game mode.
+]]
 start.t_sortRanking.scoreattack = function(t, a, b) return t[b].score < t[a].score end
 start.t_sortRanking.scoreattackcoop = start.t_sortRanking.scoreattack --Reuse above data
 start.t_sortRanking.netplayscoreattackcoop = start.t_sortRanking.scoreattack
-
--- as above but the functions return if game mode should be considered "cleared"
+--as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.scoreattack = function() return winnerteam() == 1 end
 start.t_clearCondition.scoreattackcoop = function() return winnerteam() == 1 end
 start.t_clearCondition.netplayscoreattackcoop = function() return winnerteam() == 1 end
-
--- start.t_resultData is a table storing functions used for setting variables
--- stored in start.t_result table, returning boolean depending on various
--- factors. It's used by start.f_resultInit function, depending on game mode.
+--[[
+start.t_resultData is a table storing functions used for setting variables
+stored in start.t_result table, returning boolean depending on various
+factors. It's used by start.f_resultInit function, depending on game mode.
+]]
 local txt_resultScoreAttack = main.f_createTextImg(motif.score_attack_results_screen, 'winstext')
-
 start.t_resultData.scoreattack = function()
 	if winnerteam() ~= 1 or matchno() < #start.t_roster or motif.score_attack_results_screen.enabled == 0 or scoretotal() <= start.f_lowestRankingData('score') then
 		return false
@@ -351,15 +369,12 @@ start.t_resultData.scoreattack = function()
 	end
 	return true
 end
-
 start.t_resultData.scoreattackcoop = start.t_resultData.scoreattack --Reuse above data
 start.t_resultData.netplayscoreattackcoop = start.t_resultData.scoreattack
-
 --;===========================================================
 --; main.lua
 --;===========================================================
--- Table storing data used by functions related to hiscore rendering and saving.
+--Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.scoreattack = {mode = 'scoreattack', data = 'score', title = motif.select_info.title_scoreattack_text}
 main.t_hiscoreData.scoreattackcoop = {mode = 'scoreattackcoop', data = 'score', title = 'Score Attack CO-OP'}
-
 if main.t_selOptions.scoreattackmaxmatches == nil then main.t_selOptions.scoreattackmaxmatches = {6, 1, 1, 0, 0, 0, 0, 0, 0, 0} end

@@ -1,11 +1,11 @@
---[[	   				TIME ATTACK TWEAKS
-=======================================================================
+--[[	   							TIME ATTACK TWEAKS
+=======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
+Description: Adds personal improvements to make Time Attack more faithful to what is seen in Commercial Games.
 
-Description: Adds personal improvements to make Time Attack
-more faithful to what is seen in Commercial Games.
-
+This mode is detectable by GameMode trigger as: timeattack, timeattackcoop and netplaytimeattackcoop
+=======================================================================================================
 CD2's Tweaks:
 - Show Best Record in Character Select
 - Removed MatchNo in VS Screen
@@ -13,31 +13,31 @@ CD2's Tweaks:
 - Infinite Continues
 - Ranking record will now be displayed when you complete the game mode
 - Adds Co-Op and Netplay Variant
-=======================================================================
+- Ensure compatibility with Nightly Build
+=======================================================================================================
 ]]
-
---[[
-; Example system.def parameters assignments
-
+local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values to avoid issues.
+--[[;Example system.def new parameters assignments
+;-------------------------------------------------------------------------------
 [Title Info]
-menu.itemname.timeattackcoop = "TIME ATTACK CO-OP"
+menu.itemname.timeattackcoop = "TIME ATTACK CO-OP" ;Ikemen Feature
+menu.itemname.server.netplaytimeattackcoop = "TIME ATTACK CO-OP" ;Ikemen Feature
 
-menu.itemname.server.netplaytimeattackcoop = "TIME ATTACK CO-OP"
-
+;-------------------------------------------------------------------------------
 [Select Info]
 title.timeattackcoop.text = "Time Attack Cooperative"
 title.netplaytimeattackcoop.text = "Online Time Attack"
 
-; Displaying game mode record directly in select screen
+;Displaying game mode record directly in select screen
 record.offset = 159,39
 record.font = 3,0,0
 record.scale = 1.0, 1.0
-; format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
+
+;format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.timeattack.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 record.timeattackcoop.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 record.netplaytimeattackcoop.text = "- BEST RECORD -\n%c %m:%s.%x: %n"
 ]]
-
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -111,8 +111,13 @@ main.t_itemname.timeattackcoop = function()
 	main.matchWins.tag = {1, 1}
 	main.makeRoster = true
 	main.quickContinue = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	if nightlyVer then
+		main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
+		main.numTag = {2, math.min(4, gameOption('Config.Players'))}
+	else
+		main.numSimul = {2, math.min(4, config.Players)}
+		main.numTag = {2, math.min(4, config.Players)}
+	end
 	main.resetScore = true
 	if main.roundTime == -1 then
 		main.roundTime = 99
@@ -182,7 +187,6 @@ main.t_itemname.netplaytimeattackcoop = function()
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
-
 --;===========================================================
 --; motif.lua
 --;===========================================================
@@ -205,7 +209,6 @@ end
 if motif.select_info.record_netplaytimeattackcoop_text == nil then
 	motif.select_info.record_netplaytimeattackcoop_text = '- BEST RECORD -\n%c %m:%s.%x: %n'
 end
-
 --;===========================================================
 --; start.lua
 --;======================================================
@@ -223,7 +226,6 @@ start.t_clearCondition.netplaytimeattackcoop = function() return winnerteam() ==
 
 start.t_resultData.timeattackcoop = start.t_resultData.timeattack
 start.t_resultData.netplaytimeattackcoop = start.t_resultData.timeattack
-
 --;===========================================================
 --; main.lua
 --;===========================================================

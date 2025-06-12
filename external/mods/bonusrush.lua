@@ -1,51 +1,50 @@
 --[[	   				         BONUS RUSH MODULE
 ==================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2024-08-14 Nightly Build
-
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
 Description:
-Based on official Boss Rush Module this one implements BONUS RUSH game mode
+Based on Boss Rush Module this one implements BONUS RUSH game mode
 (defeat all opponents that are consider bonuses).
 
 (Includes Co-Op and Netplay Variant)
 
-This mode is detectable by GameMode trigger as bonusrush, bonusrushcoop and netplaybonusrushcoop.
+This mode is detectable by GameMode trigger as: bonusrush, bonusrushcoop and netplaybonusrushcoop.
 Only characters with select.def "bonus = 1" parameter assigned are valid for this mode.
 ==================================================================================================
 ]]
+local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values to avoid issues.
 
---[[
-; select.def customization
+--[[;select.def customization:
 
 [Characters]
- ; - bonus
- ;   IKEMEN feature: Set the paramvalue to 1 to include this character in "Bonus
- ;   Rush" mode. At least 1 character needs this parameter for the mode to show
- ;   up in modes selection menu.
+; - bonus
+;   IKEMEN feature: Set the paramvalue to 1 to include this character in "Bonus
+;   Rush" mode. At least 1 character needs this parameter for the mode to show
+;   up in modes selection menu.
 
 [Options]
- ;IKEMEN feature: Maximum number of normal and ratio matches to fight before
- ;game ends in bonus Rush mode. Can be left empty, if player is meant to fight
- ;against all bonus characters (in such case order parameter is still respected)
+;IKEMEN feature: Maximum number of normal and ratio matches to fight before
+;game ends in Bonus Rush mode. Can be left empty, if player is meant to fight
+;against all bonus characters (in such case order parameter is still respected)
 
-bonusrush.maxmatches = 
+bonusrush.maxmatches = 6,1,1,0,0,0,0,0,0,0
+
 ]]
 
---[[
-; Example system.def parameters assignments
-
+--[[;Example system.def parameters assignments:
+;-------------------------------------------------------------------------------
 [Title Info]
-menu.itemname.bonusrush = "BONUS RUSH"
-menu.itemname.bonusrushcoop = "BONUS RUSH CO-OP"
+menu.itemname.bonusrush = "BONUS RUSH" ;Ikemen Feature
+menu.itemname.bonusrushcoop = "BONUS RUSH CO-OP" ;Ikemen Feature
+menu.itemname.server.netplaybonusrushcoop = "BONUS RUSH CO-OP" ;Ikemen Feature
 
-menu.itemname.server.netplaybonusrushcoop = "BONUS RUSH CO-OP"
-
+;-------------------------------------------------------------------------------
 [Select Info]
-title.bonuscoop.text = "Bonus Cooperative"
 title.bonusrush.text = "Bonus Rush"
 title.bonusrushcoop.text = "Bonus Rush Cooperative"
 title.netplaybonusrushcoop.text = "Online Bonus Rush"
 
+;-------------------------------------------------------------------------------
 [Bonus Rush Results Screen]
 enabled = 1
 sounds.enabled = 1
@@ -53,36 +52,41 @@ sounds.enabled = 1
 fadein.time = 32
 fadein.col = 0,0,0
 fadein.anim = -1
+
 fadeout.time = 64
 fadeout.col = 0,0,0
 fadeout.anim = -1
+
 show.time = 300
 
 winstext.text = "Congratulations!"
 winstext.offset = 159,70
 winstext.font = 3,0,0
-winstext.scale = 1.0,1.0
+winstext.scale = 1.0, 1.0
 winstext.displaytime = -1
 winstext.layerno = 2
 
-;overlay.window = 0,0,320,240
+;overlay.window = 0,0, 320,240
 overlay.col = 0,0,0
 overlay.alpha = 20,100
 
 p1.state = 180
 p2.state = 
+
 p1.teammate.state = 
 p2.teammate.state = 
 
 [BonusRushResultsBGdef]
-; left blank (character and stage not covered)
-]]
+;left blank (character and stage not covered)
 
+]]
 --;===========================================================
 --; main.lua
 --;===========================================================
--- main.t_itemname is a table storing functions with general game mode
--- configuration (usually ending with start.f_selectMode function call).
+--[[
+main.t_itemname is a table storing functions with general game mode
+configuration (usually ending with start.f_selectMode function call).
+]]
 main.t_itemname.bonusrush = function()
 	main.f_playerInput(main.playerInput, 1)
 	main.t_pIn[2] = 1
@@ -131,8 +135,13 @@ main.t_itemname.bonusrushcoop = function()
 	main.coop = true
 	main.lifebar.p1score = true
 	main.makeRoster = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	if nightlyVer then
+		main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
+		main.numTag = {2, math.min(4, gameOption('Config.Players'))}
+	else
+		main.numSimul = {2, math.min(4, config.Players)}
+		main.numTag = {2, math.min(4, config.Players)}
+	end
 	main.rankingCondition = true
 	main.resultsTable = motif.bonus_rush_results_screen
 	main.teamMenu[1].simul = true
@@ -200,7 +209,7 @@ main.t_itemname.bonus = function(t, item)
 	return start.f_selectMode
 end
 
-main.t_itemname.bonuscoop = function(t, item)
+main.t_itemname.bonuscoop = function(t, item) --Unfinished
 	main.coop = true
 	main.rankDisplay = true
 	main.charparam.ai = true
@@ -209,8 +218,13 @@ main.t_itemname.bonuscoop = function(t, item)
 	main.charparam.single = true
 	main.charparam.stage = true
 	main.charparam.time = true
-	main.numSimul = {2, math.min(4, config.Players)}
-	main.numTag = {2, math.min(4, config.Players)}
+	if nightlyVer then
+		main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
+		main.numTag = {2, math.min(4, gameOption('Config.Players'))}
+	else
+		main.numSimul = {2, math.min(4, config.Players)}
+		main.numTag = {2, math.min(4, config.Players)}
+	end
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
 	main.teamMenu[2].single = true
@@ -222,15 +236,15 @@ main.t_itemname.bonuscoop = function(t, item)
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
-
 --;===========================================================
 --; motif.lua
 --;===========================================================
--- Here we're expanding motif table with default values that will be used if
--- these parameters are not overridden by system.def parameter assignment.
--- (dots should not be used in variable names, so they have been changed to _)
-
--- [Select Info] default parameters. Displayed in select screen.
+--[[
+Here we're expanding motif table with default values that will be used if
+these parameters are not overridden by system.def parameter assignment.
+(dots should not be used in variable names, so they have been changed to _)
+]]
+--[Select Info] default parameters. Displayed in select screen.
 if motif.select_info.title_bonusrush_text == nil then
 	motif.select_info.title_bonusrush_text = 'Bonus Rush'
 end
@@ -246,9 +260,10 @@ end
 if motif.select_info.title_bonuscoop_text == nil then
 	motif.select_info.title_bonuscoop_text = 'Bonus Cooperative'
 end
-
--- [Bonus Rush Results Screen] default parameters. Works similarly to
--- [Win Screen] (used for rendering mode results screen after last match)
+--[[
+[Bonus Rush Results Screen] default parameters. Works similarly to
+[Win Screen] (used for rendering mode results screen after last match)
+]]
 local t_base = {
 	enabled = 1,
 	sounds_enabled = 1,
@@ -278,13 +293,14 @@ if motif.bonus_rush_results_screen == nil then
 end
 motif.bonus_rush_results_screen = main.f_tableMerge(t_base, motif.bonus_rush_results_screen)
 
--- If not defined, [BonusRushResultsBgDef] group defaults to [WinBGdef].
+--If not defined, [BonusRushResultsBgDef] group defaults to [WinBGdef].
 if motif.bonusrushresultsbgdef == nil then
 	motif.bonusrushresultsbgdef = motif.winbgdef
 end
-
--- This code creates data out of optional [BonusRushResultsBgDef] sff file.
--- Defaults to motif.files.spr_data, defined in screenpack, if not declared.
+--[[
+This code creates data out of optional [BonusRushResultsBgDef] sff file.
+Defaults to motif.files.spr_data, defined in screenpack, if not declared.
+]]
 if motif.bonusrushresultsbgdef.spr ~= nil and motif.bonusrushresultsbgdef.spr ~= '' then
 	motif.bonusrushresultsbgdef.spr = searchFile(motif.bonusrushresultsbgdef.spr, {motif.fileDir, '', 'data/'})
 	motif.bonusrushresultsbgdef.spr_data = sffNew(motif.bonusrushresultsbgdef.spr)
@@ -292,49 +308,49 @@ else
 	motif.bonusrushresultsbgdef.spr = motif.files.spr
 	motif.bonusrushresultsbgdef.spr_data = motif.files.spr_data
 end
-
--- Background data generation.
--- Refer to official Elecbyte docs for information how to define backgrounds.
--- http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
+--[[Background data generation.
+Refer to official Elecbyte docs for information how to define backgrounds.
+http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
+]]
 motif.bonusrushresultsbgdef.bg = bgNew(motif.bonusrushresultsbgdef.spr_data, motif.def, 'bonusrushresultsbg')
 
--- fadein/fadeout anim data generation.
+--fadein/fadeout anim data generation.
 if motif.bonus_rush_results_screen.fadein_anim ~= -1 then
 	motif.f_loadSprData(motif.bonus_rush_results_screen, {s = 'fadein_'})
 end
 if motif.bonus_rush_results_screen.fadeout_anim ~= -1 then
 	motif.f_loadSprData(motif.bonus_rush_results_screen, {s = 'fadeout_'})
 end
-
 --;===========================================================
 --; start.lua
 --;===========================================================
--- start.t_makeRoster is a table storing functions returning table data used
--- by start.f_makeRoster function, depending on game mode.
+--[[
+start.t_makeRoster is a table storing functions returning table data used
+by start.f_makeRoster function, depending on game mode.
+]]
 start.t_makeRoster.bonusrush = function()
 	return start.f_unifySettings(main.t_selOptions.bonusrushmaxmatches, main.t_bonusRushChars), main.t_bonusRushChars
 end
-
 start.t_makeRoster.bonusrushcoop = start.t_makeRoster.bonusrush
 start.t_makeRoster.netplaybonusrushcoop = start.t_makeRoster.bonusrush
-
--- start.t_sortRanking is a table storing functions with ranking sorting logic
--- used by start.f_storeStats function, depending on game mode. Here we're
--- reusing logic already declared for survival mode (refer to start.lua)
+--[[
+start.t_sortRanking is a table storing functions with ranking sorting logic
+used by start.f_storeStats function, depending on game mode. Here we're
+reusing logic already declared for Survival Mode (refer to start.lua)
+]]
 start.t_sortRanking.bonusrush = start.t_sortRanking.survival
 start.t_sortRanking.bonusrushcoop = start.t_sortRanking.survival
 start.t_sortRanking.netplaybonusrushcoop = start.t_sortRanking.survival
-
--- as above but the functions return if game mode should be considered "cleared"
+--as above but the functions return if game mode should be considered "cleared"
 start.t_clearCondition.bonusrush = function() return winnerteam() == 1 end
 start.t_clearCondition.bonusrushcoop = function() return winnerteam() == 1 end
 start.t_clearCondition.netplaybonusrushcoop = function() return winnerteam() == 1 end
-
--- start.t_resultData is a table storing functions used for setting variables
--- stored in start.t_result table, returning boolean depending on various
--- factors. It's used by start.f_resultInit function, depending on game mode.
+--[[
+start.t_resultData is a table storing functions used for setting variables
+stored in start.t_result table, returning boolean depending on various
+factors. It's used by start.f_resultInit function, depending on game mode.
+]]
 local txt_resultbonusRush = main.f_createTextImg(motif.bonus_rush_results_screen, 'winstext')
-
 start.t_resultData.bonusrush = function()
 	if winnerteam() ~= 1 or matchno() < #start.t_roster or motif.bonus_rush_results_screen.enabled == 0 then
 		return false
@@ -344,19 +360,16 @@ start.t_resultData.bonusrush = function()
 	start.t_result.bgdef = 'bonusrushresultsbgdef'
 	return true
 end
-
 start.t_resultData.bonusrushcoop = start.t_resultData.bonusrush
 start.t_resultData.netplaybonusrushcoop = start.t_resultData.bonusrush
-
 --;===========================================================
 --; main.lua
 --;===========================================================
--- Table storing data used by functions related to hiscore rendering and saving.
+--Table storing data used by functions related to hiscore rendering and saving.
 main.t_hiscoreData.bonusrush = {mode = 'bonusrush', data = 'score', title = motif.select_info.title_bonusrush_text}
 main.t_hiscoreData.bonusrushcoop = {mode = 'bonusrushcoop', data = 'score', title = motif.select_info.title_bonusrushcoop_text}
 
 main.t_bonusRushChars = {}
-
 for _, v in ipairs(main.t_selChars) do
 	if v.bonus ~= nil and v.bonus == 1 then
 		if main.t_bonusRushChars[v.order] == nil then
