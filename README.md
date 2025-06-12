@@ -3,7 +3,7 @@
 External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves and adds Game Modes.
 
 > [!NOTE]
-> Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2024-08-14 Nightly Build**.
+> Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2025-06-09 Nightly Build**.
 > Operation on other versions is not guaranteed.
 
 ##  _Gallery Mode (New)_
