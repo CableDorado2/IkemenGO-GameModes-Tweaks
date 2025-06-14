@@ -8,7 +8,7 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 > Operation on other versions is not guaranteed.
 
 ##  _Shop Mode (New)_
-A Shop Mode entry for the Main Menu (To spend Earned In-Game Currency)➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
+A Shop Mode entry for the Main Menu (To spend In-Game Currency)➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
 ##  _Gallery Mode (New)_
