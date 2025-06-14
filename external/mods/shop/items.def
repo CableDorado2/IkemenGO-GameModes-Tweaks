@@ -1,0 +1,89 @@
+;Shop Items declaration. Assigned items are purchasable via Shop Mode
+;submenu ('menu.itemname.shop' parameter in screenpack DEF file)
+
+;Declaring shop items consists of setting up following parameters:
+
+; - [Category Name] (required)
+;	Set to name that will be used to group items into Categories.
+;	Currently the only Category Names recognized by default are:
+;	"Characters"/"Chars" or "Costumes" and "Stages".
+;
+;	Unrecognized names will be considered as "Custom Categories".
+;	(Ideal for use with modules or just to buy content not added by default in the engine).
+ 
+; - id (required)
+;	Set to name that initiates new shop items declaration, so it has to be assigned
+;	before any other parameter used by the same item and inside [Category Name] previously declared.
+;	(All shop items should have unique id names and should be written in lowercase).
+;
+;	Characters and Stages id is the same text line added to load them in select.def (but using lowercase).
+;	(Unrecognized chars or stages IDs, will be excluded from the shop).
+;
+;	The id stored will be used by "unlock" paramvalue following the next format:
+;	unlock=stats.shopstock ~= nil and stats.shopstock["categoryname"] ~= nil and stats.shopstock["categoryname"]["itemid"] == false
+;
+;	This means that any engine feature that uses the "unlock" paramvalue
+;	can use this Shop Mode to create a purchasable item as an unlock condition.
+
+; - price (optional)
+;	Set to number that should be displayed as price value for each item.
+;	(If is not defined, "price.default" system.def [Shop Info] paramvalue will be used).
+
+; - name (only used in custom category) [optional]
+;	Set to name that should be displayed for each item stored in a "Custom Category".
+;	(If is not defined, "info.text.unknown" system.def [Shop Info] paramvalue will be used).
+
+; - spr (only used in custom category) [optional]
+;	Set groupNo and indexNo to load from the sff file defined in "items.spr" system.def
+;	[Shop Info] paramvalue, to show a preview sprite for items stored in a "Custom Category".
+;	(If is not defined, nothing will be displayed).
+;
+;	Characters and Stages previews are read from their own .sff file and configured
+;	in system.def [Shop Info] with "character.preview" and "stage.preview" paramvalues.
+
+; - offset (only used in custom category) [optional]
+;	Set posX and posY for each item stored in a "Custom Category" defined in "items.spr"
+;	system.def [Shop Info] paramvalue.
+;	If is not defined, custom.preview.offset system.def [Shop Info] paramvalue will be used.
+
+; - scale (only used in custom category) [optional]
+;	Set scaleX and scaleY for each item stored in a "Custom Category" defined in "items.spr"
+;	system.def [Shop Info] paramvalue.
+;	If is not defined, custom.preview.scale system.def [Shop Info] paramvalue will be used.
+
+; - window (only used in custom category) [optional]
+;	Set the drawing window for each item stored in a "Custom Category" defined in "items.spr"
+;	system.def [Shop Info] paramvalue. x1, y1 are the x,y coordinates of the upper left of the window,
+;	while x2, y2 represents the lower right. Anything drawn outside this window will not be seen.
+;	If is not defined, custom.preview.window system.def [Shop Info] paramvalue will be used.
+
+;Examples:
+
+[Characters]
+id = kfm720
+
+id = kfm_zaxis
+price = 1500
+
+[Stages]
+id = stages/kfm.def
+
+id = stages/stage0-720.def
+price = 1000
+
+id = stages/stageZ.def
+price = 1500
+
+id = stages/stage3d.def
+price = 2000
+
+;The next example is a "Custom Category" that is compatible with the following external module:
+;https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/gallery
+[Artworks]
+id = art8
+name = Artwork of Kung Fu Man
+price = 1800
+spr = 1,0
+offset = 172,30
+scale = 0.21, 0.21
+window = 0,0, 320,240
