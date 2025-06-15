@@ -5,10 +5,10 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 > [!NOTE]
 > Tested in Ikemen GO: **v0.98.2**, **v0.99.0** and **2025-06-09 Nightly Build**.
 > 
-> Operation on other versions is not guaranteed.
+> You can install the modules on a different version of Ikemen GO, but their functionality is not fully guaranteed.
 
 ##  _Shop Mode (New)_
-A Shop Mode entry for the Main Menu (To spend In-Game Currency)➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
+A Shop Menu to spend In-Game Currency➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
 ##  _Gallery Mode (New)_
