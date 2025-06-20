@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ===================================================================
-Version: 1.2
+Version: 1.3
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -67,6 +67,30 @@ local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, t
 ;   when Character Select is Enabled for Event Selected.
 ;   Default: false.
 
+; - stageselect (optional)
+;   If it Evalues to boolean "true" stage select will be displayed for the Event Selected.
+;   Default: false.
+
+; - vsscreen (optional)
+;   If it Evalues to boolean "true" versus screen will be displayed for the Event Selected.
+;   Default: false.
+
+; - orderselect (optional)
+;   If it Evalues to boolean "true" order select will be available during versus screen for the Event Selected.
+;   Default: false.
+
+; - victoryscreen (optional)
+;   If it Evalues to boolean "true" victory screen will not be displayed after win for the Event Selected.
+;   Default: true.
+
+; - continuescreen (optional)
+;   If it Evalues to boolean "false" continue screen will not be displayed when player lose for the Event Selected.
+;   Default: true.
+
+; - quickcontinue (optional)
+;   If it Evalues to boolean "true" continuing should skip player selection for the Event Selected.
+;   Default: false.
+
 ; - lifebar (optional)
 ;   If it Evalues to boolean "false" Lifebar will be disabled for the Match.
 ;   Default: true.
@@ -124,6 +148,13 @@ simulmode = true
 tagmode = true
 turnsmode = true
 ratiomode = true
+
+vsscreen = true
+orderselect = true
+stageselect = true
+victoryscreen = true
+continuescreen = true
+quickcontinue = false
 
 lifebar = true
 lifebarmatchno = true
@@ -527,6 +558,12 @@ local function f_loadEvents()
 							unlock = 'true',
 						--character select vars
 							characterselect = false,
+							stageselect = false,
+							vsscreen = false,
+							orderselect = false,
+							victoryscreen = true,
+							continuescreen = true,
+							quickcontinue = false,
 							singlemode = false,
 							simulmode = false,
 							tagmode = false,
@@ -554,6 +591,13 @@ local function f_loadEvents()
 		local settrue = "true"
 		local setfalse = "false"
 		if t_selEventMode[i].characterselect == settrue then t_selEventMode[i].characterselect = true end
+		if t_selEventMode[i].stageselect == settrue then t_selEventMode[i].stageselect = true end
+		if t_selEventMode[i].vsscreen == settrue then t_selEventMode[i].vsscreen = true end
+		if t_selEventMode[i].orderselect == settrue then t_selEventMode[i].orderselect = true end
+		if t_selEventMode[i].victoryscreen == setfalse then t_selEventMode[i].victoryscreen = false end
+		if t_selEventMode[i].continuescreen == setfalse then t_selEventMode[i].continuescreen = false end
+		if t_selEventMode[i].quickcontinue == settrue then t_selEventMode[i].quickcontinue = true end
+		
 		if t_selEventMode[i].singlemode == settrue then t_selEventMode[i].singlemode = true end
 		if t_selEventMode[i].simulmode == settrue then t_selEventMode[i].simulmode = true end
 		if t_selEventMode[i].tagmode == settrue then t_selEventMode[i].tagmode = true end
@@ -594,6 +638,13 @@ local function f_events()
 				unlock = v.unlock,
 				
 				charsel = v.characterselect,
+				stgsel = v.stageselect,
+				vsscreen = v.vsscreen,
+				ordersel = v.orderselect,
+				winscreen = v.victoryscreen,
+				continue = v.continuescreen,
+				quickcontinue = v.quickcontinue,
+				
 				single = v.singlemode,
 				simul = v.simulmode,
 				tag = v.tagmode,
@@ -648,22 +699,22 @@ local function f_events()
 --;---------------------------------------------------------------------------------------------------------------------
 	--draw clearcolor
 		if not skipClear then
-			clearColor(motif['eventbgdef'].bgclearcolor[1], motif['eventbgdef'].bgclearcolor[2], motif['eventbgdef'].bgclearcolor[3])
+			clearColor(motif.eventbgdef.bgclearcolor[1], motif.eventbgdef.bgclearcolor[2], motif.eventbgdef.bgclearcolor[3])
 		end
 	--draw layerno = 0 backgrounds
-		bgDraw(motif['eventbgdef'].bg, falseBool)
+		bgDraw(motif.eventbgdef.bg, falseBool)
 	--draw menu box
-		if motif['event_info'].menu_boxbg_visible == 1 then
+		if motif.event_info.menu_boxbg_visible == 1 then
 			rect_boxbg:update({
-				x1 =    motif['event_info'].menu_pos[1] + motif['event_info'].menu_boxcursor_coords[1],
-				y1 =    motif['event_info'].menu_pos[2] + motif['event_info'].menu_boxcursor_coords[2],
-				x2 =    motif['event_info'].menu_boxcursor_coords[3] - motif['event_info'].menu_boxcursor_coords[1] + 1,
-				y2 =    motif['event_info'].menu_boxcursor_coords[4] - motif['event_info'].menu_boxcursor_coords[2] + 1 + (math.min(#t, motif['event_info'].menu_window_visibleitems) - 1) * motif['event_info'].menu_item_spacing[2],
-				r =     motif['event_info'].menu_boxbg_col[1],
-				g =     motif['event_info'].menu_boxbg_col[2],
-				b =     motif['event_info'].menu_boxbg_col[3],
-				src =   motif['event_info'].menu_boxbg_alpha[1],
-				dst =   motif['event_info'].menu_boxbg_alpha[2],
+				x1 =    motif.event_info.menu_pos[1] + motif.event_info.menu_boxcursor_coords[1],
+				y1 =    motif.event_info.menu_pos[2] + motif.event_info.menu_boxcursor_coords[2],
+				x2 =    motif.event_info.menu_boxcursor_coords[3] - motif.event_info.menu_boxcursor_coords[1] + 1,
+				y2 =    motif.event_info.menu_boxcursor_coords[4] - motif.event_info.menu_boxcursor_coords[2] + 1 + (math.min(#t, motif.event_info.menu_window_visibleitems) - 1) * motif.event_info.menu_item_spacing[2],
+				r =     motif.event_info.menu_boxbg_col[1],
+				g =     motif.event_info.menu_boxbg_col[2],
+				b =     motif.event_info.menu_boxbg_col[3],
+				src =   motif.event_info.menu_boxbg_alpha[1],
+				dst =   motif.event_info.menu_boxbg_alpha[2],
 				defsc = motif.defaultEvent,
 			})
 			rect_boxbg:draw()
@@ -671,8 +722,8 @@ local function f_events()
 	--draw title
 		txt_titleEvent:draw()
 	--draw menu items
-		local items_shown = item + motif['event_info'].menu_window_visibleitems - cursorPosY
-		if items_shown > #t or (motif['event_info'].menu_window_visibleitems > 0 and items_shown < #t and (motif['event_info'].menu_window_margins_y[1] ~= 0 or motif['event_info'].menu_window_margins_y[2] ~= 0)) then
+		local items_shown = item + motif.event_info.menu_window_visibleitems - cursorPosY
+		if items_shown > #t or (motif.event_info.menu_window_visibleitems > 0 and items_shown < #t and (motif.event_info.menu_window_margins_y[1] ~= 0 or motif.event_info.menu_window_margins_y[2] ~= 0)) then
 			items_shown = #t
 		end
 		for i = 1, items_shown do
@@ -682,59 +733,59 @@ local function f_events()
 				if i == item then
 				--Draw active item background
 					if t[i].paramname ~= nil then
-						animDraw(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
-						animUpdate(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
+						animDraw(motif.event_info[t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
+						animUpdate(motif.event_info[t[i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
 					end
 				--Draw active item font
 					if t[i].selected then
 						t[i].data:update({
-							font =   motif['event_info'].menu_item_selected_active_font[1],
-							bank =   motif['event_info'].menu_item_selected_active_font[2],
-							align =  motif['event_info'].menu_item_selected_active_font[3],
+							font =   motif.event_info.menu_item_selected_active_font[1],
+							bank =   motif.event_info.menu_item_selected_active_font[2],
+							align =  motif.event_info.menu_item_selected_active_font[3],
 							text =   unlockText,
-							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
-							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
-							scaleX = motif['event_info'].menu_item_selected_active_scale[1],
-							scaleY = motif['event_info'].menu_item_selected_active_scale[2],
-							r =      motif['event_info'].menu_item_selected_active_font[4],
-							g =      motif['event_info'].menu_item_selected_active_font[5],
-							b =      motif['event_info'].menu_item_selected_active_font[6],
-							height = motif['event_info'].menu_item_selected_active_font[7],
+							x =      motif.event_info.menu_pos[1] + motif.event_info.menu_item_offset[1] + (i - 1) * motif.event_info.menu_item_spacing[1],
+							y =      motif.event_info.menu_pos[2] + motif.event_info.menu_item_offset[2] + (i - 1) * motif.event_info.menu_item_spacing[2] - moveTxt,
+							scaleX = motif.event_info.menu_item_selected_active_scale[1],
+							scaleY = motif.event_info.menu_item_selected_active_scale[2],
+							r =      motif.event_info.menu_item_selected_active_font[4],
+							g =      motif.event_info.menu_item_selected_active_font[5],
+							b =      motif.event_info.menu_item_selected_active_font[6],
+							height = motif.event_info.menu_item_selected_active_font[7],
 							defsc =  motif.defaultEvent,
 						})
 						t[i].data:draw()
 					else
 						t[i].data:update({
-							font =   motif['event_info'].menu_item_active_font[1],
-							bank =   motif['event_info'].menu_item_active_font[2],
-							align =  motif['event_info'].menu_item_active_font[3],
+							font =   motif.event_info.menu_item_active_font[1],
+							bank =   motif.event_info.menu_item_active_font[2],
+							align =  motif.event_info.menu_item_active_font[3],
 							text =   unlockText,
-							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_active_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
-							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_active_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
-							scaleX = motif['event_info'].menu_item_active_scale[1],
-							scaleY = motif['event_info'].menu_item_active_scale[2],
-							r =      motif['event_info'].menu_item_active_font[4],
-							g =      motif['event_info'].menu_item_active_font[5],
-							b =      motif['event_info'].menu_item_active_font[6],
-							height = motif['event_info'].menu_item_active_font[7],
+							x =      motif.event_info.menu_pos[1] + motif.event_info.menu_item_active_offset[1] + (i - 1) * motif.event_info.menu_item_spacing[1],
+							y =      motif.event_info.menu_pos[2] + motif.event_info.menu_item_active_offset[2] + (i - 1) * motif.event_info.menu_item_spacing[2] - moveTxt,
+							scaleX = motif.event_info.menu_item_active_scale[1],
+							scaleY = motif.event_info.menu_item_active_scale[2],
+							r =      motif.event_info.menu_item_active_font[4],
+							g =      motif.event_info.menu_item_active_font[5],
+							b =      motif.event_info.menu_item_active_font[6],
+							height = motif.event_info.menu_item_active_font[7],
 							defsc =  motif.defaultEvent,
 						})
 						t[i].data:draw()
 					end
 					if t[i].vardata ~= nil then
 						t[i].vardata:update({
-							font =   motif['event_info'].menu_item_value_active_font[1],
-							bank =   motif['event_info'].menu_item_value_active_font[2],
-							align =  motif['event_info'].menu_item_value_active_font[3],
+							font =   motif.event_info.menu_item_value_active_font[1],
+							bank =   motif.event_info.menu_item_value_active_font[2],
+							align =  motif.event_info.menu_item_value_active_font[3],
 							text =   t[i].vardisplay,
-							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_value_active_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
-							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_value_active_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
-							scaleX = motif['event_info'].menu_item_value_active_scale[1],
-							scaleY = motif['event_info'].menu_item_value_active_scale[2],
-							r =      motif['event_info'].menu_item_value_active_font[4],
-							g =      motif['event_info'].menu_item_value_active_font[5],
-							b =      motif['event_info'].menu_item_value_active_font[6],
-							height = motif['event_info'].menu_item_value_active_font[7],
+							x =      motif.event_info.menu_pos[1] + motif.event_info.menu_item_value_active_offset[1] + (i - 1) * motif.event_info.menu_item_spacing[1],
+							y =      motif.event_info.menu_pos[2] + motif.event_info.menu_item_value_active_offset[2] + (i - 1) * motif.event_info.menu_item_spacing[2] - moveTxt,
+							scaleX = motif.event_info.menu_item_value_active_scale[1],
+							scaleY = motif.event_info.menu_item_value_active_scale[2],
+							r =      motif.event_info.menu_item_value_active_font[4],
+							g =      motif.event_info.menu_item_value_active_font[5],
+							b =      motif.event_info.menu_item_value_active_font[6],
+							height = motif.event_info.menu_item_value_active_font[7],
 							defsc =  motif.defaultEvent,
 						})
 						t[i].vardata:draw()
@@ -742,59 +793,59 @@ local function f_events()
 				else
 				--Draw not active item background
 					if t[i].paramname ~= nil then
-						animDraw(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
-						animUpdate(motif['event_info'][t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
+						animDraw(motif.event_info[t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
+						animUpdate(motif.event_info[t[i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
 					end
 				--Draw not active item font
 					if t[i].selected then
 						t[i].data:update({
-							font =   motif['event_info'].menu_item_selected_font[1],
-							bank =   motif['event_info'].menu_item_selected_font[2],
-							align =  motif['event_info'].menu_item_selected_font[3],
+							font =   motif.event_info.menu_item_selected_font[1],
+							bank =   motif.event_info.menu_item_selected_font[2],
+							align =  motif.event_info.menu_item_selected_font[3],
 							text =   unlockText,
-							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_selected_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
-							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_selected_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
-							scaleX = motif['event_info'].menu_item_selected_scale[1],
-							scaleY = motif['event_info'].menu_item_selected_scale[2],
-							r =      motif['event_info'].menu_item_selected_font[4],
-							g =      motif['event_info'].menu_item_selected_font[5],
-							b =      motif['event_info'].menu_item_selected_font[6],
-							height = motif['event_info'].menu_item_selected_font[7],
+							x =      motif.event_info.menu_pos[1] + motif.event_info.menu_item_selected_offset[1] + (i - 1) * motif.event_info.menu_item_spacing[1],
+							y =      motif.event_info.menu_pos[2] + motif.event_info.menu_item_selected_offset[2] + (i - 1) * motif.event_info.menu_item_spacing[2] - moveTxt,
+							scaleX = motif.event_info.menu_item_selected_scale[1],
+							scaleY = motif.event_info.menu_item_selected_scale[2],
+							r =      motif.event_info.menu_item_selected_font[4],
+							g =      motif.event_info.menu_item_selected_font[5],
+							b =      motif.event_info.menu_item_selected_font[6],
+							height = motif.event_info.menu_item_selected_font[7],
 							defsc =  motif.defaultEvent,
 						})
 						t[i].data:draw()
 					else
 						t[i].data:update({
-							font =   motif['event_info'].menu_item_font[1],
-							bank =   motif['event_info'].menu_item_font[2],
-							align =  motif['event_info'].menu_item_font[3],
+							font =   motif.event_info.menu_item_font[1],
+							bank =   motif.event_info.menu_item_font[2],
+							align =  motif.event_info.menu_item_font[3],
 							text =   unlockText,
-							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
-							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
-							scaleX = motif['event_info'].menu_item_scale[1],
-							scaleY = motif['event_info'].menu_item_scale[2],
-							r =      motif['event_info'].menu_item_font[4],
-							g =      motif['event_info'].menu_item_font[5],
-							b =      motif['event_info'].menu_item_font[6],
-							height = motif['event_info'].menu_item_font[7],
+							x =      motif.event_info.menu_pos[1] + motif.event_info.menu_item_offset[1] + (i - 1) * motif.event_info.menu_item_spacing[1],
+							y =      motif.event_info.menu_pos[2] + motif.event_info.menu_item_offset[2] + (i - 1) * motif.event_info.menu_item_spacing[2] - moveTxt,
+							scaleX = motif.event_info.menu_item_scale[1],
+							scaleY = motif.event_info.menu_item_scale[2],
+							r =      motif.event_info.menu_item_font[4],
+							g =      motif.event_info.menu_item_font[5],
+							b =      motif.event_info.menu_item_font[6],
+							height = motif.event_info.menu_item_font[7],
 							defsc =  motif.defaultEvent,
 						})
 						t[i].data:draw()
 					end
 					if t[i].vardata ~= nil then
 						t[i].vardata:update({
-							font =   motif['event_info'].menu_item_value_font[1],
-							bank =   motif['event_info'].menu_item_value_font[2],
-							align =  motif['event_info'].menu_item_value_font[3],
+							font =   motif.event_info.menu_item_value_font[1],
+							bank =   motif.event_info.menu_item_value_font[2],
+							align =  motif.event_info.menu_item_value_font[3],
 							text =   t[i].vardisplay,
-							x =      motif['event_info'].menu_pos[1] + motif['event_info'].menu_item_value_offset[1] + (i - 1) * motif['event_info'].menu_item_spacing[1],
-							y =      motif['event_info'].menu_pos[2] + motif['event_info'].menu_item_value_offset[2] + (i - 1) * motif['event_info'].menu_item_spacing[2] - moveTxt,
-							scaleX = motif['event_info'].menu_item_value_scale[1],
-							scaleY = motif['event_info'].menu_item_value_scale[2],
-							r =      motif['event_info'].menu_item_value_font[4],
-							g =      motif['event_info'].menu_item_value_font[5],
-							b =      motif['event_info'].menu_item_value_font[6],
-							height = motif['event_info'].menu_item_value_font[7],
+							x =      motif.event_info.menu_pos[1] + motif.event_info.menu_item_value_offset[1] + (i - 1) * motif.event_info.menu_item_spacing[1],
+							y =      motif.event_info.menu_pos[2] + motif.event_info.menu_item_value_offset[2] + (i - 1) * motif.event_info.menu_item_spacing[2] - moveTxt,
+							scaleX = motif.event_info.menu_item_value_scale[1],
+							scaleY = motif.event_info.menu_item_value_scale[2],
+							r =      motif.event_info.menu_item_value_font[4],
+							g =      motif.event_info.menu_item_value_font[5],
+							b =      motif.event_info.menu_item_value_font[6],
+							height = motif.event_info.menu_item_value_font[7],
 							defsc =  motif.defaultEvent,
 						})
 						t[i].vardata:draw()
@@ -803,23 +854,23 @@ local function f_events()
 			end
 		end
 	--draw menu cursor
-		if motif['event_info'].menu_boxcursor_visible == 1 and not main.fadeActive then
+		if motif.event_info.menu_boxcursor_visible == 1 and not main.fadeActive then
 			local src, dst = main.f_boxcursorAlpha(
-				motif['event_info'].menu_boxcursor_alpharange[1],
-				motif['event_info'].menu_boxcursor_alpharange[2],
-				motif['event_info'].menu_boxcursor_alpharange[3],
-				motif['event_info'].menu_boxcursor_alpharange[4],
-				motif['event_info'].menu_boxcursor_alpharange[5],
-				motif['event_info'].menu_boxcursor_alpharange[6]
+				motif.event_info.menu_boxcursor_alpharange[1],
+				motif.event_info.menu_boxcursor_alpharange[2],
+				motif.event_info.menu_boxcursor_alpharange[3],
+				motif.event_info.menu_boxcursor_alpharange[4],
+				motif.event_info.menu_boxcursor_alpharange[5],
+				motif.event_info.menu_boxcursor_alpharange[6]
 			)
 			rect_boxcursor:update({
-				x1 =    motif['event_info'].menu_pos[1] + motif['event_info'].menu_boxcursor_coords[1] + (cursorPosY - 1) * motif['event_info'].menu_item_spacing[1],
-				y1 =    motif['event_info'].menu_pos[2] + motif['event_info'].menu_boxcursor_coords[2] + (cursorPosY - 1) * motif['event_info'].menu_item_spacing[2],
-				x2 =    motif['event_info'].menu_boxcursor_coords[3] - motif['event_info'].menu_boxcursor_coords[1] + 1,
-				y2 =    motif['event_info'].menu_boxcursor_coords[4] - motif['event_info'].menu_boxcursor_coords[2] + 1,
-				r =     motif['event_info'].menu_boxcursor_col[1],
-				g =     motif['event_info'].menu_boxcursor_col[2],
-				b =     motif['event_info'].menu_boxcursor_col[3],
+				x1 =    motif.event_info.menu_pos[1] + motif.event_info.menu_boxcursor_coords[1] + (cursorPosY - 1) * motif.event_info.menu_item_spacing[1],
+				y1 =    motif.event_info.menu_pos[2] + motif.event_info.menu_boxcursor_coords[2] + (cursorPosY - 1) * motif.event_info.menu_item_spacing[2],
+				x2 =    motif.event_info.menu_boxcursor_coords[3] - motif.event_info.menu_boxcursor_coords[1] + 1,
+				y2 =    motif.event_info.menu_boxcursor_coords[4] - motif.event_info.menu_boxcursor_coords[2] + 1,
+				r =     motif.event_info.menu_boxcursor_col[1],
+				g =     motif.event_info.menu_boxcursor_col[2],
+				b =     motif.event_info.menu_boxcursor_col[3],
 				src =   src,
 				dst =   dst,
 				defsc = motif.defaultEvent,
@@ -827,14 +878,14 @@ local function f_events()
 			rect_boxcursor:draw()
 		end
 	--draw scroll arrows
-		if #t > motif['event_info'].menu_window_visibleitems then
+		if #t > motif.event_info.menu_window_visibleitems then
 			if item > cursorPosY then
-				animUpdate(motif['event_info'].menu_arrow_up_data)
-				animDraw(motif['event_info'].menu_arrow_up_data)
+				animUpdate(motif.event_info.menu_arrow_up_data)
+				animDraw(motif.event_info.menu_arrow_up_data)
 			end
-			if item >= cursorPosY and item + motif['event_info'].menu_window_visibleitems - cursorPosY < #t then
-				animUpdate(motif['event_info'].menu_arrow_down_data)
-				animDraw(motif['event_info'].menu_arrow_down_data)
+			if item >= cursorPosY and item + motif.event_info.menu_window_visibleitems - cursorPosY < #t then
+				animUpdate(motif.event_info.menu_arrow_down_data)
+				animDraw(motif.event_info.menu_arrow_down_data)
 			end
 		end
 	--draw credits text
@@ -843,7 +894,7 @@ local function f_events()
 			txt_attract_credits:draw()
 		end
 	--draw footer overlay
-		if motif['event_info'].footer_overlay_window ~= nil then
+		if motif.event_info.footer_overlay_window ~= nil then
 			overlay_footer:draw()
 		end
 	--draw other text only if there is event data stored in select.def
@@ -888,7 +939,7 @@ local function f_events()
 			txt_titleEvent:update({text = "NO EVENT DATA"})
 		end
 	--draw layerno = 1 backgrounds
-		bgDraw(motif['eventbgdef'].bg, trueBool)
+		bgDraw(motif.eventbgdef.bg, trueBool)
 	--draw fadein / fadeout
 		main.f_fadeAnim(motif.event_info)
 --;---------------------------------------------------------------------------------------------------------------------
@@ -927,7 +978,10 @@ local function f_events()
 				main.teamMenu[1].tag = t[item].tag
 				main.teamMenu[1].turns = t[item].turns
 				main.teamMenu[1].ratio = t[item].ratio
-			--which lifebar elements should be rendered				
+				main.stageMenu = t[item].stgsel --Enable or Disable Stage Select for Event Selected
+				main.versusScreen = t[item].vsscreen --Enable or Disable Versus Screen for Event Selected
+				main.orderSelect[1] = t[item].ordersel --Enable or Disable Order Select for Event Selected
+			--which lifebar elements should be rendered
 				main.lifebar.bars = t[item].lfbar --main.lifebar.active = t[item].lfbar
 				main.lifebar.match = t[item].lfbarmatchno
 				main.lifebar.timer = t[item].lfbartimer
@@ -937,6 +991,7 @@ local function f_events()
 				main.lifebar.p2aiLevel = t[item].lfbaraip2
 				main.lifebar.p1winCount = t[item].lfbarwinp1
 				main.lifebar.p2winCount = t[item].lfbarwinp2
+			--Hiscore Stuff
 			--[[
 				main.hiscoreScreen = false
 				main.rankingCondition = true
@@ -945,7 +1000,9 @@ local function f_events()
 				start.t_clearCondition.event1 = function() return winnerteam() == 1 end
 				main.t_hiscoreData.event1 = {mode = t[item].itemname, data = 'score', title = "Event Ranking"}
 			--]]
-				main.continueScreen = true
+				main.victoryScreen = t[item].winscreen --Enable or Disable Victory Screen for Event Selected
+				main.continueScreen = t[item].continue --Enable or Disable Continue Screen for Event Selected
+				main.quickContinue = t[item].quickcontinue --Enable or Disable skip player selection when continuing for Event Selected
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				hook.run("main.t_itemname")
 				main.luaPath = t[item].path
@@ -955,6 +1012,7 @@ local function f_events()
 				end
 				main.f_fadeReset('fadeout', motif.event_info)
 				main.f_unlock(false) --To check Unlocks before enter in Character Select
+				if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
 				start.f_selectMode()
 				if winnerteam() == 1 then --Save Score Data only if you complete event
 					if score() > stats.modes[t[item].itemname].score then --Update Hiscore only if is greater than the previous one
@@ -983,8 +1041,8 @@ local function f_events()
 		main.f_refresh()
 	end
 end
-
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
+
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when you enter in main menu item
 end
