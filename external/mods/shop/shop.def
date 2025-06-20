@@ -1,3 +1,4 @@
+;Copy whatever you need to your system.def file.
 ;This file is not loaded by the engine, so you can delete it.
 
 [Music]
@@ -61,6 +62,7 @@ info.font = 2,0,1
 info.scale = 0.95, 0.95
 info.text.unknown = "???"
 info.text.unlock = "Unlocks"
+info.text.locked = "This item has yet to be discovered..."
 
 items.def = external/mods/shop/items.def ;load the items to be sold.
 items.spr = external/mods/shop/items.sff ;load sprites for shop items.
@@ -79,6 +81,7 @@ preview.unknown.facing = 1
 preview.unknown.scale = 1.03, 1.1
 preview.unknown.window = 0,0, 320,240
 
+character.preview.resetanim = 0 ;Set to 1 to Reset Character Preview Animation when move cursor.
 character.preview.anim = 0 ;By default it uses stand animation, but if you want to use a exclusive one, read the note in the shop.lua file.
 ;character.preview.spr = 9000,1 ;You have to choose between anim or spr(portrait)
 character.preview.offset = 238,184
@@ -86,6 +89,7 @@ character.preview.facing = 1
 character.preview.scale = 1.0, 1.0
 character.preview.window = 0,0, 320,240
 
+stage.preview.resetanim = 0 ;Set to 1 to Reset Stage Preview Animation when move cursor.
 ;stage.preview.anim = -1 ;You have to choose between anim or spr(portrait)
 stage.preview.spr = 9000,1 ;By default it uses stage select portrait, but if you want to use a exclusive one, read the note in the shop.lua file.
 stage.preview.offset = 163,31
@@ -282,4 +286,269 @@ trans = add1
 ;------------------------------------------------------------------------------------------------------------------
 ;FOR SCREENPACKS BASED IN DEFAULT MUGEN1 MOTIF (localcoord = 1280,720):
 ;------------------------------------------------------------------------------------------------------------------
-Work In Progress...
+[Shop Info] ;Shop screen definition
+reload.enabled = 0 ;Set to 1 to enable shop data reload (items.def & items.sff files), each time that shop menu is initialized (for debug purposes), 0 to disable.
+
+fadein.time = 20
+fadein.col = 0,0,0
+;fadein.anim = -1
+
+fadeout.time = 20
+fadeout.col = 0,0,0
+;fadeout.anim = -1
+
+menu.uselocalcoord = 1
+menu.pos = 0,0
+
+cursor.move.snd = 100,0
+cursor.category.snd = 100,0
+cursor.done.snd = 100,1
+cursor.purchase.snd = 600,0
+cursor.error.snd = 600,1
+cancel.snd = 100,2
+
+title.offset = 10,45
+title.font = 4,0,1
+title.scale = 1.0, 1.0
+title.text = "ITEM SHOP"
+
+category.offset = 350,110
+category.font = 3,5,0
+category.scale = 1.0, 1.0
+
+currency.offset = 1270,45
+currency.font = 3,0,-1
+currency.scale = 1.0, 1.0
+currency.text = "P$"
+
+price.offset = 1000,640
+price.font = 3,0,0
+price.scale = 1.0, 1.0
+price.text.sold = "SOLD OUT"
+price.default = 500 ;If a shop item does not have a price assigned, it will be assigned this price by default.
+
+info.offset = 10,690
+info.font = 2,0,1
+info.scale = 1.0, 1.0
+info.text.unknown = "???"
+info.text.unlock = "Unlocks"
+info.text.locked = "This item has yet to be discovered..."
+
+items.def = external/mods/shop/itemsMUGEN1.def ;load the items to be sold.
+items.spr = external/mods/shop/items.sff ;load sprites for shop items.
+
+;preview.bg.anim = -1
+preview.bg.spr = 0,1
+preview.bg.offset = 380,40
+preview.bg.facing = 1
+preview.bg.scale = 3.2, 3.2
+preview.bg.window = 0,0, 1280,720
+
+;preview.unknown.anim = -1
+preview.unknown.spr = 0,2
+preview.unknown.offset = 383,47
+preview.unknown.facing = 1
+preview.unknown.scale = 3.2, 3.2
+preview.unknown.window = 0,0, 1280,720
+
+character.preview.resetanim = 0 ;Set to 1 to Reset Character Preview Animation when move cursor.
+character.preview.anim = 0 ;By default it uses stand animation, but if you want to use a exclusive one, read the note in the shop.lua file.
+;character.preview.spr = 9000,1
+character.preview.offset = 990,550
+character.preview.facing = 1
+character.preview.scale = 0.8, 0.8
+character.preview.window = 0,0, 1280,720
+
+stage.preview.resetanim = 0 ;Set to 1 to Reset Stage Preview Animation when move cursor.
+;stage.preview.anim = -1
+stage.preview.spr = 9000,1 ;By default it uses stage select portrait, but if you want to use a exclusive one, read the note in the shop.lua file.
+stage.preview.offset = 764,92
+stage.preview.facing = 1
+stage.preview.scale = 0.48, 1.22
+stage.preview.window = 0,0, 1280,720
+
+custom.preview.offset = 640,20
+custom.preview.scale = 1.0, 1.0
+custom.preview.window = 0,0, 1280,720
+
+menu.item.offset = 10,161
+menu.item.font = 7,0,1
+menu.item.scale = 1.0, 1.0
+menu.item.spacing = 0,45 ;active items also uses this
+
+menu.item.active.offset = 10,161
+menu.item.active.font = 7,0,1
+menu.item.active.scale = 1.0, 1.0
+
+;menu.window.margins.y = 0,0
+menu.window.visibleitems = 10
+
+menu.boxcursor.visible = 1
+menu.boxcursor.coords = -5,128, 730,172
+menu.boxcursor.col = 255,255,255
+menu.boxcursor.alpharange = 10,40,2, 255,255,0
+
+menu.boxbg.visible = 1
+menu.boxbg.col = 0,0,0
+menu.boxbg.alpha = 0,128
+
+;menu.arrow.up.anim = -1
+menu.arrow.up.spr = 400,0
+menu.arrow.up.offset = 700,100
+menu.arrow.up.facing = 1
+menu.arrow.up.scale = 1.5, 1.5
+
+;menu.arrow.down.anim = -1
+menu.arrow.down.spr = 401,0
+menu.arrow.down.offset = 700,590
+menu.arrow.down.facing = 1
+menu.arrow.down.scale = 1.5, 1.5
+
+;Fade BG during Purchase Screen
+purchase.overlay.window = 0,0, 1280,720
+purchase.overlay.col = 0,0,0
+purchase.overlay.alpha = 0,128
+
+;purchase.bg.anim = -1
+purchase.bg.spr = 0,1
+purchase.bg.offset = 100,100
+purchase.bg.facing = 1
+purchase.bg.scale = 6.0, 2.2
+purchase.bg.window = 0,0, 1280,720
+
+;Show Custom Cursor during Purchase Screen
+;purchase.cursor.anim = -1
+;purchase.cursor.spr = 
+;purchase.cursor.offset = 80.6,100
+;purchase.cursor.spacing = 0,15
+;purchase.cursor.facing = 1
+;purchase.cursor.scale = 1.0, 1.0
+;purchase.cursor.window = 0,0, 1280,720
+
+purchase.boxcursor.visible = 1
+purchase.boxcursor.spacing = 0,60
+purchase.boxcursor.coords = 209,408, 1077,470
+purchase.boxcursor.col = 255,255,255
+purchase.boxcursor.alpharange = 10,40,2, 255,255,0
+
+purchase.info.offset = 648,240
+purchase.info.spacing = 0,5
+purchase.info.window = 400,0, 1280,720
+purchase.info.font = 2,0,0
+purchase.info.scale = 1.1, 1.1
+purchase.info.text = "You do not have enough P$ to buy this content."
+
+purchase.question.offset = 648,240
+purchase.question.font = 2,5,0
+purchase.question.scale = 1.1, 1.1
+purchase.question.text = "Purchase with P$?"
+
+purchase.yes.text = "Yes"
+purchase.ok.text = "Accept" ;This text appears when don't have enough currency
+purchase.no.text = "No"
+
+purchase.yes.offset = 646,450
+purchase.yes.font = 4,0,0, 191,191,191
+purchase.yes.scale = 1.0, 1.0
+
+purchase.yes.active.offset = 646,450
+purchase.yes.active.font = 4,0,0, 255,255,255
+purchase.yes.active.scale = 1.0, 1.0
+
+purchase.no.offset = 646,520
+purchase.no.font = 4,0,0, 191,191,191
+purchase.no.scale = 1.0, 1.0
+
+purchase.no.active.offset = 646,520
+purchase.no.active.font = 4,0,0, 255,255,255
+purchase.no.active.scale = 1.0, 1.0
+
+balance.old.offset = 590,350
+balance.old.font = 3,0,-1
+balance.old.scale = 1.0, 1.0
+
+;balance.arrow.anim = -1
+balance.arrow.spr = 0,0
+balance.arrow.offset = 320,159
+balance.arrow.facing = 1
+balance.arrow.scale = 1.5, 1.5
+balance.arrow.window = 0,0, 1280,720
+
+balance.new.offset = 695,350
+balance.new.font = 3,0,1
+balance.new.scale = 1.0, 1.0
+;-------------------------------------------------------------------------------
+[ShopBGdef] ;Shop screen background
+spr = ""
+bgclearcolor = 0,0,0
+
+[ShopBG BG]
+type = normal
+spriteno = 100,0
+start = 0,0
+tile = 1,1
+velocity = -1.000, -0.618
+
+[ShopBG Title BG]
+type = normal
+spriteno = 700,0
+start = -640,0
+scalestart = 3.1, 0.89
+trans = add1
+
+[ShopBG Info BG]
+type = normal
+spriteno = 700,0
+start = -640,650
+scalestart = 3.1, 1
+trans = add1
+
+;-------------------------------------------------------------------------------
+[Reward Info] ;Reward screen definition
+fadein.time = 20
+fadein.col = 0,0,0
+;fadein.anim = -1
+
+fadeout.time = 20
+fadeout.col = 0,0,0
+;fadeout.anim = -1
+
+menu.pos = 0,0
+
+reward.snd = 600,0
+accept.snd = 100,2
+
+victory.reward = 500
+firstattack.reward = 100
+specialko.reward = 1000
+superko.reward = 1500
+perfectko.reward = 2000
+
+reward.offset = 640,300
+reward.font = 3,0,0
+reward.scale = 1.0, 1.0
+reward.text = "P$ Earned!"
+
+accept.offset = 640,450
+accept.font = 4,0,0
+accept.scale = 1.0, 1.0
+accept.text = "Accept"
+
+;-------------------------------------------------------------------------------
+[RewardBGdef] ;Reward screen background
+spr = ""
+bgclearcolor = 255,255,255
+
+[RewardBG BG]
+type = normal
+spriteno = 100,0
+start = 0,0
+tile = 1,1
+velocity = -1.000, -0.618
+
+[RewardBG Window]
+type = normal
+spriteno = 700,0
+start = -450,220
+scalestart = 2.15, 4
+trans = add1

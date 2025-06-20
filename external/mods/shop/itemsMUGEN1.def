@@ -1,0 +1,31 @@
+;See the original "items.def" file for Examples and Instructions about using each paramvalue.
+
+[Characters]
+id = kfm720
+
+id = kfm_zaxis
+price = 1500
+
+[Stages]
+id = stages/kfm.def
+
+id = stages/stage0-720.def
+price = 1000
+
+id = stages/stagez.def
+price = 1500
+
+id = stages/stage3d.def
+price = 2000
+
+;The next example is a "Custom Category" that is compatible with the following external module:
+;https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/gallery
+[Artworks]
+id = art8
+name = Kung Fu Man
+info = Esaka's Kung Fu Man Artwork will be available in Gallery.
+price = 1800
+spr = 1,0
+offset = 780,64
+scale = 0.64, 0.64
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil and stats.modes.arcade.clearcount.kfm720 > 0

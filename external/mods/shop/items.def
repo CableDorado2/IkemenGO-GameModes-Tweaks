@@ -20,23 +20,33 @@
 ;	(Unrecognized chars or stages IDs, will be excluded from the shop).
 ;
 ;	The id stored will be used by "unlock" paramvalue following the next format:
-;	unlock=stats.shopstock ~= nil and stats.shopstock["categoryname"] ~= nil and stats.shopstock["categoryname"]["itemid"] == false
+;	unlock=stats.shopstock ~= nil and stats.shopstock["categoryname"] ~= nil and stats.shopstock["categoryname"]["itemid"] == false or network()
 ;
 ;	This means that any engine feature that uses the "unlock" paramvalue
 ;	can use this Shop Mode to create a purchasable item as an unlock condition.
 
 ; - price (optional)
 ;	Set to number that should be displayed as price value for each item.
-;	(If is not defined, "price.default" system.def [Shop Info] paramvalue will be used).
+;	If is not defined, "price.default" system.def [Shop Info] paramvalue will be used.
+
+; - unlock (optional)
+;   Pure Lua code, executed exactly as is, each time upon loading shop menu.
+;   If it evaluates to boolean 'true' the item will be selectable from
+;   shop submenu, or hidden on 'false'. Default: true.
+;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
+
+; - info (optional)
+;   Set to custom description that should be displayed for item selected.
+;   If is not defined, "info.text.unlock" system.def [Shop Info] paramvalue + item name will be used.
 
 ; - name (only used in custom category) [optional]
 ;	Set to name that should be displayed for each item stored in a "Custom Category".
-;	(If is not defined, "info.text.unknown" system.def [Shop Info] paramvalue will be used).
+;	If is not defined, "info.text.unknown" system.def [Shop Info] paramvalue will be used.
 
 ; - spr (only used in custom category) [optional]
 ;	Set groupNo and indexNo to load from the sff file defined in "items.spr" system.def
 ;	[Shop Info] paramvalue, to show a preview sprite for items stored in a "Custom Category".
-;	(If is not defined, nothing will be displayed).
+;	If is not defined, nothing will be displayed.
 ;
 ;	Characters and Stages previews are read from their own .sff file and configured
 ;	in system.def [Shop Info] with "character.preview" and "stage.preview" paramvalues.
@@ -64,6 +74,7 @@ id = kfm720
 
 id = kfm_zaxis
 price = 1500
+unlock = stats.shopstock ~= nil and stats.shopstock["Stages"] ~= nil and stats.shopstock["Stages"]["stages/stagez.def"] == false
 
 [Stages]
 id = stages/kfm.def
@@ -71,7 +82,7 @@ id = stages/kfm.def
 id = stages/stage0-720.def
 price = 1000
 
-id = stages/stageZ.def
+id = stages/stagez.def
 price = 1500
 
 id = stages/stage3d.def
@@ -81,9 +92,11 @@ price = 2000
 ;https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/gallery
 [Artworks]
 id = art8
-name = Artwork of Kung Fu Man
+name = Kung Fu Man
+info = Esaka's Kung Fu Man Artwork will be available in Gallery.
 price = 1800
 spr = 1,0
 offset = 172,30
 scale = 0.21, 0.21
 window = 0,0, 320,240
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil and stats.modes.arcade.clearcount.kfm720 > 0
