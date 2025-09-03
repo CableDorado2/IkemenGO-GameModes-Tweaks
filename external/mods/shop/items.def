@@ -10,6 +10,8 @@
 ;
 ;	Unrecognized names will be considered as "Custom Categories".
 ;	(Ideal for use with modules or just to buy content not added by default in the engine).
+;
+;	To change categories in the shop menu, use the TAG buttons, defined as D and W in the Input Settings.
  
 ; - id (required)
 ;	Set to name that initiates new shop items declaration, so it has to be assigned
