@@ -1045,4 +1045,5 @@ if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when you enter in main menu item
+
 end
