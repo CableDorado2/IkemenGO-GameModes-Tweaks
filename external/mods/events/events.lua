@@ -1,10 +1,10 @@
 --[[	   				  EVENTS MODULE
-===================================================================
-Version: 1.3
+======================================================================
+Version: 1.3.1
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
-===================================================================
+======================================================================
 ]]
 local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to adjust some values ​​to draw the background...
 --TODO: Fix High Score.
@@ -16,117 +16,124 @@ local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, t
 ;Declaring events consists of setting up following parameters:
 
 ; - id (required)
-;   Set to name that should be returned by GameMode trigger.
-;   This parameter also initiates new events declaration, so it has to be
-;   assigned before any other parameter used by the same event. All events should
-;   have unique id names.
+;	Set to name that should be returned by GameMode trigger.
+;	This parameter also initiates new events declaration, so it has to be
+;	assigned before any other parameter used by the same event. All events should
+;	have unique id names.
 
-; - name (required)
-;   Set to name that should be displayed for item in Events Mode submenu.
+; - spr (optional)
+;	Set groupNo and indexNo to load from the sff file defined in "events.spr" system.def
+;	[Event Info] paramvalue, to show a preview sprite for event item.
+;	If is not defined, "preview.unknown.spr" will be displayed.
+
+; - name (optional)
+;	Set to name that should be displayed for item in Events Mode submenu.
+;	If is not defined, "menu.itemname.unknown" system.def [Event Info] paramvalue will be used.
 
 ; - description (optional)
-;   Set to description that should be displayed for item in Events Mode submenu.
+;	Set to description that should be displayed for item in Events Mode submenu.
+;	If is not defined, "info.unknown" system.def [Event Info] paramvalue will be used.
 
 ; - path (required)
-;   Path to file with lua extension (relative to game directory)
-;   containing event mode custom fight coded in Lua language.
-;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
+;	Path to file with lua extension (relative to game directory)
+;	containing event mode custom fight coded in Lua language.
+;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
 
 ; - unlock (optional)
-;   Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
-;   If it evaluates to boolean 'true' the event will be selectable from
-;   events mode submenu, or hidden on 'false'. Default: true.
-;   https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
+;	Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
+;	If it evaluates to boolean 'true' the event will be selectable from
+;	events mode submenu, or hidden on 'false'. Default: true.
+;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
 
 ; - characterselect (optional)
-;   If it Evalues to boolean "true" character select will be displayed for the Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" character select will be displayed for the Event Selected.
+;	Default: false.
 
 ; - singlemode (optional)
-;   If it Evalues to boolean "true" Single Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" Single Team mode will be selectable
+;	when Character Select is Enabled for Event Selected.
+;	Default: false.
 
 ; - simulmode (optional)
-;   If it Evalues to boolean "true" Simul Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" Simul Team mode will be selectable
+;	when Character Select is Enabled for Event Selected.
+;	Default: false.
 
 ; - tagmode (optional)
-;   If it Evalues to boolean "true" Tag Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" Tag Team mode will be selectable
+;	when Character Select is Enabled for Event Selected.
+;	Default: false.
 
 ; - turnsmode (optional)
-;   If it Evalues to boolean "true" Turns Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" Turns Team mode will be selectable
+;	when Character Select is Enabled for Event Selected.
+;	Default: false.
 
 ; - ratiomode (optional)
-;   If it Evalues to boolean "true" Ratio Team mode will be selectable
-;   when Character Select is Enabled for Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" Ratio Team mode will be selectable
+;	when Character Select is Enabled for Event Selected.
+;	Default: false.
 
 ; - stageselect (optional)
-;   If it Evalues to boolean "true" stage select will be displayed for the Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" stage select will be displayed for the Event Selected.
+;	Default: false.
 
 ; - vsscreen (optional)
-;   If it Evalues to boolean "true" versus screen will be displayed for the Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" versus screen will be displayed for the Event Selected.
+;	Default: false.
 
 ; - orderselect (optional)
-;   If it Evalues to boolean "true" order select will be available during versus screen for the Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" order select will be available during versus screen for the Event Selected.
+;	Default: false.
 
 ; - victoryscreen (optional)
-;   If it Evalues to boolean "true" victory screen will not be displayed after win for the Event Selected.
-;   Default: true.
+;	If it Evalues to boolean "true" victory screen will not be displayed after win for the Event Selected.
+;	Default: true.
 
 ; - continuescreen (optional)
-;   If it Evalues to boolean "false" continue screen will not be displayed when player lose for the Event Selected.
-;   Default: true.
+;	If it Evalues to boolean "false" continue screen will not be displayed when player lose for the Event Selected.
+;	Default: true.
 
 ; - quickcontinue (optional)
-;   If it Evalues to boolean "true" continuing should skip player selection for the Event Selected.
-;   Default: false.
+;	If it Evalues to boolean "true" continuing should skip player selection for the Event Selected.
+;	Default: false.
 
 ; - lifebar (optional)
-;   If it Evalues to boolean "false" Lifebar will be disabled for the Match.
-;   Default: true.
+;	If it Evalues to boolean "false" Lifebar will be disabled for the Match.
+;	Default: true.
 
 ; - lifebarwincntp1 (optional)
-;   If it Evalues to boolean "true" Win Count for p1 side will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" Win Count for p1 side will be displayed in Lifebar.
+;	Default: false.
 
 ; - lifebarwincntp2 (optional)
-;   If it Evalues to boolean "true" Win Count for p2 side will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" Win Count for p2 side will be displayed in Lifebar.
+;	Default: false.
 
 ; - lifebartimer (optional)
-;   If it Evalues to boolean "true" Timer will be displayed in Lifebar.
-;   Note: It will only be displayed if launchFight() round time is different than -1.
-;   Default: false.
+;	If it Evalues to boolean "true" Timer will be displayed in Lifebar.
+;	Note: It will only be displayed if launchFight() round time is different than -1.
+;	Default: false.
 
 ; - lifebarscorep1 (optional)
-;   If it Evalues to boolean "true" Score for p1 side will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" Score for p1 side will be displayed in Lifebar.
+;	Default: false.
 
 ; - lifebarscorep2 (optional)
-;   If it Evalues to boolean "true" Score for p2 side will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" Score for p2 side will be displayed in Lifebar.
+;	Default: false.
 
 ; - lifebarmatchno (optional)
-;   If it Evalues to boolean "true" Match Number will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" Match Number will be displayed in Lifebar.
+;	Default: false.
 
 ; - lifebarailevelp1 (optional)
-;   If it Evalues to boolean "true" AI Level for p1 side will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" AI Level for p1 side will be displayed in Lifebar.
+;	Default: false.
 
 ; - lifebarailevelp2 (optional)
-;   If it Evalues to boolean "true" AI Level for p2 side will be displayed in Lifebar.
-;   Default: false.
+;	If it Evalues to boolean "true" AI Level for p2 side will be displayed in Lifebar.
+;	Default: false.
 
 ;Examples:
  
@@ -137,6 +144,7 @@ description = Event 1 Description...
 path = data/events/event1.lua
 
 id = event2
+spr = 0,2
 name = All-Star Match 1
 description = Event 2 Description...
 path = data/events/event2.lua
@@ -203,9 +211,19 @@ cursor.move.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
 
-menu.uselocalcoord = 1
-menu.pos = 85,33
-menu.title.uppercase = 1
+events.def = external/mods/events/events.def ;load the events items to show. (If is not defined, events will be loaded from select.def)
+events.spr = external/mods/events/events.sff ;load sprites for events items. (If is not defined, nothing will be displayed)
+
+;preview.unknown.anim = -1
+preview.unknown.spr = 0,0
+preview.unknown.offset = 0,0
+preview.unknown.facing = 1
+preview.unknown.scale = 1.0, 1.0
+preview.unknown.window = 0,0, 320,240
+
+preview.offset = 0,0
+preview.scale = 1.0, 1.0
+preview.window = 0,0, 320,240
 
 title.offset = 159,15
 title.font = 3,0,0
@@ -217,6 +235,7 @@ hiscore.font = 3,5,1
 hiscore.text = "HIGH SCORE:"
 hiscore.scale = 1.0, 1.0
 
+info.unknown = "???"
 info.offset = 40,200
 info.spacing = 0,0
 info.font = 2,0,1
@@ -225,6 +244,11 @@ info.window = 0,171, 301,228
 info.textwrap = w
 info.delay = 2
 
+menu.uselocalcoord = 1
+menu.pos = 85,33
+menu.title.uppercase = 1
+
+menu.itemname.unknown = "???"
 menu.item.offset = 0,0
 menu.item.font = 2,0,1
 menu.item.scale = 1.0, 1.0
@@ -278,13 +302,29 @@ reload.enabled = 0 ;Set to 1 to enable select.def events data reload, each time 
 
 fadein.time = 20
 fadein.col = 0,0,0
+;fadein.anim = -1
 
 fadeout.time = 20
 fadeout.col = 0,0,0
+;fadeout.anim = -1
 
 cursor.move.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
+
+events.def = external/mods/events/events.def ;load the events items to show. (If is not defined, events will be loaded from select.def)
+events.spr = external/mods/events/events.sff ;load sprites for events items. (If is not defined, nothing will be displayed)
+
+;preview.unknown.anim = -1
+preview.unknown.spr = 0,0
+preview.unknown.offset = 0,0
+preview.unknown.facing = 1
+preview.unknown.scale = 1.0, 1.0
+preview.unknown.window = 0,0, 1280,720
+
+preview.offset = 0,0
+preview.scale = 1.0, 1.0
+preview.window = 0,0, 1280,720
 
 title.offset = 640,38
 title.font = 4,0,0
@@ -296,9 +336,11 @@ hiscore.font = 2,0,1
 hiscore.text = "HIGH SCORE:"
 hiscore.scale = 1.5, 1.5
 
+info.unknown = "???"
 info.offset = 350,580
 info.spacing = 0,2
 info.font = 5,0,1
+info.scale = 1.0, 1.0
 info.window = 38,521, 1041,708
 info.textwrap = w
 info.delay = 0
@@ -307,6 +349,7 @@ menu.uselocalcoord = 1
 menu.pos = 414,99
 menu.title.uppercase = 1
 
+menu.itemname.unknown = "???"
 menu.item.offset = 0,0
 menu.item.font = 7,0,1
 menu.item.scale = 1.0, 1.0
@@ -332,11 +375,13 @@ menu.boxbg.alpha = 0,128
 menu.arrow.up.spr = 400,0
 menu.arrow.up.offset = 470,-30
 menu.arrow.up.facing = 1
+menu.arrow.up.scale = 1.5, 1.5
 
 ;menu.arrow.down.anim = -1
 menu.arrow.down.spr = 401,0
 menu.arrow.down.offset = 470,372
 menu.arrow.down.facing = 1
+menu.arrow.down.scale = 1.5, 1.5
 
 ;-------------------------------------------------------------------------------
 [EventBGdef] ;Event select screen background
@@ -390,6 +435,21 @@ local t_base = {
 	cursor_move_snd = {100, 0},
 	cursor_done_snd = {100, 1},
 	cancel_snd = {100, 2},
+
+	events_def = "external/mods/events/events.def",
+	events_spr = "external/mods/events/events.sff",
+	
+	preview_unknown_anim = -1,
+	preview_unknown_spr = {0, 0},
+	preview_unknown_offset = {0, 0},
+	preview_unknown_facing = 1,
+	preview_unknown_scale = {1.0, 1.0},
+	preview_unknown_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
+	
+	preview_offset = {0, 0},
+	preview_facing = 1,
+	preview_scale = {1.0, 1.0},
+	preview_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
 	
 	title_offset = {159, 15},
 	title_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
@@ -401,6 +461,7 @@ local t_base = {
 	hiscore_scale = {1.0, 1.0},
 	hiscore_text = 'HIGH SCORE:',
 	
+	info_unknown = '???',
 	info_offset = {40, 200},
 	info_spacing = {0, 0},
 	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
@@ -413,6 +474,7 @@ local t_base = {
 	menu_pos = {85, 33},
 	menu_title_uppercase = 1,	
 	menu_itemname_back = 'Back',
+	menu_itemname_unknown = '???',
 	
 	--menu_bg_<itemname>_anim = -1,
 	--menu_bg_<itemname>_spr = {},
@@ -532,9 +594,21 @@ end
 
 local function f_loadEvents()
 	t_selEventMode = {}
+--Load .def file with Events Items
+	if main.f_fileExists(motif.event_info.events_def) then
+		motif.files.event_def = motif.event_info.events_def
+	else
+		motif.files.event_def = motif.files.select
+	end
+--Load .sff file with Events Preview Items
+	if main.f_fileExists(motif.event_info.events_spr) then
+		motif.files.event_data = sffNew(motif.event_info.events_spr)
+	else
+		motif.files.event_data = sffNew()
+	end
 	local section = 0
 	local row = 0
-	local content = main.f_fileRead(motif.files.select)
+	local content = main.f_fileRead(motif.files.event_def)
 	content = content:gsub('([^\r\n;]*)%s*;[^\r\n]*', '%1')
 	content = content:gsub('\n%s*\n', '\n')
 	for line in content:gmatch('[^\r\n]+') do
@@ -552,6 +626,7 @@ local function f_loadEvents()
 					--Default Values for each Event Added
 						{
 							id = value,
+							spr = {},
 							name = '',
 							description = '',
 							path = '',
@@ -581,7 +656,15 @@ local function f_loadEvents()
 							lifebarailevelp2 = false
 						}
 					)
-				elseif t_selEventMode[#t_selEventMode][param] ~= nil then
+			--Update optional comma separated number values to table
+				elseif param:match('^spr$') then
+					local tbl = {}
+					for num in value:gmatch('([^,]+)') do
+						table.insert(tbl, tonumber(num))
+					end
+					t_selEventMode[#t_selEventMode][param] = tbl
+			--Update optional paramvalues with custom ones
+				else--if t_selEventMode[#t_selEventMode][param] ~= nil then
 					t_selEventMode[#t_selEventMode][param] = value
 				end
 			end
@@ -619,7 +702,63 @@ local function f_loadEvents()
 	end
 	if main.debugLog then main.f_printTable(t_selEventMode, 'debug/t_selEventMode.txt') end
 end
-f_loadEvents() --Load select.def events data when engine starts
+f_loadEvents() --Load events data (events.def & events.sff files) when engine starts
+
+--creates sprite data out of table values
+local anim = ''
+local facing = ''
+local function f_loadEventSprData(t, v) --This function uses motif.files.event_data instead system.sff data
+	local animParam = v.s .. 'anim'
+	local sprParam = v.s .. 'spr'
+	local data = v.s .. 'data'
+	-- optional prefix argument only changes parameter name for anim/spr numbers assignment
+	if v.prefix ~= nil then
+		animParam = v.s .. v.prefix .. 'anim'
+		sprParam = v.s .. v.prefix .. 'spr'
+		data = v.s .. v.prefix .. 'data'
+	end
+	if t[v.s .. 'offset'] == nil then t[v.s .. 'offset'] = {0, 0} end
+	if t[v.s .. 'scale'] == nil then t[v.s .. 'scale'] = {1.0, 1.0} end
+	if t[animParam] ~= nil and t[animParam] ~= -1 and motif.anim[t[animParam]] ~= nil then --create animation data
+		if t[v.s .. 'facing'] == nil then t[v.s .. 'facing'] = 1 end
+		t[data] = main.f_animFromTable(
+			motif.anim[t[animParam]],
+			motif.files.event_data,
+			(t[v.s .. 'offset'][1] + (v.x or 0)) / t[v.s .. 'scale'][1],
+			(t[v.s .. 'offset'][2] + (v.y or 0)) / t[v.s .. 'scale'][2],
+			t[v.s .. 'scale'][1],
+			t[v.s .. 'scale'][2],
+			motif.f_animFacing(t[v.s .. 'facing'])
+		)
+	elseif t[sprParam] ~= nil and #t[sprParam] > 0 then --create sprite data
+		if #t[sprParam] == 1 then --fix values
+			if type(t[sprParam][1]) == 'string' then
+				t[sprParam] = {tonumber(t[sprParam][1]:match('^([0-9]+)')), 0}
+			else
+				t[sprParam] = {t[sprParam][1], 0}
+			end
+		end
+		if t[v.s .. 'facing'] == -1 then facing = ', H' else facing = '' end
+		t[data] = animNew(motif.files.event_data, t[sprParam][1] .. ', ' .. t[sprParam][2] .. ', ' .. (t[v.s .. 'offset'][1] + (v.x or 0)) / t[v.s .. 'scale'][1] .. ', ' .. (t[v.s .. 'offset'][2] + (v.y or 0)) / t[v.s .. 'scale'][2] .. ', -1' .. facing)
+		animSetScale(t[data], t[v.s .. 'scale'][1], t[v.s .. 'scale'][2])
+		animUpdate(t[data])
+	else --create dummy data
+		t[data] = animNew(motif.files.event_data, '-1,0, 0,0, -1')
+		animUpdate(t[data])
+	end
+	animSetWindow(t[data], 0, 0, motif.info.localcoord[1], motif.info.localcoord[2])
+end
+f_loadEventSprData(motif.event_info, {s = 'preview_unknown_'}) --Generate motif.event_info.preview_unknown_data
+
+local function f_drawCustomPreview(group, index, x, y, scaleX, scaleY, x1, y1, x2, y2)
+	local anim = group..','..index..', 0,0, -1' --local anim = group..','..index..','..x..','..y..','..'-1'
+	anim = animNew(motif.files.event_data, anim)
+	animSetScale(anim, scaleX, scaleY)
+	animSetPos(anim, x, y)
+	animSetWindow(anim, x1, y1, x2, y2)
+	animUpdate(anim)
+	animDraw(anim)
+end
 
 local function f_events()
 	sndPlay(motif.files.snd_data, motif.event_info.cursor_done_snd[1], motif.event_info.cursor_done_snd[2])
@@ -632,6 +771,7 @@ local function f_events()
 	for k, v in ipairs(t_selEventMode) do
 		table.insert(t, {data = text:create({window = t_menuWindowEvent}),
 				itemname = v.id,
+				itemspr = v.spr,
 				displayname = v.name,
 				info = v.description,
 				path = v.path,
@@ -664,7 +804,13 @@ local function f_events()
 		)
 	end
 	if #t_selEventMode == 0 then --If there is not event data
-		table.insert(t, {data = text:create({window = t_menuWindowEvent}), itemname = 'back', displayname = motif.event_info.menu_itemname_back, info = ""})
+		table.insert(t, {
+			data = text:create({window = t_menuWindowEvent}),
+			itemname = 'back',
+			itemspr = {},
+			displayname = motif.event_info.menu_itemname_back,
+			info = ""
+		})
 	else --If there is event data
 	--Initialize Statistics
 		if stats.modes == nil then stats.modes = {} end
@@ -721,6 +867,29 @@ local function f_events()
 		end
 	--draw title
 		txt_titleEvent:draw()
+	--draw preview sprites
+		if t[item].itemspr[1] == nil or t[item].itemspr[2] == nil then
+			main.f_animPosDraw(
+				motif.event_info.preview_unknown_data,
+				motif.event_info.menu_pos[1] + motif.event_info.preview_unknown_offset[1],
+				motif.event_info.menu_pos[2] + motif.event_info.preview_unknown_offset[2],
+				motif.event_info.preview_unknown_facing,
+				true
+			)
+		else
+			f_drawCustomPreview(
+				t[item].itemspr[1], --group
+				t[item].itemspr[2], --index
+				motif.event_info.menu_pos[1] + motif.event_info.preview_offset[1], --x
+				motif.event_info.menu_pos[2] + motif.event_info.preview_offset[2], --y
+				motif.event_info.preview_scale[1], --scaleX
+				motif.event_info.preview_scale[2], --scaleY
+				motif.event_info.preview_window[1], --x1
+				motif.event_info.preview_window[2], --y1
+				motif.event_info.preview_window[3], --x2
+				motif.event_info.preview_window[4] --y2
+			)
+		end
 	--draw menu items
 		local items_shown = item + motif.event_info.menu_window_visibleitems - cursorPosY
 		if items_shown > #t or (motif.event_info.menu_window_visibleitems > 0 and items_shown < #t and (motif.event_info.menu_window_margins_y[1] ~= 0 or motif.event_info.menu_window_margins_y[2] ~= 0)) then
@@ -728,7 +897,7 @@ local function f_events()
 		end
 		for i = 1, items_shown do
 			local unlockText = ""
-			if main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = "???" end --Condition to Show Unlocked Text
+			if t[i].displayname ~= "" and main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = motif.event_info.menu_itemname_unknown end --Condition to Show Unlocked Text
 			if i > item - cursorPosY then
 				if i == item then
 				--Draw active item background
@@ -903,7 +1072,7 @@ local function f_events()
 			local eventNo = t[item].itemname
 			local cdText = ""
 		--Set text data
-			if t[item].info ~= "" and main.t_unlockLua.modes[t[item].itemname] == nil then cdText = t[item].info else cdText = "???" end
+			if t[item].info ~= "" and main.t_unlockLua.modes[t[item].itemname] == nil then cdText = t[item].info else cdText = motif.event_info.info_unknown end
 		--draw description text
 			infoTextEnd = main.f_textRender(
 				txt_infoEvent,
@@ -1042,8 +1211,6 @@ local function f_events()
 	end
 end
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
-
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when you enter in main menu item
-
 end
