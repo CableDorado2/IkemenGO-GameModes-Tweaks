@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.3.1
+Version: 1.3.2
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -868,7 +868,7 @@ local function f_events()
 	--draw title
 		txt_titleEvent:draw()
 	--draw preview sprites
-		if t[item].itemspr[1] == nil or t[item].itemspr[2] == nil then
+		if t[item].itemspr[1] == nil or t[item].itemspr[2] == nil or main.t_unlockLua.modes[t[item].itemname] ~= nil then
 			main.f_animPosDraw(
 				motif.event_info.preview_unknown_data,
 				motif.event_info.menu_pos[1] + motif.event_info.preview_unknown_offset[1],
