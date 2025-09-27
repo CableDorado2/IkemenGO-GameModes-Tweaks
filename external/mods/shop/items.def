@@ -101,4 +101,4 @@ spr = 1,0
 offset = 172,30
 scale = 0.21, 0.21
 window = 0,0, 320,240
-unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil and stats.modes.arcade.clearcount.kfm720 > 0
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil

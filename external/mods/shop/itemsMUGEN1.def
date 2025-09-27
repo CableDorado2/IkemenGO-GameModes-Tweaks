@@ -28,4 +28,4 @@ price = 1800
 spr = 1,0
 offset = 780,64
 scale = 0.64, 0.64
-unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil and stats.modes.arcade.clearcount.kfm720 > 0
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm720 ~= nil
