@@ -1,8 +1,8 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.3.2
+Version: 1.4
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-10-01 Nightly Build
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 ======================================================================
 ]]
@@ -28,7 +28,7 @@ local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, t
 
 ; - name (optional)
 ;	Set to name that should be displayed for item in Events Mode submenu.
-;	If is not defined, "menu.itemname.unknown" system.def [Event Info] paramvalue will be used.
+;	If is not defined, "itemname.unknown" system.def [Event Info] paramvalue will be used.
 
 ; - description (optional)
 ;	Set to description that should be displayed for item in Events Mode submenu.
@@ -248,7 +248,7 @@ menu.uselocalcoord = 1
 menu.pos = 85,33
 menu.title.uppercase = 1
 
-menu.itemname.unknown = "???"
+itemname.unknown = "???"
 menu.item.offset = 0,0
 menu.item.font = 2,0,1
 menu.item.scale = 1.0, 1.0
@@ -349,7 +349,7 @@ menu.uselocalcoord = 1
 menu.pos = 414,99
 menu.title.uppercase = 1
 
-menu.itemname.unknown = "???"
+itemname.unknown = "???"
 menu.item.offset = 0,0
 menu.item.font = 7,0,1
 menu.item.scale = 1.0, 1.0
@@ -474,7 +474,7 @@ local t_base = {
 	menu_pos = {85, 33},
 	menu_title_uppercase = 1,	
 	menu_itemname_back = 'Back',
-	menu_itemname_unknown = '???',
+	itemname_unknown = '???',
 	
 	--menu_bg_<itemname>_anim = -1,
 	--menu_bg_<itemname>_spr = {},
@@ -760,6 +760,71 @@ local function f_drawCustomPreview(group, index, x, y, scaleX, scaleY, x1, y1, x
 	animDraw(anim)
 end
 
+--common menu calculations
+local function f_menuCommonCalc(t, item, cursorPosY, moveTxt, section, keyPrev, keyNext)
+	local startItem = 1
+	for _, v in ipairs(t) do
+		if v.itemname ~= 'empty' then
+			break
+		end
+		startItem = startItem + 1
+	end
+	if main.f_input(main.t_players, keyNext) then
+		sndPlay(motif.files.snd_data, motif[section].cursor_move_snd[1], motif[section].cursor_move_snd[2])
+		while true do
+			item = item + 1
+			if cursorPosY < motif[section].menu_window_visibleitems then
+				cursorPosY = cursorPosY + 1
+			end
+			if t[item] == nil or t[item].itemname ~= 'empty' then
+				break
+			end
+		end
+	elseif main.f_input(main.t_players, keyPrev) then
+		sndPlay(motif.files.snd_data, motif[section].cursor_move_snd[1], motif[section].cursor_move_snd[2])
+		while true do
+			item = item - 1
+			if cursorPosY > startItem then
+				cursorPosY = cursorPosY - 1
+			end
+			if t[item] == nil or t[item].itemname ~= 'empty' then
+				break
+			end
+		end
+	end
+	if item > #t or (item == 1 and t[item].itemname == 'empty') then
+		item = 1
+		while true do
+			if t[item].itemname ~= 'empty' or item >= #t then
+				break
+			else
+				item = item + 1
+			end
+		end
+		cursorPosY = item
+	elseif item < 1 then
+		item = #t
+		while true do
+			if t[item].itemname ~= 'empty' or item <= 1 then
+				break
+			else
+				item = item - 1
+			end
+		end
+		if item > motif[section].menu_window_visibleitems then
+			cursorPosY = motif[section].menu_window_visibleitems
+		else
+			cursorPosY = item
+		end
+	end
+	if cursorPosY >= motif[section].menu_window_visibleitems then
+		moveTxt = (item - motif[section].menu_window_visibleitems) * motif[section].menu_item_spacing[2]
+	elseif cursorPosY <= startItem then
+		moveTxt = (item - startItem) * motif[section].menu_item_spacing[2]
+	end
+	return cursorPosY, moveTxt, item
+end
+
 local function f_events()
 	sndPlay(motif.files.snd_data, motif.event_info.cursor_done_snd[1], motif.event_info.cursor_done_snd[2])
 	local cursorPosY = 1
@@ -897,7 +962,7 @@ local function f_events()
 		end
 		for i = 1, items_shown do
 			local unlockText = ""
-			if t[i].displayname ~= "" and main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = motif.event_info.menu_itemname_unknown end --Condition to Show Unlocked Text
+			if t[i].displayname ~= "" and main.t_unlockLua.modes[t[i].itemname] == nil then unlockText = t[i].displayname else unlockText = motif.event_info.itemname_unknown end --Condition to Show Unlocked Text
 			if i > item - cursorPosY then
 				if i == item then
 				--Draw active item background
@@ -1112,7 +1177,7 @@ local function f_events()
 	--draw fadein / fadeout
 		main.f_fadeAnim(motif.event_info)
 --;---------------------------------------------------------------------------------------------------------------------
-		cursorPosY, moveTxt, item = main.f_menuCommonCalc(t, item, cursorPosY, moveTxt, 'event_info', {'$U'}, {'$D'})
+		cursorPosY, moveTxt, item = f_menuCommonCalc(t, item, cursorPosY, moveTxt, 'event_info', {'$U'}, {'$D'})
 	--Cursor Move
 		if commandGetState(main.t_cmd[main.playerInput], '$U') or commandGetState(main.t_cmd[main.playerInput], '$D') then
 			f_resetEventInfoTxt()
@@ -1211,6 +1276,7 @@ local function f_events()
 	end
 end
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
+
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when you enter in main menu item
 end
