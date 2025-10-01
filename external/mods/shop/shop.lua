@@ -1,8 +1,8 @@
 --[[					 		   SHOP MODULE
 ===========================================================================================
-Version: 1.1
+Version: 1.2
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-06-09 Nightly Build
+Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-10-01 Nightly Build
 Description:
 Adds:
 - In-Game Currency System (Player Currency will increase after win a match).
@@ -426,6 +426,71 @@ local t_menuWindowShop = main.f_menuWindow(motif.shop_info)
 
 local overlay_purchase = main.f_createOverlay(motif.shop_info, 'purchase_overlay')
 local rect_purchaseboxcursor = rect:create({})
+
+--common menu calculations
+local function f_menuCommonCalc(t, item, cursorPosY, moveTxt, section, keyPrev, keyNext)
+	local startItem = 1
+	for _, v in ipairs(t) do
+		if v.itemname ~= 'empty' then
+			break
+		end
+		startItem = startItem + 1
+	end
+	if main.f_input(main.t_players, keyNext) then
+		sndPlay(motif.files.snd_data, motif[section].cursor_move_snd[1], motif[section].cursor_move_snd[2])
+		while true do
+			item = item + 1
+			if cursorPosY < motif[section].menu_window_visibleitems then
+				cursorPosY = cursorPosY + 1
+			end
+			if t[item] == nil or t[item].itemname ~= 'empty' then
+				break
+			end
+		end
+	elseif main.f_input(main.t_players, keyPrev) then
+		sndPlay(motif.files.snd_data, motif[section].cursor_move_snd[1], motif[section].cursor_move_snd[2])
+		while true do
+			item = item - 1
+			if cursorPosY > startItem then
+				cursorPosY = cursorPosY - 1
+			end
+			if t[item] == nil or t[item].itemname ~= 'empty' then
+				break
+			end
+		end
+	end
+	if item > #t or (item == 1 and t[item].itemname == 'empty') then
+		item = 1
+		while true do
+			if t[item].itemname ~= 'empty' or item >= #t then
+				break
+			else
+				item = item + 1
+			end
+		end
+		cursorPosY = item
+	elseif item < 1 then
+		item = #t
+		while true do
+			if t[item].itemname ~= 'empty' or item <= 1 then
+				break
+			else
+				item = item - 1
+			end
+		end
+		if item > motif[section].menu_window_visibleitems then
+			cursorPosY = motif[section].menu_window_visibleitems
+		else
+			cursorPosY = item
+		end
+	end
+	if cursorPosY >= motif[section].menu_window_visibleitems then
+		moveTxt = (item - motif[section].menu_window_visibleitems) * motif[section].menu_item_spacing[2]
+	elseif cursorPosY <= startItem then
+		moveTxt = (item - startItem) * motif[section].menu_item_spacing[2]
+	end
+	return cursorPosY, moveTxt, item
+end
 
 local function f_saveStats()
 	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
@@ -1452,9 +1517,9 @@ local function f_shopMenu()
 		if not confirmPurchase then
 			if not main.fadeActive then
 				if inCategory then
-					cursorPosY, moveTxt, item = main.f_menuCommonCalc(t_shopMenu[shopCategoryNo], item, cursorPosY, moveTxt, 'shop_info', {'$U'}, {'$D'})
+					cursorPosY, moveTxt, item = f_menuCommonCalc(t_shopMenu[shopCategoryNo], item, cursorPosY, moveTxt, 'shop_info', {'$U'}, {'$D'})
 				--else
-				--	cursorPosY, moveTxt, shopCategoryNo = main.f_menuCommonCalc(t_shopMenu, shopCategoryNo, cursorPosY, moveTxt, 'shop_info', {'$U'}, {'$D'})
+				--	cursorPosY, moveTxt, shopCategoryNo = f_menuCommonCalc(t_shopMenu, shopCategoryNo, cursorPosY, moveTxt, 'shop_info', {'$U'}, {'$D'})
 				end
 			end
 		--Close Menu
@@ -1491,7 +1556,7 @@ local function f_shopMenu()
 			elseif commandGetState(main.t_cmd[main.playerInput], '$U') and not main.fadeActive then
 				resetShopAnim = true
 				if inCategory then
-					--item = item - 1 --This is already managed by main.f_menuCommonCalc
+					--item = item - 1 --This is already managed by f_menuCommonCalc
 				else
 					shopCategoryNo = shopCategoryNo - 1
 				end
@@ -1499,7 +1564,7 @@ local function f_shopMenu()
 			elseif commandGetState(main.t_cmd[main.playerInput], '$D') and not main.fadeActive then
 				resetShopAnim = true
 				if inCategory then
-					--item = item + 1 --This is already managed by main.f_menuCommonCalc
+					--item = item + 1 --This is already managed by f_menuCommonCalc
 				else
 					shopCategoryNo = shopCategoryNo + 1
 				end
@@ -1720,7 +1785,6 @@ function start.f_selectMode()
 	end
 end
 if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
-
 main.t_itemname.shop = function()
 	return f_shopMenu()
 end
