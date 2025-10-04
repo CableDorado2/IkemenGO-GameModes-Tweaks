@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.4
+Version: 1.4.1
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-10-01 Nightly Build
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -1195,7 +1195,7 @@ local function f_events()
 			main.close = false
 			break
 	--Back Button
-		elseif esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'})) then
+		elseif not main.close and (esc() or main.f_input(main.t_players, {'m'}) or (t[item].itemname == 'back' and main.f_input(main.t_players, {'pal', 's'}))) then
 			sndPlay(motif.files.snd_data, motif.event_info.cancel_snd[1], motif.event_info.cancel_snd[2])
 			main.f_fadeReset('fadeout', motif.event_info)
 			main.close = true
