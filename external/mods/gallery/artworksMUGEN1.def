@@ -1,4 +1,4 @@
-;See the original "artworks.def" file for Examples and Guidance about using each paramvalue.
+;See the original "artworks.def" file for Examples and Instructions about using each paramvalue.
 
 [GalleryArtworks]
 id = Art 1

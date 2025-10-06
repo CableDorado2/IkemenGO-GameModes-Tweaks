@@ -1,0 +1,75 @@
+;Gallery Storyboards declaration. Assigned storyboards are selectable via Gallery Mode
+;submenu ('menu.itemname.gallery' parameter in screenpack DEF file)
+
+;Declaring storyboards consists of setting up following parameters:
+
+; - id (required)
+;	Set to name that should be stored for use with unlocks paramvalue.
+;	This parameter also initiates new storyboard declaration, so it has to be
+;	assigned before any other parameter used by the same storyboard.
+;	All storyboards should have unique id names.
+
+; - path (required)
+;	Set Path to file with def extension (relative to game directory).
+;	containing cutscenes events coded in storyboard definition file.
+;	https://www.elecbyte.com/mugendocs/storyboard.html
+
+; - previewspr (only used in main gallery screen) [optional]
+;	Set groupNo and indexNo to load from sff file defined in "storyboards.spr"
+;	system.def [Gallery Info] paramvalue, to show preview sprite for items.
+;	If is not defined, "preview.unknown.spr" will be displayed.
+
+; - previewsize (only used in main gallery screen) [optional]
+;	Set Width and Height of for gallery preview sprite defined in previewspr paramvalue.
+;	If is not defined, "preview.storyboard.size" system.def [Gallery Info] paramvalue will be used.
+
+; - previewpos (only used in main gallery screen) [optional]
+;	Set posX and posY for gallery preview sprite which is the same defined in previewspr paramvalue.
+;	If is not defined, "preview.storyboard.offset" system.def [Gallery Info] paramvalue will be used.
+
+; - previewspacing (only used in main gallery screen) [optional]
+;	Set spacingX and spacingY for gallery preview sprite which is the same defined in previewspr paramvalue.
+;	If is not defined, "preview.storyboard.spacing" system.def [Gallery Info] paramvalue will be used.
+
+; - previewscale (only used in main gallery screen) [optional]
+;	Set scaleX and scaleY for gallery preview sprite which is the same defined in previewspr paramvalue.
+;	If is not defined, "preview.storyboard.scale" system.def [Gallery Info] paramvalue will be used.
+
+; - info (only used in main gallery screen) [optional]
+;	Set to description that should be displayed for storyboard selected.
+;	If is not defined, "info.unknown.text" system.def [Gallery Info] paramvalue will be used.
+
+; - unlock (optional)
+;	Pure Lua code, executed exactly as is, each time upon loading gallery menu.
+;	If it evaluates to boolean 'true' the storyboard will be selectable from
+;	gallery mode submenu, or hidden on 'false'. Default: true.
+;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
+
+;Examples:
+
+[GalleryStoryboards]
+id = Storyboard 1
+path = data/kfm/intro.def
+previewspr = 1,1
+info = Kung Fu Man Motif Introduction.
+
+id = Storyboard 2
+path = chars/kfm/intro.def
+previewspr = 1,2
+info = Introduction Cutscene for KFM's story.
+
+id = Storyboard 3
+path = chars/kfm/ending.def
+previewspr = 1,3
+info = Ending Cutscene for KFM's story.
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and (stats.modes.arcade.clearcount.kfm720 ~= nil or stats.modes.arcade.clearcount.kfmz ~= nil or stats.modes.arcade.clearcount.kfm_zss ~= nil or stats.modes.arcade.clearcount.kfm_zaxis ~= nil)
+
+id = Storyboard 4
+path = data/kfm/gameover.def
+previewspr = 1,4
+info = Game Over Screen.
+
+id = Storyboard 5
+path = data/kfm/credits.def
+previewspr = 1,5
+info = Scrolling Ending Credits.

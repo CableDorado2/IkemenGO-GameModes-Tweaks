@@ -1,5 +1,5 @@
+;Copy whatever you need to your system.def file.
 ;This file is not loaded by the engine, so you can delete it.
-;This was made just for you <3 copy whatever you need to your system.def file.
 
 [Music]
 ;Music to play at gallery mode screen.
@@ -17,7 +17,7 @@ menu.itemname.gallery = "GALLERY" ;Ikemen feature
 ;FOR SCREENPACKS BASED IN DEFAULT WINMUGEN MOTIF (localcoord = 320,240):
 ;------------------------------------------------------------------------------------------------------------------
 [Gallery Info] ;Gallery screen definition
-reload.enabled = 0 ;Set to 1 to enable gallery data reload (artworks.def & artworks.sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
+reload.enabled = 0 ;Set to 1 to enable gallery data reload (.def & .sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
 
 fadein.time = 20
 fadein.col = 0,0,0
@@ -31,6 +31,7 @@ menu.uselocalcoord = 1
 menu.pos = 0,0
 
 cursor.move.snd = 100,0
+cursor.category.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
 
@@ -38,14 +39,25 @@ title.offset = 159,15
 title.font = 3,0,0
 title.scale = 1.0, 1.0
 title.text = "GALLERY"
+title.text.artworks = "ARTWORKS"
+title.text.storyboards = "CUTSCENES"
+title.text.music = "MUSIC"
 
 info.offset = 5,230
 info.font = 2,0,1
 info.scale = 0.95, 0.95
 info.unknown.text = "???"
 
+common.spr = external/mods/gallery/common.sff
+
 artworks.def = external/mods/gallery/artworks.def
 artworks.spr = external/mods/gallery/artworks.sff
+
+storyboards.def = external/mods/gallery/storyboards.def
+storyboards.spr = external/mods/gallery/storyboards.sff
+
+music.def = external/mods/gallery/music.def
+music.spr = external/mods/gallery/music.sff
 
 preview.art.columns = 3
 preview.art.hiddencolumns = 0
@@ -57,6 +69,18 @@ preview.art.spacing = 950,218
 preview.art.scale = 0.0558, 0.0558
 preview.art.window = 0,22, 320,184
 
+preview.storyboard.offset = 825,767
+preview.storyboard.spacing = 165,168
+preview.storyboard.size = 1280,720
+preview.storyboard.scale = 0.0705, 0.07
+preview.storyboard.window = 0,22, 320,184
+
+preview.music.offset = 825,767
+preview.music.spacing = 165,168
+preview.music.size = 1280,720
+preview.music.scale = 0.0705, 0.07
+preview.music.window = 0,22, 320,184
+
 ;preview.bg.anim = -1
 preview.bg.spr = 0,0
 preview.bg.offset = 5,13
@@ -67,7 +91,7 @@ preview.bg.scale = 1, 1
 preview.bg.window = 0,22, 320,184
 
 ;preview.cursor.anim = -1
-preview.cursor.spr = 0,2
+preview.cursor.spr = 1,0
 preview.cursor.offset = 5,13
 preview.cursor.spacing = 6,6
 preview.cursor.facing = 1
@@ -75,14 +99,32 @@ preview.cursor.size = 96,56
 preview.cursor.scale = 1, 1
 preview.cursor.window = 0,22, 320,184
 
+;preview.locked.anim = -1
+preview.locked.spr = 2,0
+preview.locked.offset = 6.9,14.9
+preview.locked.spacing = 12,12
+preview.locked.facing = 1
+preview.locked.size = 90,50
+preview.locked.scale = 1, 1
+preview.locked.window = 0,22, 320,184
+
 ;preview.unknown.anim = -1
-preview.unknown.spr = 0,1
+preview.unknown.spr = 3,0
 preview.unknown.offset = 6.9,14.9
 preview.unknown.spacing = 12,12
 preview.unknown.facing = 1
 preview.unknown.size = 90,50
 preview.unknown.scale = 1, 1
 preview.unknown.window = 0,22, 320,184
+
+;preview.unknown.music.anim = -1
+preview.unknown.music.spr = 4,0
+preview.unknown.music.offset = 6.9,14.9
+preview.unknown.music.spacing = 12,12
+preview.unknown.music.facing = 1
+preview.unknown.music.size = 90,50
+preview.unknown.music.scale = 1, 1
+preview.unknown.music.window = 0,22, 320,184
 ;-------------------------------------------------------------------------------
 [GalleryBGdef] ;Gallery screen background
 spr = ""
@@ -174,11 +216,48 @@ scalestart = 0.24, 0.30
 layerno = 1
 trans = add1
 
+;-------------------------------------------------------------------------------
+[MusicPlayer Info] ;Music Player screen definition
+fadein.time = 20
+fadein.col = 0,0,0
+;fadein.anim = -1
+
+fadeout.time = 20
+fadeout.col = 0,0,0
+;fadeout.anim = -1
+
+menu.pos = 0,0
+;cursor.done.snd = 100,2
+
+info.offset = 160,120
+info.spacing = 0,5
+info.font = 4,0,0
+info.scale = 0.5, 0.5
+info.window = 5,0, 320,240
+;-------------------------------------------------------------------------------
+[MusicPlayerBGdef] ;Music Player screen background
+spr = ""
+bgclearcolor = 255,255,255
+
+[MusicPlayerBG BG]
+type = normal
+spriteno = 100,0
+start = 0,0
+tile = 1,1
+velocity = -1.000, -0.618
+
+[MusicPlayerBG Info]
+type = normal
+spriteno = 700,0
+start = -160,100
+scalestart = 1, 0.80
+trans = add1
+
 ;------------------------------------------------------------------------------------------------------------------
 ;FOR SCREENPACKS BASED IN MUGEN1 MOTIF (localcoord = 1280,720):
 ;------------------------------------------------------------------------------------------------------------------
 [Gallery Info] ;Gallery screen definition
-reload.enabled = 0 ;Set to 1 to enable gallery data reload (artworks.def & artworks.sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
+reload.enabled = 0 ;Set to 1 to enable gallery data reload (.def & .sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
 
 fadein.time = 20
 fadein.col = 0,0,0
@@ -192,6 +271,7 @@ menu.uselocalcoord = 1
 menu.pos = 0,0
 
 cursor.move.snd = 100,0
+cursor.category.snd = 100,0
 cursor.done.snd = 100,1
 cancel.snd = 100,2
 
@@ -199,14 +279,25 @@ title.offset = 640,45
 title.font = 4,0,0
 title.scale = 1.0, 1.0
 title.text = "GALLERY"
+title.text.artworks = "ARTWORKS"
+title.text.storyboards = "CUTSCENES"
+title.text.music = "MUSIC"
 
 info.offset = 10,690
 info.font = 2,0,1
 info.scale = 1.0, 1.0
 info.unknown.text = "???"
 
+common.spr = external/mods/gallery/common.sff
+
 artworks.def = external/mods/gallery/artworksMUGEN1.def
 artworks.spr = external/mods/gallery/artworks.sff
+
+storyboards.def = external/mods/gallery/storyboards.def
+storyboards.spr = external/mods/gallery/storyboards.sff
+
+music.def = external/mods/gallery/music.def
+music.spr = external/mods/gallery/music.sff
 
 preview.art.columns = 4
 preview.art.hiddencolumns = 0
@@ -218,6 +309,18 @@ preview.art.spacing = 1000,280
 preview.art.scale = 0.167, 0.167
 preview.art.window = 0,40, 1280,600
 
+preview.storyboard.offset = 775.10,725
+preview.storyboard.spacing = 221,213
+preview.storyboard.size = 1280,720
+preview.storyboard.scale = 0.2105, 0.21
+preview.storyboard.window = 0,40, 1280,600
+
+preview.music.offset = 775.10,725
+preview.music.spacing = 221,213
+preview.music.size = 1280,720
+preview.music.scale = 0.2105, 0.21
+preview.music.window = 0,40, 1280,600
+
 ;preview.bg.anim = -1
 preview.bg.spr = 0,0
 preview.bg.offset = 10,35
@@ -228,7 +331,7 @@ preview.bg.scale = 3, 3
 preview.bg.window = 0,40, 1280,600
 
 ;preview.cursor.anim = -1
-preview.cursor.spr = 0,2
+preview.cursor.spr = 1,0
 preview.cursor.offset = 10,35
 preview.cursor.spacing = 220,140
 preview.cursor.facing = 1
@@ -236,14 +339,32 @@ preview.cursor.size = 96,56
 preview.cursor.scale = 3, 3
 preview.cursor.window = 0,40, 1280,600
 
+;preview.locked.anim = -1
+preview.locked.spr = 2,0
+preview.locked.offset = 14.95,39
+preview.locked.spacing = 226.5,145
+preview.locked.facing = 1
+preview.locked.size = 90,50
+preview.locked.scale = 3, 3
+preview.locked.window = 0,40, 1280,600
+
 ;preview.unknown.anim = -1
-preview.unknown.spr = 0,1
+preview.unknown.spr = 3,0
 preview.unknown.offset = 14.95,39
 preview.unknown.spacing = 226.5,145
 preview.unknown.facing = 1
 preview.unknown.size = 90,50
 preview.unknown.scale = 3, 3
 preview.unknown.window = 0,40, 1280,600
+
+;preview.unknown.music.anim = -1
+preview.unknown.music.spr = 4,0
+preview.unknown.music.offset = 14.95,39
+preview.unknown.music.spacing = 226.5,145
+preview.unknown.music.facing = 1
+preview.unknown.music.size = 90,50
+preview.unknown.music.scale = 3, 3
+preview.unknown.music.window = 0,40, 1280,600
 ;-------------------------------------------------------------------------------
 [GalleryBGdef] ;Gallery screen background
 spr = ""
@@ -333,4 +454,41 @@ spriteno = 700,0
 start = 440,10
 scalestart = 0.47, 0.8
 layerno = 1
+trans = add1
+
+;-------------------------------------------------------------------------------
+[MusicPlayer Info] ;Music Player screen definition
+fadein.time = 20
+fadein.col = 0,0,0
+;fadein.anim = -1
+
+fadeout.time = 20
+fadeout.col = 0,0,0
+;fadeout.anim = -1
+
+menu.pos = 0,0
+;cursor.done.snd = 100,2
+
+info.offset = 640,360
+info.spacing = 0,5
+info.font = 4,0,0
+info.scale = 1.0, 1.0
+info.window = 50,0, 1280,720
+;-------------------------------------------------------------------------------
+[MusicPlayerBGdef] ;Music Player screen background
+spr = ""
+bgclearcolor = 255,255,255
+
+[MusicPlayerBG BG]
+type = normal
+spriteno = 100,0
+start = 0,0
+tile = 1,1
+velocity = -1.000, -0.618
+
+[MusicPlayerBG Info]
+type = normal
+spriteno = 700,0
+start = -640,300
+scalestart = 3.1, 2.0
 trans = add1

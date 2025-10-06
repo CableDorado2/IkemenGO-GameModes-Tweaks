@@ -1,0 +1,65 @@
+;Gallery Music declaration. Assigned music are selectable via Gallery Mode
+;submenu ('menu.itemname.gallery' parameter in screenpack DEF file)
+
+;Declaring music consists of setting up following parameters:
+
+; - id (required)
+;	Set to name that should be stored for use with unlocks paramvalue.
+;	This parameter also initiates new music declaration, so it has to be
+;	assigned before any other parameter used by the same music.
+;	All music should have unique id names.
+
+; - path (required)
+;	Set Path to file with song (relative to game directory).
+;	containing music file to play.
+
+; - volume (optional)
+;	Set default music volume scale. 100 is for 100% (default: 100)
+
+; - loopstart (optional)
+;	Set music loop start sample number. (default: 0)
+
+; - loopend (optional)
+;	Set music loop end sample number. (default: 0)
+
+; - previewspr (only used in main gallery screen) [optional]
+;	Set groupNo and indexNo to load from sff file defined in "music.spr"
+;	system.def [Gallery Info] paramvalue, to show preview sprite for items.
+;	If is not defined, "preview.unknown.music.spr" will be displayed.
+
+; - previewsize (only used in main gallery screen) [optional]
+;	Set Width and Height of for gallery preview sprite defined in previewspr paramvalue.
+;	If is not defined, "preview.music.size" system.def [Gallery Info] paramvalue will be used.
+
+; - previewpos (only used in main gallery screen) [optional]
+;	Set posX and posY for gallery preview sprite which is the same defined in previewspr paramvalue.
+;	If is not defined, "preview.music.offset" system.def [Gallery Info] paramvalue will be used.
+
+; - previewspacing (only used in main gallery screen) [optional]
+;	Set spacingX and spacingY for gallery preview sprite which is the same defined in previewspr paramvalue.
+;	If is not defined, "preview.music.spacing" system.def [Gallery Info] paramvalue will be used.
+
+; - previewscale (only used in main gallery screen) [optional]
+;	Set scaleX and scaleY for gallery preview sprite which is the same defined in previewspr paramvalue.
+;	If is not defined, "preview.music.scale" system.def [Gallery Info] paramvalue will be used.
+
+; - info (optional)
+;	Set to description that should be displayed for music selected.
+;	If is not defined, "info.unknown.text" system.def [Gallery Info] paramvalue will be used.
+
+; - unlock (optional)
+;	Pure Lua code, executed exactly as is, each time upon loading gallery menu.
+;	If it evaluates to boolean 'true' the music will be selectable from
+;	gallery mode submenu, or hidden on 'false'. Default: true.
+;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#content-unlocking
+
+;Examples:
+
+[GalleryMusic]
+id = music 1
+path = external/mods/gallery/Itty Bitty 8 Bit.mp3
+info = Itty Bitty 8 Bit - Kevin MacLeod (incompetech.com)
+
+id = music 2
+path = external/mods/gallery/Special Spotlight.mp3
+info = Special Spotlight - Kevin MacLeod (incompetech.com)
