@@ -24,3 +24,22 @@ Work contributed to Ikemen by various artists is licensed under a
 Creative Commons Attribution 3.0 Unported License.
 
 http://creativecommons.org/licenses/by/3.0/deed.en_US
+
+----------------------------------------------------------------------------
+
+Gallery Demo Songs
+
+The songs included in this repository for demonstration purposes
+is licensed under the terms of Creative Commons: By Attribution.
+
+Song 1:
+Title: Itty Bitty 8 Bit
+Artist: Kevin MacLeod (incompetech.com)
+License: Creative Commons: By Attribution 3.0 License.
+Source: http://creativecommons.org/licenses/by/3.0/
+
+Song 2:
+Title: Special Spotlight
+Artist: Kevin MacLeod (incompetech.com)
+License: Creative Commons: By Attribution 3.0 License.
+Source: http://creativecommons.org/licenses/by/3.0/
