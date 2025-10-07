@@ -1,6 +1,6 @@
 --[[					 		   SHOP MODULE
 ===========================================================================================
-Version: 1.2
+Version: 1.2.1
 Author: Cable Dorado 2 (CD2)
 Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-10-01 Nightly Build
 Description:
@@ -1531,7 +1531,7 @@ local function f_shopMenu()
 				main.f_unlock(false) --Check Menu Unlocks
 				stats.playerCurrencyOLD = stats.playerCurrency --Refresh player currency backup to do calculations
 				break
-			elseif esc() or main.f_input(main.t_players, {'m'}) then
+			elseif (esc() or main.f_input(main.t_players, {'m'})) and not main.close then
 				sndPlay(motif.files.snd_data, motif.shop_info.cancel_snd[1], motif.shop_info.cancel_snd[2])
 			--Back to Category Select
 				--if inCategory then
