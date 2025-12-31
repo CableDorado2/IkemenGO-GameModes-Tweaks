@@ -1,6 +1,6 @@
 # Ikemen GO - Custom Game Modes
 
-External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves and adds Game Modes.
+External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves or adds New Features.
 
 > [!NOTE]
 > - If you are using Ikemen GO **v0.98.2** or **v0.99.0** stable releases, please download and use the *Legacy Modules* [**here**](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/releases/tag/legacy)
