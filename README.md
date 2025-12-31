@@ -3,9 +3,9 @@
 External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves and adds Game Modes.
 
 > [!NOTE]
-> If you are using Ikemen GO **v0.98.2** or **v0.99.0** stable releases, please download and use the *Legacy Modules* [**here**](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/releases/tag/legacy)
+> - If you are using Ikemen GO **v0.98.2** or **v0.99.0** stable releases, please download and use the *Legacy Modules* [**here**](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/releases/tag/legacy)
 > 
-> If you are using Ikemen GO Nightly Build, you can install the modules using the green **<> Code** button in this repo. However, their functionality is not fully guaranteed due the nature of this engine build.
+> - If you are using Ikemen GO Nightly Build, you can install the modules using the green **<> Code** button in this repo. However, their functionality is not fully guaranteed due the nature of this engine build.
 
 ##  _Shop Mode (New)_
 A Shop Menu to spend In-Game Currency➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
