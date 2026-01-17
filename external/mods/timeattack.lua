@@ -10,7 +10,8 @@ CD2's Tweaks:
 - Show Best Record in Character Select
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
-- Set Infinite Round Time and Unlimited Continue Credits
+- Set Infinite Round Time
+- Disable Continue Screen
 - Disable Victory Screen
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
@@ -158,6 +159,7 @@ p2.teammate.win.state =
 ;left blank (character and stage not covered)
 
 ]]
+
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -177,14 +179,14 @@ local function f_commonCfg()
 	--main.luaPath = "external/script/default.lua" --path to script executed by start.f_selectMode()
 	--main.persistLife = true --if life should be maintained after match
 	main.aiRamp = true
-	--main.elimination = true
+	main.elimination = true
 	--main.dropDefeated = true
 	main.exitSelect = true
 	--main.rotationChars = true
 	main.makeRoster = true
-	main.quickContinue = true --if by default continuing should skip player selection
+	--main.quickContinue = true --if by default continuing should skip player selection
 	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
-	main.resetScore = true --if loosing should set score for the next match to lose count
+	--main.resetScore = true --if loosing should set score for the next match to lose count
 	main.roundTime = -1 --Infinite Round Time
 	main.stageOrder = true
 	
@@ -194,7 +196,7 @@ local function f_commonCfg()
 	--main.motif.losescreen = true
 	--main.motif.winscreen = true
 	main.motif.victoryscreen = false
-	main.motif.continuescreen = true
+	--main.motif.continuescreen = true
 	main.motif.hiscore = true
 	
 	--main.lifebar.mode = true

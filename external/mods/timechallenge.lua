@@ -11,7 +11,7 @@ CD2's Tweaks:
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set Infinite Round Time
-- Time Record now is Saved in Ranking if player wins
+- Time Record now is Saved in Ranking if player wins ;TODO
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
@@ -212,6 +212,7 @@ p2.teammate.win.state =
 ;left blank (character and stage not covered)
 
 ]]
+
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -224,10 +225,11 @@ local function f_commonCfg()
 	main.selectMenu[2] = true
 	main.stageMenu = true
 	main.roundTime = -1 --Infinite Round Time
+	main.elimination = true
 	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	
 	main.motif.hiscore = true
-	main.motif.losescreen = true
+	--main.motif.losescreen = true
 	main.motif.versusscreen = true
 	main.motif.victoryscreen = true
 	main.motif.winscreen = true

@@ -9,7 +9,7 @@ This mode is detectable by GameMode trigger as: scorechallenge, scorechallengeco
 =======================================================================================================
 CD2's Tweaks:
 - Enables the "Here Comes a New Challenger" Intermission
-- Score Record now is Saved in Ranking if player wins
+- Score Record now is Saved in Ranking if player wins ;TODO
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
@@ -210,6 +210,7 @@ p2.teammate.win.state =
 ;left blank (character and stage not covered)
 
 ]]
+
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -221,6 +222,7 @@ configuration (usually ending with start.f_selectMode function call).
 local function f_commonCfg()
 	main.selectMenu[2] = true
 	main.stageMenu = true
+	main.elimination = true
 	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	--main.roundTime = 50
 	
@@ -230,7 +232,7 @@ local function f_commonCfg()
 	main.matchWins.tag = {1, 1}
 	
 	main.motif.hiscore = true
-	main.motif.losescreen = true
+	--main.motif.losescreen = true
 	main.motif.versusscreen = true
 	main.motif.victoryscreen = true
 	main.motif.winscreen = true
