@@ -9,7 +9,7 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 
 ##  _Installation:_
 - Extract archive content into "**./external/mods**" directory.
-- Edit select.def or system.def depending of module installed.
+- Edit select.def or system.def depending of module installed (Each module contains its installation instructions within its folder or lua file).
 
 ##  _Shop Mode (New)_
 A Shop Menu to spend In-Game Currency➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
