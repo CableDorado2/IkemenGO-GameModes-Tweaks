@@ -1,83 +1,74 @@
---[[	   					       BOSS RUSH MODULE
-=======================================================================================================
-Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
+--[[	   				         BONUS MARATHON MODULE
+==================================================================================================
+Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
-Description: A special challenge where player fight multiple bosses consecutively.
-Beating all bosses clears the mode.
+Description: Based on Boss Rush Module.
+Bonus Marathon Mode is about defeat all opponents that are consider bonuses.
 
-This mode is detectable by GameMode trigger as: bossrush, bossrushcoop and netplaybossrushcoop.
-Only characters with select.def "boss = 1" parameter assigned are valid for this mode.
-=======================================================================================================
-CD2's Tweaks:
-- VS Screen Restored
-- Enables the "Here Comes a New Challenger" Intermission
-- Adds Co-Op and Netplay Variant
-- main.t_bossChars renamed to main.t_bossRushChars to allow Single Boss Fight variant like Bonus Games
-TODO: Add Single Boss Fight game mode (defeat a boss character selected) detectable by GameMode trigger as boss.
-=======================================================================================================
+(Includes Co-Op and Netplay Variant)
+
+This mode is detectable by GameMode trigger as: bonusmarathon, bonusmarathoncoop and netplaybonusmarathoncoop.
+Only characters with select.def "bonus = 1" parameter assigned are valid for this mode.
+==================================================================================================
 ]]
 
 --[[select.def customization:
 [Characters]
-; - boss
-;   IKEMEN feature: Set the paramvalue to 1 to include this character in "Boss Rush" and "Boss Fight" mode.
-;   At least 1 character needs this parameter for the mode to be playable.
+; - bonus
+;   IKEMEN feature: Set the paramvalue to 1 to include this character in Bonus Marathon mode.
+;	At least 1 character needs this parameter for the mode to be playable.
 
 [Options]
-;Maximum number of normal and ratio matches to fight before game ends in Boss Rush mode.
-;Leave it empty to fight all boss characters (the "order" parameter is still respected).
+;Maximum number of normal and ratio matches to fight before game ends in Bonus Marathon mode.
+;Leave it empty to fight all bonus characters (the "order" parameter is still respected).
 
-bossrush.maxmatches = 6,1,1,0,0,0,0,0,0,0
+bonusmarathon.maxmatches = 6,1,1,0,0,0,0,0,0,0
 
 ]]
 
---[[Example system.def parameters assignments
+--[[Example system.def parameters assignments:
 ;-------------------------------------------------------------------------------
 [Title Info]
 ;You need to add itemname to the main system.def so menu items keep the expected order. Grouping rules:
 ;https://github.com/ikemen-engine/Ikemen-GO/wiki/Screenpack-features#menus
 
-menu.itemname.bossrush = "BOSS RUSH" ;Ikemen Feature
-menu.itemname.bossrushcoop = "BOSS RUSH CO-OP" ;Ikemen Feature
-menu.itemname.server.netplaybossrushcoop = "BOSS RUSH CO-OP" ;Ikemen Feature
-
-menu.itemname.bossfight = "BOSS FIGHT" ;TODO
-menu.itemname.bossfight.back = "BACK" ;TODO boss characters menu items are automatically added before bossfight.back
+menu.itemname.bonusmarathon = "BONUS MARATHON" ;Ikemen Feature
+menu.itemname.bonusmarathoncoop = "BONUS MARATHON CO-OP" ;Ikemen Feature
+menu.itemname.server.netplaybonusmarathoncoop = "BONUS MARATHON CO-OP" ;Ikemen Feature
 
 ;-------------------------------------------------------------------------------
 [Select Info]
-title.bossrush.text = "Boss Rush"
-title.bossrushcoop.text = "Boss Rush Cooperative"
-title.netplaybossrushcoop.text = "Online Boss Rush"
+title.bonusmarathon.text = "Bonus Marathon"
+title.bonusmarathoncoop.text = "Bonus Marathon Cooperative"
+title.netplaybonusmarathoncoop.text = "Online Bonus Marathon"
 
-title.boss.text = "Boss Fight" ;TODO
-
-record.bossrush.text = "- BEST RECORD: %n -\n%c: Round %r"
-record.bossrushcoop.text = "- BEST RECORD: %n -\n%c: Round %r"
+record.bonusmarathon.text = "- BEST RECORD: %n -\n%c: %p PTS"
+record.bonusmarathoncoop.text = "- BEST RECORD: %n -\n%c: %p PTS"
+record.netplaybonusmarathoncoop.text = "- BEST RECORD: %n -\n%c: %p PTS"
 
 ;-------------------------------------------------------------------------------
 [Hiscore Info]
 ;Set per-gamemode ranking criteria: score|time|win. Used to sort hiscores for that mode.
 
-ranking.bossrush = "win"
-ranking.bossrushcoop = "win"
-ranking.netplaybossrushcoop = "win"
+ranking.bonusmarathon = "score"
+ranking.bonusmarathoncoop = "score"
+ranking.netplaybonusmarathoncoop = "score"
 
-title.bossrush.text = "Ranking Boss Rush"
-title.bossrushcoop.text = "Ranking Boss Rush Cooperative"
-title.netplaybossrushcoop.text = "Ranking Online Boss Rush"
+title.bonusmarathon.text = "Ranking Bonus Marathon"
+title.bonusmarathoncoop.text = "Ranking Bonus Marathon Cooperative"
+title.netplaybonusmarathoncoop.text = "Ranking Online Bonus Marathon"
 
 ;-------------------------------------------------------------------------------
 [Win Screen]
 ;Set per-gamemode win/results screen variant to use for that mode.
 ;Use "Win Screen" (default) or a specific "<X> Results Screen" name.
 
-results.bossrush = "Boss Rush Results Screen"
-results.bossrushcoop = "Boss Rush Cooperative Results Screen"
-results.netplaybossrushcoop = "Online Boss Rush Results Screen"
+results.bonusmarathon = "Bonus Marathon Results Screen"
+results.bonusmarathoncoop = "Bonus Marathon Cooperative Results Screen"
+results.netplaybonusmarathoncoop = "Online Bonus Marathon Results Screen"
 
 ;-------------------------------------------------------------------------------
-[Boss Rush Results Screen]
+[Bonus Marathon Results Screen]
 enabled = 1
 sounds.enabled = 1
 
@@ -95,7 +86,7 @@ show.time = 300
 state.time = 0
 
 winstext.displaytime = 0
-winstext.text = Bosses defeated: %i
+winstext.text = Total Score: %i
 winstext.font = enter48.def, 0, 0
 winstext.offset = 640,240
 winstext.scale = 1.0, 1.0
@@ -122,12 +113,11 @@ p2.win.state =
 p2.teammate.state = 
 p2.teammate.win.state = 
 
-;-------------------------------------------------------------------------------
-[BossRushResultsBGdef]
+[BonusMarathonResultsBGdef]
 ;left blank (character and stage not covered)
 
 ;-------------------------------------------------------------------------------
-[Boss Rush Cooperative Results Screen]
+[Bonus Marathon Cooperative Results Screen]
 enabled = 1
 sounds.enabled = 1
 
@@ -145,7 +135,7 @@ show.time = 300
 state.time = 0
 
 winstext.displaytime = 0
-winstext.text = Bosses defeated: %i
+winstext.text = Total Score: %i
 winstext.font = enter48.def, 0, 0
 winstext.offset = 640,240
 winstext.scale = 1.0, 1.0
@@ -172,12 +162,11 @@ p2.win.state =
 p2.teammate.state = 
 p2.teammate.win.state = 
 
-;-------------------------------------------------------------------------------
-[BossRushCooperativeResultsBGdef]
+[BonusMarathonCooperativeResultsBGdef]
 ;left blank (character and stage not covered)
 
 ;-------------------------------------------------------------------------------
-[Online Boss Rush Results Screen]
+[Online Bonus Marathon Results Screen]
 enabled = 1
 sounds.enabled = 1
 
@@ -195,7 +184,7 @@ show.time = 300
 state.time = 0
 
 winstext.displaytime = 0
-winstext.text = Bosses defeated: %i
+winstext.text = Total Score: %i
 winstext.font = enter48.def, 0, 0
 winstext.offset = 640,240
 winstext.scale = 1.0, 1.0
@@ -222,12 +211,10 @@ p2.win.state =
 p2.teammate.state = 
 p2.teammate.win.state = 
 
-;-------------------------------------------------------------------------------
-[OnlineBossRushResultsBGdef]
+[OnlineBonusMarathonResultsBGdef]
 ;left blank (character and stage not covered)
 
 ]]
-
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -253,15 +240,15 @@ local function f_commonCfg()
 	main.rotationChars = true
 	main.makeRoster = true
 	--main.quickContinue = true --if by default continuing should skip player selection
-	--main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
+	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	--main.resetScore = true --if loosing should set score for the next match to lose count
 	
-	main.motif.versusscreen = true
+	--main.motif.versusscreen = true
 	--main.motif.versusmatchno = true
 	--main.motif.dialogue = true
-	main.motif.losescreen = true
+	--main.motif.losescreen = true
 	main.motif.winscreen = true
-	main.motif.victoryscreen = true
+	--main.motif.victoryscreen = true
 	--main.motif.continuescreen = true
 	main.motif.hiscore = true
 	
@@ -276,7 +263,7 @@ local function f_commonCfg()
 	--main.storyboard.credits = true
 end
 
-main.t_itemname.bossrush = function()
+main.t_itemname.bonusmarathon = function()
 	main.f_playerInput(main.playerInput, 1)
 	main.t_pIn[2] = 1
 	main.motif.challenger = true
@@ -284,7 +271,7 @@ main.t_itemname.bossrush = function()
 	
 	main.orderSelect[1] = true
 	main.orderSelect[2] = true
-	
+
 	main.teamMenu[1].single = true
 	main.teamMenu[1].simul = true
 	main.teamMenu[1].tag = true
@@ -292,18 +279,14 @@ main.t_itemname.bossrush = function()
 	main.teamMenu[1].ratio = true
 	
 	main.teamMenu[2].single = true
-	main.teamMenu[2].simul = true
-	main.teamMenu[2].tag = true
-	main.teamMenu[2].turns = true
-	main.teamMenu[2].ratio = true
 	
-	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.bossrush)
-	setGameMode('bossrush')
+	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.bonusmarathon)
+	setGameMode('bonusmarathon')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
 
-main.t_itemname.bossrushcoop = function()
+main.t_itemname.bonusmarathoncoop = function()
 	main.coop = true
 	main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
 	main.numTag = {2, math.min(4, gameOption('Config.Players'))}
@@ -313,18 +296,14 @@ main.t_itemname.bossrushcoop = function()
 	main.teamMenu[1].tag = true
 	
 	main.teamMenu[2].single = true
-	main.teamMenu[2].simul = true
-	main.teamMenu[2].tag = true
-	main.teamMenu[2].turns = true
-	main.teamMenu[2].ratio = true
 	
-	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.bossrushcoop)
-	setGameMode('bossrushcoop')
+	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.bonusmarathoncoop)
+	setGameMode('bonusmarathoncoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
 
-main.t_itemname.netplaybossrushcoop = function()
+main.t_itemname.netplaybonusmarathoncoop = function()
 	main.coop = true
 	main.numSimul = {2, 2}
 	main.numTag = {2, 2}
@@ -334,22 +313,15 @@ main.t_itemname.netplaybossrushcoop = function()
 	main.teamMenu[1].tag = true
 	
 	main.teamMenu[2].single = true
-	main.teamMenu[2].simul = true
-	main.teamMenu[2].tag = true
-	main.teamMenu[2].turns = true
-	main.teamMenu[2].ratio = true
 	
-	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.netplaybossrushcoop)
-	setGameMode('netplaybossrushcoop')
+	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.netplaybonusmarathoncoop)
+	setGameMode('netplaybonusmarathoncoop')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
 
-main.t_itemname.boss = function() --W.I.P
+main.t_itemname.bonus = function(t, item)
 	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
-	main.selectMenu[2] = true
-	main.motif.victoryscreen = true
 	
 	main.charparam.ai = true
 	main.charparam.music = true
@@ -358,8 +330,9 @@ main.t_itemname.boss = function() --W.I.P
 	main.charparam.stage = true
 	main.charparam.time = true
 	
-	main.orderSelect[1] = true
-	main.orderSelect[2] = true
+	main.forceChar[2] = {main.t_bonusChars[item]}
+	main.selectMenu[2] = true
+	main.lifebar.p1score = true
 	
 	main.teamMenu[1].single = true
 	main.teamMenu[1].simul = true
@@ -368,41 +341,35 @@ main.t_itemname.boss = function() --W.I.P
 	main.teamMenu[1].ratio = true
 	
 	main.teamMenu[2].single = true
-	main.forceChar[2] = {main.t_bossChars[item]}
 	
 	main.motif.challenger = true
 	main.f_setCredits()
 	
-	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.boss)
-	setGameMode('boss')
+	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.bonus)
+	setGameMode('bonus')
 	hook.run("main.t_itemname")
 	return start.f_selectMode
 end
 
-main.t_bossChars = {}
-main.t_bossRushChars = {}
+main.t_bonusmarathonChars = {}
 for _, v in ipairs(main.t_selChars) do
-	if v.boss ~= nil and v.boss == 1 then
-		if main.t_bossChars == nil then
-			main.t_bossChars = {}
+	if v.bonus ~= nil and v.bonus == 1 then
+		if main.t_bonusmarathonChars[v.order] == nil then
+			main.t_bonusmarathonChars[v.order] = {}
 		end
-		if main.t_bossRushChars[v.order] == nil then
-			main.t_bossRushChars[v.order] = {}
-		end
-		table.insert(main.t_bossChars, v.char_ref)
-		table.insert(main.t_bossRushChars[v.order], v.char_ref)
+		table.insert(main.t_bonusmarathonChars[v.order], v.char_ref)
 	end
 end
 
-if main.t_selOptions.bossrushmaxmatches == nil or #main.t_selOptions.bossrushmaxmatches == 0 then
+if main.t_selOptions.bonusmarathonmaxmatches == nil or #main.t_selOptions.bonusmarathonmaxmatches == 0 then
 	local size = 1
-	for k, _ in pairs(main.t_bossRushChars) do if k > size then size = k end end
-	main.t_selOptions.bossrushmaxmatches = {}
+	for k, _ in pairs(main.t_bonusmarathonChars) do if k > size then size = k end end
+	main.t_selOptions.bonusmarathonmaxmatches = {}
 	for i = 1, size do
-		table.insert(main.t_selOptions.bossrushmaxmatches, 0)
+		table.insert(main.t_selOptions.bonusmarathonmaxmatches, 0)
 	end	
-	for k, v in pairs(main.t_bossRushChars) do
-		main.t_selOptions.bossrushmaxmatches[k] = #v
+	for k, v in pairs(main.t_bonusmarathonChars) do
+		main.t_selOptions.bonusmarathonmaxmatches[k] = #v
 	end
 end
 
@@ -414,13 +381,10 @@ start.t_makeRoster is a table storing functions returning table data used
 by start.f_makeRoster function, depending on game mode.
 ]]
 
-start.t_makeRoster.bossrush = function()
-	return start.f_unifySettings(main.t_selOptions.bossrushmaxmatches, main.t_bossRushChars), main.t_bossRushChars
+start.t_makeRoster.bonusmarathon = function()
+	return start.f_unifySettings(main.t_selOptions.bonusmarathonmaxmatches, main.t_bonusmarathonChars), main.t_bonusmarathonChars
 end
-start.t_makeRoster.bossrushcoop = start.t_makeRoster.bossrush
-start.t_makeRoster.netplaybossrushcoop = start.t_makeRoster.bossrush
+start.t_makeRoster.bonusmarathoncoop = start.t_makeRoster.bonusmarathon
+start.t_makeRoster.netplaybonusmarathoncoop = start.t_makeRoster.bonusmarathon
 
-if gameOption('Debug.DumpLuaTables') then
-	main.f_printTable(main.t_bossChars, "debug/t_bossChars.txt")
-	main.f_printTable(main.t_bossRushChars, "debug/t_bossRushChars.txt")
-end
+if gameOption('Debug.DumpLuaTables') then main.f_printTable(main.t_bonusmarathonChars, "debug/t_bonusmarathonChars.txt") end
