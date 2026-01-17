@@ -1,6 +1,6 @@
 # Ikemen GO - Custom Game Modes
 
-External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves or adds New Features.
+External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ikemen-GO) that improves the originals and adds New Features to the engine.
 
 > [!NOTE]
 > - If you are using Ikemen GO Nightly Build, you can download the modules using the green **<> Code** button in this repo. However, their functionality is not fully guaranteed at the moment you're testing it due the nature of this engine build.
