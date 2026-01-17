@@ -1,7 +1,7 @@
 --[[	   					       TIME CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best time.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
@@ -11,6 +11,7 @@ CD2's Tweaks:
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set Infinite Round Time
+- Time Record now is Saved in Ranking if player wins
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
@@ -223,6 +224,7 @@ local function f_commonCfg()
 	main.selectMenu[2] = true
 	main.stageMenu = true
 	main.roundTime = -1 --Infinite Round Time
+	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	
 	main.motif.hiscore = true
 	main.motif.losescreen = true
@@ -241,8 +243,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.timechallenge = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

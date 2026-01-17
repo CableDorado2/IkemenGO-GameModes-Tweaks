@@ -1,7 +1,7 @@
 --[[	   					       SCORE ATTACK MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: Implements Score Attack game mode (defeat opponents beating previous score record).
 Includes a Co-Op and Netplay variant.
 
@@ -239,7 +239,7 @@ local function f_commonCfg()
 	main.quickContinue = true --if by default continuing should skip player selection
 	--main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	main.resetScore = true --if loosing should set score for the next match to lose count
-	main.roundTime = 99
+	--main.roundTime = 99
 	main.stageOrder = true
 	
 	main.motif.versusscreen = true
@@ -268,8 +268,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.scoreattack = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

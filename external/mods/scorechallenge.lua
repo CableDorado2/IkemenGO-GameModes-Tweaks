@@ -1,7 +1,7 @@
 --[[	   					       SCORE CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best score.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
@@ -9,6 +9,7 @@ This mode is detectable by GameMode trigger as: scorechallenge, scorechallengeco
 =======================================================================================================
 CD2's Tweaks:
 - Enables the "Here Comes a New Challenger" Intermission
+- Score Record now is Saved in Ranking if player wins
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
@@ -220,6 +221,13 @@ configuration (usually ending with start.f_selectMode function call).
 local function f_commonCfg()
 	main.selectMenu[2] = true
 	main.stageMenu = true
+	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
+	--main.roundTime = 50
+	
+	main.matchWins.draw = {0, 0}
+	main.matchWins.simul = {1, 1}
+	main.matchWins.single = {1, 1}
+	main.matchWins.tag = {1, 1}
 	
 	main.motif.hiscore = true
 	main.motif.losescreen = true
@@ -233,8 +241,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.scorechallenge = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

@@ -1,7 +1,7 @@
 --[[	   				         BONUS MARATHON MODULE
 ==================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: Based on Boss Rush Module.
 Bonus Marathon Mode is about defeat all opponents that are consider bonuses.
 
@@ -242,6 +242,7 @@ local function f_commonCfg()
 	--main.quickContinue = true --if by default continuing should skip player selection
 	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	--main.resetScore = true --if loosing should set score for the next match to lose count
+	--main.roundTime = 99
 	
 	--main.motif.versusscreen = true
 	--main.motif.versusmatchno = true
@@ -264,8 +265,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.bonusmarathon = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	
@@ -321,7 +322,8 @@ main.t_itemname.netplaybonusmarathoncoop = function()
 end
 
 main.t_itemname.bonus = function(t, item)
-	main.f_playerInput(main.playerInput, 1)
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	
 	main.charparam.ai = true
 	main.charparam.music = true

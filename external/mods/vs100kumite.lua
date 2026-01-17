@@ -1,7 +1,7 @@
 --[[	   					       	 VS 100 KUMITE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: Defeat as many opponents as possible across 100 consecutive matches.
 Based on Street Fighter Alpha 3 MAX.
 
@@ -210,7 +210,6 @@ p2.teammate.win.state =
 ;left blank (character and stage not covered)
 
 ]]
-
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -234,6 +233,7 @@ local function f_commonCfg()
 	main.exitSelect = true
 	--main.stageMenu = true --Enable Stage Select
 	main.makeRoster = true
+	--main.roundTime = 99
 	
 	--main.persistLife = true --life maintained after match
 	--main.persistMusic = true --don't stop the previous music at the start of the match.
@@ -263,8 +263,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.vs100kumite = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

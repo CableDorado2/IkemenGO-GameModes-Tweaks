@@ -1,7 +1,7 @@
 --[[	   					       BOSS RUSH MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: A special challenge where player fight multiple bosses consecutively.
 Beating all bosses clears the mode.
 
@@ -255,6 +255,7 @@ local function f_commonCfg()
 	--main.quickContinue = true --if by default continuing should skip player selection
 	--main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
 	--main.resetScore = true --if loosing should set score for the next match to lose count
+	--main.roundTime = 99
 	
 	main.motif.versusscreen = true
 	--main.motif.versusmatchno = true
@@ -277,8 +278,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.bossrush = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	
@@ -346,8 +347,8 @@ main.t_itemname.netplaybossrushcoop = function()
 end
 
 main.t_itemname.boss = function() --W.I.P
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.selectMenu[2] = true
 	main.motif.victoryscreen = true
 	
@@ -419,7 +420,6 @@ start.t_makeRoster.bossrush = function()
 end
 start.t_makeRoster.bossrushcoop = start.t_makeRoster.bossrush
 start.t_makeRoster.netplaybossrushcoop = start.t_makeRoster.bossrush
-
 if gameOption('Debug.DumpLuaTables') then
 	main.f_printTable(main.t_bossChars, "debug/t_bossChars.txt")
 	main.f_printTable(main.t_bossRushChars, "debug/t_bossRushChars.txt")

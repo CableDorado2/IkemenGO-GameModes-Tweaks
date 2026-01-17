@@ -1,7 +1,7 @@
 --[[	   							TIME ATTACK TWEAKS
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.15)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
 Description: Adds personal improvements to make Time Attack more faithful to Commercial Games.
 
 This mode is detectable by GameMode trigger as: timeattack, timeattackcoop and netplaytimeattackcoop
@@ -12,7 +12,6 @@ CD2's Tweaks:
 - Set 1 Round to Win
 - Set Infinite Round Time and Unlimited Continue Credits
 - Disable Victory Screen
-- Ranking record will now be displayed when you complete the game mode ;TODO
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
@@ -159,7 +158,6 @@ p2.teammate.win.state =
 ;left blank (character and stage not covered)
 
 ]]
-
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -216,8 +214,8 @@ local function f_commonCfg()
 end
 
 main.t_itemname.timeattack = function()
-	main.f_playerInput(main.playerInput, 1)
-	main.t_pIn[2] = 1
+	remapInput(main.playerInput, 1)
+	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	
