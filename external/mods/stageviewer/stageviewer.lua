@@ -22,7 +22,6 @@ menu.itemname.stageviewer = "STAGE VIEWER" ;Ikemen Feature
 title.stageviewer.text = "Stage Viewer"
 
 ]]
-
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -40,7 +39,6 @@ main.f_addChar( --Load Character Outside select.def
 main.t_itemname.stageviewer = function()
 	remapInput(main.playerInput, 1)
 	setCommandInputSource(2, 1)
-	main.cpuSide[2] = false
 	setHomeTeam(1)
 	
 	main.teamMenu[1].single = true
