@@ -1,13 +1,20 @@
 --[[	   					       STAGE VIEWER MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2) & Yoshin222
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.19)
 Description: Adds a Stage Viewer Game Mode, based on Yoshin222's Stage Viewer Character.
 
 This mode is detectable by GameMode trigger as: stageviewer
 =======================================================================================================
 ]]
-local StageViewerPath = "external/mods/stageviewer/STAGE VIEWER.def" --Set the Stage Viewer Path
+
+--Auto-Load ZSS Module
+local zss = gameOption("Common.States")
+table.insert(zss, "external/mods/stageviewer/stageviewer.zss")
+modifyGameOption("Common.States", zss)
+
+--Set the Stage Viewer Path
+local StageViewerPath = "external/mods/stageviewer/STAGE VIEWER.def"
 
 --[[Example system.def parameters assignments:
 ;-------------------------------------------------------------------------------
@@ -22,6 +29,7 @@ menu.itemname.stageviewer = "STAGE VIEWER" ;Ikemen Feature
 title.stageviewer.text = "Stage Viewer"
 
 ]]
+
 --;===========================================================
 --; main.lua
 --;===========================================================

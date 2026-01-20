@@ -1,0 +1,24 @@
+#===============================================================================
+# 						     STAGE VIEWER MODULE
+#===============================================================================
+# Author: Cable Dorado 2 (CD2)
+# Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.19)
+# Description: Skip Round and Fight Calls when Match Starts for Stage Viewer.
+#===============================================================================
+[StateDef -4] #Global states (not halted by Pause/SuperPause, no helper limitations)
+ignoreHitPause if gameMode = "stageviewer" {
+	# Disable normal KO behavior
+	assertSpecial{
+		flag: globalNoKo;
+		flag2: noKoFall;
+		flag3: noKoVelocity;
+	}
+	# Force players out of KO state
+	if stateNo = 5150 && time >= 90 && alive {
+		selfState{value: 5120}
+	}
+	# Skip round and fight calls
+	if roundState < 2 {
+		assertSpecial{flag: skipRoundDisplay; flag2: skipFightDisplay}
+	}
+}
