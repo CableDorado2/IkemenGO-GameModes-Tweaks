@@ -1,7 +1,7 @@
 --[[	   					       BOSS RUSH MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
 Description: A special challenge where player fight multiple bosses consecutively.
 Beating all bosses clears the mode.
 
@@ -278,7 +278,7 @@ local function f_commonCfg()
 end
 
 main.t_itemname.bossrush = function()
-	remapInput(main.playerInput, 1)
+	remapInput(1, getLastInputController())
 	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
@@ -347,7 +347,7 @@ main.t_itemname.netplaybossrushcoop = function()
 end
 
 main.t_itemname.boss = function() --W.I.P
-	remapInput(main.playerInput, 1)
+	remapInput(1, getLastInputController())
 	setCommandInputSource(2, 1)
 	main.selectMenu[2] = true
 	main.motif.victoryscreen = true

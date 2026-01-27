@@ -1,7 +1,7 @@
 --[[	   					       TIME CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.17)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best time.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
@@ -245,7 +245,7 @@ local function f_commonCfg()
 end
 
 main.t_itemname.timechallenge = function()
-	remapInput(main.playerInput, 1)
+	remapInput(1, getLastInputController())
 	setCommandInputSource(2, 1)
 	main.motif.challenger = true
 	f_commonCfg()
