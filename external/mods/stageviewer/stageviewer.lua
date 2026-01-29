@@ -1,13 +1,12 @@
 --[[	   					       STAGE VIEWER MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2) & Yoshin222
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.19)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.29)
 Description: Adds a Stage Viewer Game Mode, based on Yoshin222's Stage Viewer Character.
 
 This mode is detectable by GameMode trigger as: stageviewer
 =======================================================================================================
 ]]
-
 --Auto-Load ZSS Module
 local zss = gameOption("Common.States")
 table.insert(zss, "external/mods/stageviewer/stageviewer.zss")
@@ -28,6 +27,19 @@ menu.itemname.stageviewer = "STAGE VIEWER" ;Ikemen Feature
 [Select Info]
 title.stageviewer.text = "Stage Viewer"
 
+;-------------------------------------------------------------------------------
+[StageViewer Pause Menu]
+menu.itemname.back = "Continue"
+menu.itemname.commandlist = 
+menu.itemname.menuinput = "Button Config"
+menu.itemname.menuinput.keyboard = "Key Config"
+menu.itemname.menuinput.gamepad = "Joystick Config"
+menu.itemname.menuinput.spacer = "-"
+menu.itemname.menuinput.inputdefault = "Default"
+menu.itemname.menuinput.back = "Back"
+menu.itemname.characterchange = "Stage Change"
+menu.itemname.exit = "Exit"
+
 ]]
 
 --;===========================================================
@@ -45,7 +57,7 @@ main.f_addChar( --Load Character Outside select.def
 )
 
 main.t_itemname.stageviewer = function()
-	remapInput(main.playerInput, 1)
+	remapInput(1, getLastInputController())
 	setCommandInputSource(2, 1)
 	setHomeTeam(1)
 	
