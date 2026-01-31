@@ -29,12 +29,12 @@ A Game Mode that consist in defeat opponents beating previous score record.
 https://github.com/user-attachments/assets/99e5b26e-de09-4ebd-aa53-3cd9f521bddd
 
 ##  _Bonus ~~Rush~~ Marathon (New Feature)_
-A Game Mode that consist in clear in a row All Bonus Games added.
+A Game Mode that consist in clear All Bonus Games added in a row.
 
 https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
 
 ## _Stage Viewer (Tweaks)_
-A Game Mode that adds a dedicated Main Menu Entry for Yoshin222's Stage Viewer Character➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
+A dedicated Game Mode Main Menu Entry for Yoshin222's Stage Viewer Character➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
 [![Alt text](https://i.ytimg.com/vi/W4BxhKvDBmg/maxresdefault.jpg)](https://www.youtube.com/watch?v=W4BxhKvDBmg)
 
 ##  _Time Attack (Tweaks)_
