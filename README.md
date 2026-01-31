@@ -11,23 +11,31 @@ External Modules for [**Ikemen GO Engine**](https://github.com/ikemen-engine/Ike
 - Extract archive content into "**./external/mods**" directory.
 - Edit select.def or system.def depending of module installed (Each module contains its installation instructions within its folder or lua file).
 
-##  _Shop Mode (New)_
+##  _Shop Mode (New Feature)_
 A Shop Menu to spend In-Game Currency➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
-##  _Gallery Mode (New)_
+##  _Gallery Mode (New Feature)_
 A Custom Gallery Mode entry for the Main Menu➤ https://www.youtube.com/watch?v=DD5PvthonTU
 [![Alt text](https://i.ytimg.com/vi/DD5PvthonTU/maxresdefault.jpg)](https://www.youtube.com/watch?v=DD5PvthonTU)
 
-##  _Events Mode (New)_
+##  _Events Mode (New Feature)_
 A "Portal" to any custom game mode➤ https://www.youtube.com/watch?v=1FcPYB-RuoI
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
 
-##  _Score Attack (New)_
+##  _Score Attack (New Feature)_
+A Game Mode which consist in defeat opponents beating previous score record.
+
 https://github.com/user-attachments/assets/99e5b26e-de09-4ebd-aa53-3cd9f521bddd
 
-##  _Bonus ~~Rush~~ Marathon (New)_
+##  _Bonus ~~Rush~~ Marathon (New Feature)_
+A Game Mode which consist in clear in a row All Bonus Games added.
+
 https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
+
+## _Stage Viewer (Tweaks)_
+A Game Mode which provides an Exclusive Menu Entry to Yoshin222's Stage Viewer Character➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
+[![Alt text](https://i.ytimg.com/vi/W4BxhKvDBmg/maxresdefault.jpg)](https://www.youtube.com/watch?v=W4BxhKvDBmg)
 
 ##  _Time Attack (Tweaks)_
 https://github.com/user-attachments/assets/3dc49d2c-df82-4e21-a78c-9a407d5575d2
