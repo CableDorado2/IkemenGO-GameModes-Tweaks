@@ -387,17 +387,20 @@ for _, v in ipairs(main.t_selChars) do
 		if main.t_bossChars == nil then
 			main.t_bossChars = {}
 		end
-		if main.t_bossRushChars[v.order] == nil then
-			main.t_bossRushChars[v.order] = {}
+		local order = math.max(1, v.order)
+		if main.t_bossRushChars[order] == nil then
+			main.t_bossRushChars[order] = {}
 		end
 		table.insert(main.t_bossChars, v.char_ref)
-		table.insert(main.t_bossRushChars[v.order], v.char_ref)
+		table.insert(main.t_bossRushChars[order], v.char_ref)
 	end
 end
 
 if main.t_selOptions.bossrushmaxmatches == nil or #main.t_selOptions.bossrushmaxmatches == 0 then
 	local size = 1
-	for k, _ in pairs(main.t_bossRushChars) do if k > size then size = k end end
+	for k, _ in pairs(main.t_bossRushChars) do
+		if k > size then size = k end
+	end
 	main.t_selOptions.bossrushmaxmatches = {}
 	for i = 1, size do
 		table.insert(main.t_selOptions.bossrushmaxmatches, 0)

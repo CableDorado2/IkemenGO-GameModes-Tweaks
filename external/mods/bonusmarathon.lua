@@ -356,16 +356,19 @@ end
 main.t_bonusmarathonChars = {}
 for _, v in ipairs(main.t_selChars) do
 	if v.bonus ~= nil and v.bonus == 1 then
-		if main.t_bonusmarathonChars[v.order] == nil then
-			main.t_bonusmarathonChars[v.order] = {}
+		local order = math.max(1, v.order)
+		if main.t_bonusmarathonChars[order] == nil then
+			main.t_bonusmarathonChars[order] = {}
 		end
-		table.insert(main.t_bonusmarathonChars[v.order], v.char_ref)
+		table.insert(main.t_bonusmarathonChars[order], v.char_ref)
 	end
 end
 
 if main.t_selOptions.bonusmarathonmaxmatches == nil or #main.t_selOptions.bonusmarathonmaxmatches == 0 then
 	local size = 1
-	for k, _ in pairs(main.t_bonusmarathonChars) do if k > size then size = k end end
+	for k, _ in pairs(main.t_bonusmarathonChars) do
+		if k > size then size = k end
+	end
 	main.t_selOptions.bonusmarathonmaxmatches = {}
 	for i = 1, size do
 		table.insert(main.t_selOptions.bonusmarathonmaxmatches, 0)
