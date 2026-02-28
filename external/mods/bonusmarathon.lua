@@ -1,7 +1,7 @@
 --[[	   				         BONUS MARATHON MODULE
 ==================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
 Description: Based on Boss Rush Module.
 Bonus Marathon Mode is about defeat all opponents that are consider bonuses.
 
@@ -266,7 +266,7 @@ end
 
 main.t_itemname.bonusmarathon = function()
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	
@@ -323,7 +323,7 @@ end
 
 main.t_itemname.bonus = function(t, item)
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	
 	main.charparam.ai = true
 	main.charparam.music = true

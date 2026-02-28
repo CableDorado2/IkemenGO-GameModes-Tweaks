@@ -1,7 +1,7 @@
 --[[	   					       	 VS 100 KUMITE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
 Description: Defeat as many opponents as possible across 100 consecutive matches.
 Based on Street Fighter Alpha 3 MAX.
 
@@ -264,7 +264,7 @@ end
 
 main.t_itemname.vs100kumite = function()
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

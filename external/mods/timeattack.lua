@@ -1,7 +1,7 @@
 --[[	   							TIME ATTACK TWEAKS
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
 Description: Adds personal improvements to make Time Attack more faithful to Commercial Games.
 
 This mode is detectable by GameMode trigger as: timeattack, timeattackcoop and netplaytimeattackcoop
@@ -217,7 +217,7 @@ end
 
 main.t_itemname.timeattack = function()
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

@@ -1,7 +1,7 @@
 --[[	   					       SCORE CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best score.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
@@ -244,7 +244,7 @@ end
 
 main.t_itemname.scorechallenge = function()
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	

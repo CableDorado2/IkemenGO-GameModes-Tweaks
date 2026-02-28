@@ -1,7 +1,7 @@
 --[[	   					       SCORE ATTACK MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.27)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
 Description: Implements Score Attack game mode (defeat opponents beating previous score record).
 Includes a Co-Op and Netplay variant.
 
@@ -269,7 +269,7 @@ end
 
 main.t_itemname.scoreattack = function()
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	main.motif.challenger = true
 	f_commonCfg()
 	
