@@ -1,7 +1,7 @@
 --[[	   					       STAGE VIEWER MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2) & Yoshin222
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.01.29)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
 Description: Adds a Stage Viewer Game Mode, based on Yoshin222's Stage Viewer Character.
 
 This mode is detectable by GameMode trigger as: stageviewer
@@ -58,7 +58,7 @@ main.f_addChar( --Load Character Outside select.def
 
 main.t_itemname.stageviewer = function()
 	remapInput(1, getLastInputController())
-	setCommandInputSource(2, 1)
+	remapInput(getLastInputController(), 1)
 	setHomeTeam(1)
 	
 	main.teamMenu[1].single = true
