@@ -1,7 +1,7 @@
 --[[	   					       STAGE VIEWER MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2) & Yoshin222
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.11)
 Description: Adds a Stage Viewer Game Mode, based on Yoshin222's Stage Viewer Character.
 
 This mode is detectable by GameMode trigger as: stageviewer
@@ -78,8 +78,8 @@ main.t_itemname.stageviewer = function()
 	main.matchWins.single = {0, 0}
 	main.matchWins.tag = {0, 0}
 	
-	main.lifebar.active = false
-	main.lifebar.bars = false
+	main.fightscreen.active = false
+	main.fightscreen.bars = false
 	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.stageviewer)
 	setGameMode('stageviewer')
 	return start.f_selectMode
