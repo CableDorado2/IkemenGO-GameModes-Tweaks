@@ -1,7 +1,7 @@
 --[[	   					       TIME CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.11)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best time.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
@@ -234,9 +234,9 @@ local function f_commonCfg()
 	main.motif.victoryscreen = true
 	main.motif.winscreen = true
 	
-	--main.lifebar.mode = true
-	main.lifebar.timer = true
-	--main.lifebar.p2ailevel = true
+	--main.fightscreen.mode = true
+	main.fightscreen.timer = true
+	--main.fightscreen.p2ailevel = true
 	
 	main.matchWins.draw = {0, 0}
 	main.matchWins.simul = {1, 1}

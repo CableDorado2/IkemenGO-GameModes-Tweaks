@@ -1,7 +1,7 @@
 --[[	   					       SCORE ATTACK MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.11)
 Description: Implements Score Attack game mode (defeat opponents beating previous score record).
 Includes a Co-Op and Netplay variant.
 
@@ -251,12 +251,12 @@ local function f_commonCfg()
 	--main.motif.continuescreen = true
 	main.motif.hiscore = true
 	
-	--main.lifebar.mode = true
-	--main.lifebar.match = true
-	--main.lifebar.timer = true
-	main.lifebar.p1score = true
-	--main.lifebar.p1wincount = true
-	--main.lifebar.p2aiLevel = true
+	--main.fightscreen.mode = true
+	--main.fightscreen.match = true
+	--main.fightscreen.timer = true
+	main.fightscreen.p1score = true
+	--main.fightscreen.p1wincount = true
+	--main.fightscreen.p2aiLevel = true
 	
 	--main.matchWins.draw = {0, 0}
 	--main.matchWins.simul = {1, 1}

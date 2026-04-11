@@ -1,7 +1,7 @@
 --[[	   					       	 VS 100 KUMITE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.11)
 Description: Defeat as many opponents as possible across 100 consecutive matches.
 Based on Street Fighter Alpha 3 MAX.
 
@@ -246,12 +246,12 @@ local function f_commonCfg()
 	main.motif.losescreen = false --no lose screen after lose the match
 	--main.motif.winscreen = true
 	
-	--main.lifebar.mode = true
-	main.lifebar.match = true
-	--main.lifebar.timer = true
-	--main.lifebar.p1score = true
-	--main.lifebar.p1wincount = true
-	--main.lifebar.p2ailevel = true
+	--main.fightscreen.mode = true
+	main.fightscreen.match = true
+	--main.fightscreen.timer = true
+	--main.fightscreen.p1score = true
+	--main.fightscreen.p1wincount = true
+	--main.fightscreen.p2ailevel = true
 	
 	main.matchWins.draw = {0, 0}
 	main.matchWins.simul = {1, 1}

@@ -1,7 +1,7 @@
 --[[	   				         BONUS MARATHON MODULE
 ==================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.02.26)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.11)
 Description: Based on Boss Rush Module.
 Bonus Marathon Mode is about defeat all opponents that are consider bonuses.
 
@@ -253,12 +253,12 @@ local function f_commonCfg()
 	--main.motif.continuescreen = true
 	main.motif.hiscore = true
 	
-	--main.lifebar.mode = true
-	--main.lifebar.match = true
-	--main.lifebar.timer = true
-	main.lifebar.p1score = true
-	--main.lifebar.p1wincount = true
-	--main.lifebar.p2aiLevel = true
+	--main.fightscreen.mode = true
+	--main.fightscreen.match = true
+	--main.fightscreen.timer = true
+	main.fightscreen.p1score = true
+	--main.fightscreen.p1wincount = true
+	--main.fightscreen.p2aiLevel = true
 	
 	main.storyboard.gameover = true
 	--main.storyboard.credits = true
@@ -334,7 +334,7 @@ main.t_itemname.bonus = function(t, item)
 	
 	main.forceChar[2] = {main.t_bonusChars[item]}
 	main.selectMenu[2] = true
-	main.lifebar.p1score = true
+	main.fightscreen.p1score = true
 	
 	main.teamMenu[1].single = true
 	main.teamMenu[1].simul = true
