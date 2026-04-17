@@ -1,0 +1,183 @@
+[Info]
+ikemenversion = 1.0
+localcoord = 1280,720
+
+;-------------------------------------------------------------------------------
+[Files]
+def = external/mods/events/events.def ;load the Events Items to show in Events Menu. (If is not defined, events will be loaded from select.def)
+;sff = external/mods/events/events.sff ;load sprites for Events Items. (If is not defined, nothing will be displayed)
+air = external/mods/events/events.air ;load animations for Events Items. (If is not defined, animations will be loaded from system.def)
+
+;-------------------------------------------------------------------------------
+[Music]
+;Music to play at event mode screen.
+menu.bgm = sound/system/Events.mp3
+menu.volume = 100
+menu.loop = 1
+menu.loopstart = 0
+menu.loopend = 0
+menu.startposition = 0
+menu.freqmul = 1.0
+menu.loopcount = -1
+
+;-------------------------------------------------------------------------------
+[Event Info] ;Events screen definition
+reload.enabled = 0 ;Set to 1 to enable select.def events data reload, each time that events menu is initialized (for debug purposes), 0 to disable.
+
+fadein.time = 20
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1,0
+
+fadeout.time = 20
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1,0
+
+cursor.move.snd = 100,0
+cursor.done.snd = 100,1
+cursor.cancel.snd = 100,2
+
+;preview.unknown.anim = 110
+preview.unknown.spr = 0,0
+preview.unknown.offset = 200,200
+preview.unknown.facing = 1
+preview.unknown.scale = 1.0, 1.0
+preview.unknown.window = 0,0, 1280,720
+
+preview.offset = 200,200
+preview.scale = 1.0, 1.0
+preview.window = 0,0, 1280,720
+
+title.font = 4,0,0
+title.text = "EVENT SELECT" ;Text rendered in Event Menu
+title.select = "EVENT MATCH" ;Text rendered in Character Select
+title.offset = 640,46
+title.scale = 1.0, 1.0
+title.layerno = 1
+
+hiscore.font = 2,0,1
+hiscore.text = "HIGH SCORE:"
+hiscore.suffix = "PTS"
+hiscore.offset = 400,540
+hiscore.scale = 1.5, 1.5
+hiscore.layerno = 1
+
+recordtime.font = 2,0,1
+recordtime.text = "BEST TIME:"
+recordtime.default = "--:--.--" ;Set default best record suffix. (If is not defined, "99:59.99" will be displayed as default).
+recordtime.offset = 400,580
+recordtime.scale = 1.5, 1.5
+recordtime.layerno = 1
+
+info.font = 5,0,1
+info.unknown = "???"
+info.offset = 40,625
+info.scale = 1.0, 1.0
+info.length = 93
+info.spacing = 38
+info.delay = 1.5
+info.layerno = 1
+
+menu.pos = 414,99
+
+;Keys for menu movement
+menu.next.key = D, R
+menu.previous.key = U, L
+
+;Key for selecting menu item
+menu.done.key = a, b, c, x, y, z, s
+menu.cancel.key = m
+
+menu.itemname.back = "BACK"
+menu.itemname.clear = "CLEAR!"
+menu.itemname.unknown = "???"
+
+menu.item.font = 7,0,1, 191,191,191
+menu.item.offset = 0,0
+menu.item.scale = 1.0, 1.0
+menu.item.spacing = 0,42
+menu.item.tween.factor = 0.5, 0
+
+menu.item.active.font = 7,0,1
+menu.item.active.offset = 0,0
+menu.item.active.scale = 1.0, 1.0
+
+menu.item.value.font = 7,0,-1
+menu.item.value.offset = 450,0
+menu.item.value.scale = 1.0, 1.0
+menu.item.value.spacing = 0,42
+
+menu.item.value.active.font = 7,0,-1
+menu.item.value.active.offset = 450,0
+menu.item.value.active.scale = 1.0, 1.0
+
+menu.tween.factor = 0.5, 0
+menu.tween.wrap.snap = 0
+
+menu.window.margins.y = 21,2
+menu.window.visibleitems = 10
+
+menu.boxcursor.visible = 1
+menu.boxcursor.coords = -15,-30, 462,11
+menu.boxcursor.col = 255,255,255
+menu.boxcursor.pulse = 30,20,30
+menu.boxcursor.tween.factor = 0.5, 0
+menu.boxcursor.tween.snap = 0
+menu.boxcursor.tween.wrap.snap = 0
+
+menu.boxbg.visible = 1
+menu.boxbg.col = 0,0,0
+menu.boxbg.alpha = 0,128
+
+;menu.arrow.up.anim = -1
+menu.arrow.up.spr = 400,0
+menu.arrow.up.offset = 850,52
+menu.arrow.up.facing = 1
+menu.arrow.up.scale = 1.0, 1.0
+
+;menu.arrow.down.anim = -1
+menu.arrow.down.spr = 401,0
+menu.arrow.down.offset = 850,495
+menu.arrow.down.facing = 1
+menu.arrow.down.scale = 1.0, 1.0
+
+;-------------------------------------------------------------------------------
+[EventBGdef] ;Events screen background
+spr = ""
+model = ""
+bgclearcolor = 0,0,0
+
+[EventBG Background Sky]
+type = normal
+spriteno = 100,0
+layerno = 0
+start = -640,0
+
+[EventBG Background Clouds Top]
+type = normal
+spriteno = 100,2
+layerno = 0
+start = -640, -50
+tile = 1,0
+velocity = -0.1, 0
+window = 0,0, 1279,959
+mask = 1
+
+[EventBG Background Clouds Bottom]
+type = normal
+spriteno = 100,3
+layerno = 0
+start = -640, 0
+tile = 1,0
+velocity = -0.7, 0
+window = 0,0, 1279,959
+mask = 1
+
+[EventBG Info Bar]
+type = normal
+spriteno = 700,0
+layerno = 0
+start = -639,590
+scalestart = 3.0, 1.9
+trans = add1
