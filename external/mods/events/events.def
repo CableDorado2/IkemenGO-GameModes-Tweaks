@@ -131,13 +131,13 @@
 id = event1
 name = Trouble Dude
 description = When Beat 'Em Up Mode?
-path = external/mods/events/content/event1.lua
+path = external/mods/events/sample/event1.lua
 lifebarscorep1 = true
 
 id = event2
 name = THE IKEMEN MAN
 description = Fight Against the High Definition Version of Kung Fu Man!
-path = external/mods/events/content/event2.lua
+path = external/mods/events/sample/event2.lua
 unlock = eventsDat ~= nil and eventsDat.event1 ~= nil and eventsDat.event1.score > 0
 
 characterselect = true
