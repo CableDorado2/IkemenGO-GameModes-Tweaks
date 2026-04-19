@@ -693,7 +693,7 @@ local function f_events()
 				if itemData.vardisplay ~= nil and eventsDat ~= nil and eventsDat[itemData.itemname] ~= nil and eventsDat[itemData.itemname].score ~= nil and eventsDat[itemData.itemname].score > 0 then
 					itemData.vardisplay = motifEvent.event_info.menu.itemname.clear
 				else
-					itemData.vardisplay = ""
+					itemData.vardisplay = motifEvent.event_info.menu.itemname.new
 				end
 			else
 				if itemData.displayname ~= "" then itemData.displayname = motifEvent.event_info.menu.itemname.unknown end
