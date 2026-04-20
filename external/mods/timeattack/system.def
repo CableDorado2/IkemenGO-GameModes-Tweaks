@@ -1,0 +1,133 @@
+;Loaded automatically from external/mods/**/system.def and merged before the motif system.def.
+;The motif file is loaded last, so anything defined there overrides this file.
+;-------------------------------------------------------------------------------
+[Select Info]
+title.timeattack.text = "TIME ATTACK"
+title.timeattackcoop.text = "TIME ATTACK CO-OP"
+title.netplaytimeattackcoop.text = "ONLINE TIME ATTACK"
+
+;format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
+record.timeattack.text = "- BEST RECORD: %n -\n%c: %m:%s.%x"
+record.timeattackcoop.text = "- BEST RECORD: %n -\n%c: %m:%s.%x"
+record.netplaytimeattackcoop.text = "- BEST RECORD: %n -\n%c: %m:%s.%x"
+
+;-------------------------------------------------------------------------------
+[Hiscore Info]
+;Set per-gamemode ranking criteria: score|time|win. Used to sort hiscores for that mode.
+
+ranking.timeattack = "time"
+ranking.timeattackcoop = "time"
+ranking.netplaytimeattackcoop = "time"
+
+title.timeattack.text = "Ranking Time Attack"
+title.timeattackcoop.text = "Ranking Time Attack Co-Op"
+title.netplaytimeattackcoop.text = "Ranking Online Time Attack"
+
+;-------------------------------------------------------------------------------
+[Win Screen]
+;Set per-gamemode win/results screen variant to use for that mode.
+;Use "Win Screen" (default) or a specific "<X> Results Screen" name.
+
+results.timeattack = "Time Attack Results Screen"
+results.timeattackcoop = "Time Attack Co-Op Results Screen"
+results.netplaytimeattackcoop = "Online Time Attack Results Screen"
+
+;-------------------------------------------------------------------------------
+[Time Attack Co-Op Results Screen]
+enabled = 1
+sounds.enabled = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Clear Time: %m:%s.%x
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[TimeAttackCo-OpResultsBGdef]
+;left blank (character and stage not covered)
+
+;-------------------------------------------------------------------------------
+[Online Time Attack Results Screen]
+enabled = 1
+sounds.enabled = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Clear Time: %m:%s.%x
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[OnlineTimeAttackResultsBGdef]
+;left blank (character and stage not covered)
