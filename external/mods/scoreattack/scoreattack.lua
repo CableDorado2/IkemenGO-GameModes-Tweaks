@@ -9,15 +9,6 @@ This mode is detectable by GameMode trigger as: scoreattack, scoreattackcoop and
 =======================================================================================================
 ]]
 
---[[select.def customization:
-
-[Options]
-;Maximum number of normal and ratio matches to fight before game ends in Score Attack mode.
-;Leave it empty to fight all boss characters (the "order" parameter is still respected).
-
-scoreattack.maxmatches = 6,1,1,0,0,0,0,0,0,0
-
-]]
 --;===========================================================
 --; main.lua
 --;===========================================================
@@ -25,7 +16,6 @@ scoreattack.maxmatches = 6,1,1,0,0,0,0,0,0,0
 main.t_itemname is a table storing functions with general game mode
 configuration (usually ending with start.f_selectMode function call).
 ]]
-
 local function f_commonCfg()
 	main.charparam.ai = true
 	main.charparam.music = true
