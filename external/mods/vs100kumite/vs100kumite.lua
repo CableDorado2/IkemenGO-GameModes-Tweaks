@@ -8,7 +8,7 @@ Based on Street Fighter Alpha 3.
 This mode is detectable by GameMode trigger as vs100kumite, vs100kumitecoop and netplayvs100kumitecoop
 =======================================================================================================
 CD2's Tweaks:
-- MatchNo now is displayed in VS Screen
+- VS Screen Restored
 - Stage Select Disabled
 - Enables the "Here Comes a New Challenger" Intermission
 - Adds Co-Op and Netplay Variant
