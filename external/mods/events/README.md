@@ -1,6 +1,6 @@
 # Events Mode (I.K.E.M.E.N. GO Module)
 
-***Events Match*** is a serie of special challenges (inspired from [Super Smash Bros. Series](https://www.ssbwiki.com/Event_match)) where player fight in custom matches. Beating all events clears the mode.
+***Events Match*** is a series of special challenges (inspired from [Super Smash Bros. Series](https://www.ssbwiki.com/Event_match)) where player fight in custom matches. Beating all events clears the mode.
 
 ## Installation
 
