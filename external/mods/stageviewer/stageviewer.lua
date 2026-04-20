@@ -1,7 +1,7 @@
 --[[	   					       STAGE VIEWER MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2) & Yoshin222
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.19)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
 Description: Adds a Stage Viewer Game Mode, based on Yoshin222's Stage Viewer Character.
 
 This mode is detectable by GameMode trigger as: stageviewer
