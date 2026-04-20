@@ -7,12 +7,10 @@ Description: Adds personal improvements to make Time Attack more faithful to Com
 The new Co-op modes are detectable by GameMode trigger as: timeattackcoop and netplaytimeattackcoop
 =======================================================================================================
 CD2's Tweaks:
-- Show Best Record in Character Select
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set Infinite Round Time
 - Disable Continue Screen
-- Disable Victory Screen
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
