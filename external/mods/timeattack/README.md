@@ -2,12 +2,10 @@
 
 This module adds the following personal improvements, to make the Time Attack Mode that comes by default with engine, more faithful to Commercial Games:
 
-- Show Best Record in Character Select
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set Infinite Round Time
 - Disable Continue Screen
-- Disable Victory Screen
 - Adds Co-Op and Netplay Variant
 
 > [!NOTE]
