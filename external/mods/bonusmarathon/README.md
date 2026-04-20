@@ -3,10 +3,10 @@
 ***Bonus Marathon*** is a special challenge where player face multiple bonus characters consecutively and tries to beat their previous best score.
 
 > [!NOTE]
-> **Only characters with select.def "bonus = 1" parameter assigned are valid for this mode.**
->
->Includes a Co-Op and Netplay variant!
->This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
+> - **Only characters with select.def "bonus = 1" parameter assigned are valid for this mode.**
+> - If bonus characters are not detected, the Game Mode will not be playable.
+> 
+> This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
 >- bonusmarathon
 >- bonusmarathoncoop
 >- netplaybonusmarathoncoop
