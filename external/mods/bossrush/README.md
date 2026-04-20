@@ -59,5 +59,5 @@ Optionally set a maximum number of matches before Boss Rush ends:
 ;Maximum number of normal and ratio matches to fight before game ends in Boss Rush mode.
 ;Leave it empty to fight all boss characters (the "order" parameter is still respected).
 
-bossrush.maxmatches = 6,1,1,0,0,0,0,0,0,0
+bossrush.maxmatches = 3,2,1,0,0,0,0,0,0,0
 ````
