@@ -1,7 +1,7 @@
 --[[	   							TIME ATTACK TWEAKS
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.19)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
 Description: Adds personal improvements to make Time Attack more faithful to Commercial Games.
 
 The new Co-op modes are detectable by GameMode trigger as: timeattackcoop and netplaytimeattackcoop
