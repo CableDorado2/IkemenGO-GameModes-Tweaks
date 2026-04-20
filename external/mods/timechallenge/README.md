@@ -10,7 +10,7 @@ Add the following Personal Improvements for [K4thos Time Challenge Module](https
 - Adds Co-Op and Netplay Variant
 
 > [!NOTE]
-> - **This module overwrites the [original](https://github.com/ikemen-engine/modules/tree/main/external/mods/scorechallenge) Score Challenge module**, so if you're using it, make a backup.
+> - **This module overwrites the [original](https://github.com/ikemen-engine/modules/tree/main/external/mods/timechallenge) Time Challenge module**, so if you're using it, make a backup.
 > 
 > This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
 >- timechallenge
