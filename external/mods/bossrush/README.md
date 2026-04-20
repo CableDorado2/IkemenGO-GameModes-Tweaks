@@ -2,8 +2,8 @@
 
 Add the following Personal Improvements for [K4thos Boss Rush Module](https://github.com/ikemen-engine/modules/tree/main/external/mods/bossrush):
 
-- VS Screen Restored
 - Enables the "Here Comes a New Challenger" Intermission
+- VS Screen Restored
 - Adds Co-Op and Netplay Variant
 - main.t_bossChars renamed to main.t_bossRushChars for planned Single Boss Fight variant like Bonus Games Mode
 
