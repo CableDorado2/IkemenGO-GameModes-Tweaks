@@ -1,7 +1,3 @@
---[[EVENT EXAMPLE
-For all paramvalues available, check the Engine Wiki:
-https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#launchfight
-]]
 
 if gameMode() ~= nil and gameMode() ~= "" then --To avoid execute this script as module when boot the engine
 	if matchNo() == 1 then
