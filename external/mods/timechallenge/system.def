@@ -1,0 +1,186 @@
+;Loaded automatically from external/mods/**/system.def and merged before the motif system.def.
+;The motif file is loaded last, so anything defined there overrides this file.
+;-------------------------------------------------------------------------------
+[Select Info]
+title.timechallenge.text = "TIME CHALLENGE"
+title.timechallengecoop.text = "TIME CHALLENGE CO-OP"
+title.netplaytimechallengecoop.text = "ONLINE TIME CHALLENGE"
+
+;format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
+record.timechallenge.text = "- BEST RECORD: %n -\n%c: %m:%s.%x"
+record.timechallengecoop.text = "- BEST RECORD: %n -\n%c: %m:%s.%x"
+record.netplaytimechallengecoop.text = "- BEST RECORD: %n -\n%c: %m:%s.%x"
+
+;-------------------------------------------------------------------------------
+[Hiscore Info]
+;Set per-gamemode ranking criteria: score|time|win. Used to sort hiscores for that mode.
+
+ranking.timechallenge = "time"
+ranking.timechallengecoop = "time"
+ranking.netplaytimechallengecoop = "time"
+
+title.timechallenge.text = "Ranking Time Challenge"
+title.timechallengecoop.text = "Ranking Time Challenge Co-Op"
+title.netplaytimechallengecoop.text = "Ranking Online Time Challenge"
+
+;-------------------------------------------------------------------------------
+[Win Screen]
+;Set per-gamemode win/results screen variant to use for that mode.
+;Use "Win Screen" (default) or a specific "<X> Results Screen" name.
+
+results.timechallenge = "Time Challenge Results Screen"
+results.timechallengecoop = "Time Challenge Co-Op Results Screen"
+results.netplaytimechallengecoop = "Online Time Challenge Results Screen"
+
+;-------------------------------------------------------------------------------
+[Time Challenge Results Screen]
+enabled = 1
+sounds.enabled = 1
+roundstowin = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Clear Time: %m:%s.%x
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[TimeChallengeResultsBGdef]
+;left blank (character and stage not covered)
+
+;-------------------------------------------------------------------------------
+[Time Challenge Co-Op Results Screen]
+enabled = 1
+sounds.enabled = 1
+roundstowin = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Clear Time: %m:%s.%x
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[TimeChallengeCo-OpResultsBGdef]
+;left blank (character and stage not covered)
+
+;-------------------------------------------------------------------------------
+[Online Time Challenge Results Screen]
+enabled = 1
+sounds.enabled = 1
+roundstowin = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Clear Time: %m:%s.%x
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[OnlineTimeChallengeResultsBGdef]
+;left blank (character and stage not covered)
