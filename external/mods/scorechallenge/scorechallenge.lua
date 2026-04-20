@@ -26,9 +26,9 @@ configuration (usually ending with start.f_selectMode function call).
 local function f_commonCfg()
 	main.selectMenu[2] = true
 	main.stageMenu = true
+	main.roundTime = 50
 	main.elimination = true --if single lose should stop further lua execution
 	main.rankingCondition = true --if winning (clearing) whole mode is needed for rankings to be saved
-	main.roundTime = 50
 	
 	main.matchWins.draw = {0, 0}
 	main.matchWins.simul = {1, 1}
