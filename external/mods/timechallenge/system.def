@@ -36,7 +36,6 @@ results.netplaytimechallengecoop = "Online Time Challenge Results Screen"
 [Time Challenge Results Screen]
 enabled = 1
 sounds.enabled = 1
-roundstowin = 1
 
 fadein.time = 32
 fadein.col = 0,0,0
@@ -87,7 +86,6 @@ p2.teammate.win.state =
 [Time Challenge Co-Op Results Screen]
 enabled = 1
 sounds.enabled = 1
-roundstowin = 1
 
 fadein.time = 32
 fadein.col = 0,0,0
@@ -138,7 +136,6 @@ p2.teammate.win.state =
 [Online Time Challenge Results Screen]
 enabled = 1
 sounds.enabled = 1
-roundstowin = 1
 
 fadein.time = 32
 fadein.col = 0,0,0
