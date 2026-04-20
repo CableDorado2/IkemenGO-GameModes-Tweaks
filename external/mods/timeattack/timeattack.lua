@@ -44,8 +44,8 @@ local function f_commonCfg()
 	main.roundTime = -1 --Infinite Round Time
 	main.stageOrder = true
 	
-	main.motif.versusscreen = true
-	main.motif.versusmatchno = true
+	main.motif.vsscreen = true
+	main.motif.vsmatchno = true
 	--main.motif.dialogue = true
 	--main.motif.losescreen = true
 	--main.motif.winscreen = true
