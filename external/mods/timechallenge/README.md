@@ -1,7 +1,7 @@
 # Time Challenge Mode Tweaks (I.K.E.M.E.N. GO Module)
 
 Add the following Personal Improvements for [K4thos Time Challenge Module](https://github.com/ikemen-engine/modules/tree/main/external/mods/timechallenge) to make it more faithful to   
-[Super Street Fighter II: The New Challengers](https://www.youtube.com/watch?v=_AEc681QQQ4&list=PLTb7Uia5Yj_Sa9s4uByN4qM7XdS4XJ0gk) which it is based on:
+***[Super Street Fighter II: The New Challengers](https://www.youtube.com/watch?v=_AEc681QQQ4&list=PLTb7Uia5Yj_Sa9s4uByN4qM7XdS4XJ0gk)*** which it is based on:
 
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
