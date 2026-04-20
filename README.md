@@ -33,7 +33,7 @@ A Game Mode that consist in clear All Bonus Games added in a row.
 
 https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
 
-## _[Stage Viewer](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/stageviewer) (Tweaks)_
+## _[Stage Viewer](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/stageviewer) (Feature)_
 A dedicated Game Mode Main Menu Entry for Yoshin222's Stage Viewer Character ➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
 [![Alt text](https://i.ytimg.com/vi/W4BxhKvDBmg/maxresdefault.jpg)](https://www.youtube.com/watch?v=W4BxhKvDBmg)
 
