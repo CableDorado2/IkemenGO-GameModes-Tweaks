@@ -4,7 +4,7 @@ Add the following Personal Improvements for [K4thos VS 100 Kumite Module](https:
 ***Street Fighter Alpha 3*** which it is based on:
 
 - Enables the "Here Comes a New Challenger" Intermission
-- MatchNo now is displayed in VS Screen
+- VS Screen Restored
 - Stage Select Disabled
 - Adds Co-Op and Netplay Variant
 
