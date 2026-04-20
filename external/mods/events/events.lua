@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.5.0
+Version: 1.5.1
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -980,6 +980,7 @@ local function f_events()
 				main.motif.victoryScreen = t[item].winscreen --Enable or Disable Victory Screen for Event Selected
 				main.motif.continueScreen = t[item].continue --Enable or Disable Continue Screen for Event Selected
 				main.quickContinue = t[item].quickcontinue --Enable or Disable skip player selection when continuing for Event Selected
+				main.exitSelect = t[item].charsel --Automatically Exit from Character Select if is enabled
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				hook.run("main.t_itemname")
 				main.luaPath = t[item].path
@@ -1002,6 +1003,7 @@ end
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when enter in main menu item
 end
+
 --;===========================================================
 --; MODES LOOP (copy from external/script/start.lua)
 --;===========================================================
