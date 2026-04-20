@@ -1,6 +1,7 @@
 # Score Challenge Mode Tweaks (I.K.E.M.E.N. GO Module)
 
-Add the following Personal Improvements for [K4thos Score Challenge Module](https://github.com/ikemen-engine/modules/tree/main/external/mods/scorechallenge) to make it more faithful to [Super Street Fighter II: The New Challengers (Sega Mega Drive)](https://www.youtube.com/watch?v=DE3n0q81S34&list=PLTb7Uia5Yj_Sa9s4uByN4qM7XdS4XJ0gk) which it is based on:
+Add the following Personal Improvements for [K4thos Score Challenge Module](https://github.com/ikemen-engine/modules/tree/main/external/mods/scorechallenge) to make it more faithful to   
+[Super Street Fighter II: The New Challengers (Sega Mega Drive)](https://www.youtube.com/watch?v=DE3n0q81S34&list=PLTb7Uia5Yj_Sa9s4uByN4qM7XdS4XJ0gk) which it is based on:
 
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
