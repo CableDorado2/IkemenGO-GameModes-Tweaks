@@ -1,46 +1,22 @@
 --[[	   					       STAGE VIEWER MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2) & Yoshin222
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.11)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.19)
 Description: Adds a Stage Viewer Game Mode, based on Yoshin222's Stage Viewer Character.
 
 This mode is detectable by GameMode trigger as: stageviewer
 =======================================================================================================
 ]]
+--Set Common Module Files Path
+local modulePath = "external/mods/stageviewer/"
+
 --Auto-Load ZSS Module
 local zss = gameOption("Common.States")
-table.insert(zss, "external/mods/stageviewer/stageviewer.zss")
+table.insert(zss, modulePath.."stageviewer.zss")
 modifyGameOption("Common.States", zss)
 
 --Set the Stage Viewer Path
-local StageViewerPath = "external/mods/stageviewer/STAGE VIEWER.def"
-
---[[Example system.def parameters assignments:
-;-------------------------------------------------------------------------------
-[Title Info]
-;You need to add itemname to the main system.def so menu items keep the expected order. Grouping rules:
-;https://github.com/ikemen-engine/Ikemen-GO/wiki/Screenpack-features#menus
-
-menu.itemname.stageviewer = "STAGE VIEWER" ;Ikemen Feature
-
-;-------------------------------------------------------------------------------
-[Select Info]
-title.stageviewer.text = "Stage Viewer"
-
-;-------------------------------------------------------------------------------
-[StageViewer Pause Menu]
-menu.itemname.back = "Continue"
-menu.itemname.commandlist = 
-menu.itemname.menuinput = "Button Config"
-menu.itemname.menuinput.keyboard = "Key Config"
-menu.itemname.menuinput.gamepad = "Joystick Config"
-menu.itemname.menuinput.spacer = "-"
-menu.itemname.menuinput.inputdefault = "Default"
-menu.itemname.menuinput.back = "Back"
-menu.itemname.characterchange = "Stage Change"
-menu.itemname.exit = "Exit"
-
-]]
+local StageViewerPath = modulePath.."STAGE VIEWER.def"
 
 --;===========================================================
 --; main.lua
@@ -80,7 +56,7 @@ main.t_itemname.stageviewer = function()
 	
 	main.fightscreen.active = false
 	main.fightscreen.bars = false
-	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.stageviewer)
+	textImgSetText(motif.select_info.title.TextSpriteData, motif.select_info.title.text.stageviewer or "STAGE VIEWER")
 	setGameMode('stageviewer')
 	return start.f_selectMode
 end
