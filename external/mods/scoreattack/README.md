@@ -2,11 +2,11 @@
 
 ***Score Attack*** is a special challenge where player fight multiple opponents consecutively and tries to beat their previous best score.
 
-Includes a Co-Op and Netplay variant!
-This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
-- scoreattack
-- scoreattackcoop
-- netplayscoreattackcoop
+> [!NOTE]
+> This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
+> - scoreattack
+> - scoreattackcoop
+> - netplayscoreattackcoop
 
 ## Installation
 
