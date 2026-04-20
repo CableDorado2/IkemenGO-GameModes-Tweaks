@@ -1,6 +1,8 @@
 # Events Mode (I.K.E.M.E.N. GO Module)
 
-***Events Match*** is a series of special challenges (inspired from [Super Smash Bros. Series](https://www.ssbwiki.com/Event_match)) where player fight in custom matches. Beating all events clears the mode.
+***Event Match*** is a series of special challenges (inspired from [Super Smash Bros. Series](https://www.ssbwiki.com/Event_match)) where player fight in custom matches. Beating all events clears the mode.
+
+This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as **id** assigned per event item via [events.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/events/events.def)
 
 ## Installation
 
@@ -25,3 +27,7 @@ menu.itemname.events = "EVENTS"
 The module includes its own `eventsMenu.def` (next to the script) with **default values for the 720p ikemen1 motif**.
 
 You can leave these defaults in the module or overwrite as your needs.
+
+## `events.def` customization
+
+A dedicated [events.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/events/events.def) file is provided with instructions to setup and adding event matches.
