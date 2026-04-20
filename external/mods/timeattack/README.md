@@ -1,6 +1,6 @@
 # Time Attack Mode Tweaks (I.K.E.M.E.N. GO Module)
 
-This module adds the follow personal improvements to make the Time Attack Mode that comes by default in engine more faithful to Commercial Games.
+This module adds the following personal improvements to make the Time Attack Mode that comes by default with engine more faithful to Commercial Games:
 
 - Show Best Record in Character Select
 - Enables the "Here Comes a New Challenger" Intermission
@@ -28,8 +28,7 @@ Without this, the mode won't show up in main menu.
 
 ```ini
 [Title Info]
-;Time Attack Modes
-menu.itemname.timeattack = "TIME ATTACK"
+;New Time Attack Modes
 menu.itemname.timeattackcoop = "TIME ATTACK CO-OP"
 menu.itemname.server.netplaytimeattackcoop = "TIME ATTACK CO-OP"
 ````
@@ -39,17 +38,3 @@ menu.itemname.server.netplaytimeattackcoop = "TIME ATTACK CO-OP"
 The module includes its own `system.def` (next to the script) with **default values for the 720p ikemen1 motif**.
 
 You can leave these defaults in the module or overwrite as your needs.
-
-## `select.def` customization
-
-### Limit the number of matches (optional)
-
-Optionally set a maximum number of matches before Time Attack ends:
-
-```ini
-[Options]
-;Maximum number of normal and ratio matches to fight before game ends in Time Attack mode.
-;Leave it empty to fight all characters (the "order" parameter is still respected).
-
-timeattack.maxmatches = 6,1,1,0,0,0,0,0,0,0
-````
