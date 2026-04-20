@@ -3,7 +3,7 @@
 ***Score Attack*** is a special challenge where player fight multiple opponents consecutively and tries to beat their previous best score.
 
 Includes a Co-Op and Netplay variant!
-This mode is detectable by GameMode trigger as:
+This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
 - scoreattack
 - scoreattackcoop
 - netplayscoreattackcoop
@@ -36,13 +36,14 @@ You can leave these defaults in the module or overwrite as your needs.
 
 ## `select.def` customization
 
-###Limit the number of matches (optional)
+### Limit the number of matches (optional)
+
 Optionally set a maximum number of matches before Score Attack ends:
 
 ```ini
 [Options]
 ;Maximum number of normal and ratio matches to fight before game ends in Score Attack mode.
-;Leave it empty to fight all boss characters (the "order" parameter is still respected).
+;Leave it empty to fight all characters (the "order" parameter is still respected).
 
 scoreattack.maxmatches = 6,1,1,0,0,0,0,0,0,0
 ````
