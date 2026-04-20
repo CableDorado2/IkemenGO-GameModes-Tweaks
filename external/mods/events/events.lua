@@ -8,6 +8,7 @@ Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 TODO:
 - Add "background params" for menu.
 - Custom Fonts support in [Files] .def module section.
+- Fix Fades.
 ======================================================================
 ]]
 local eventMotifPath = "external/mods/events/eventsMenu.def" --Set the Motif/Screenpack Definition File Path
@@ -530,6 +531,22 @@ local function f_drawCustomPreview(group, index, x, y, scaleX, scaleY, x1, y1, x
 	animDraw(anim)
 end
 
+--Fade Data
+if motifEvent.event_info.fadein.anim ~= -1 then
+	motifEvent.event_info.fadein.AnimData = f_createAnim(motifEvent.event_info, 'fadein', false, false)
+end
+--motifEvent.event_info.fadein.FadeData = f_createAnim(motifEvent.event_info, 'fadein', false, false)
+
+if motifEvent.event_info.fadeout.anim ~= -1 then
+	motifEvent.event_info.fadeout.AnimData = f_createAnim(motifEvent.event_info, 'fadeout', false, false)
+end
+--motifEvent.event_info.fadeout.FadeData = f_createAnim(motifEvent.event_info, 'fadeout', false, false)
+
+if gameOption('Debug.DumpLuaTables') then main.f_printTable(motifEvent, "debug/eventsMenuMotif.txt") end
+--===================================================================================
+--								 EVENTS MENU
+--===================================================================================
+eventModeActive = false
 local function f_playEventBGM()
 	playBgm({
 		bgm = motifEvent.music.menu.bgm,
@@ -543,11 +560,7 @@ local function f_playEventBGM()
 		interrupt = true
 	})
 end
-if gameOption('Debug.DumpLuaTables') then main.f_printTable(motifEvent, "debug/eventsMenuMotif.txt") end
---===================================================================================
---								 EVENTS MENU
---===================================================================================
-eventModeActive = false
+
 local function f_events()
 	eventModeActive = true
 	main.f_default()
@@ -635,7 +648,7 @@ local function f_events()
 	end
 	if gameOption('Debug.DumpLuaTables') then main.f_printTable(t, 'debug/t_eventsMenu.txt') end
 	bgReset(motifEvent.eventbgdef.BGDef)
-	main.f_fadeReset('fadein', motifEvent.event_info)
+	--fadeInInit(motifEvent.event_info.fadein.FadeData)
 	if motifEvent.music.menu.bgm ~= "" then f_playEventBGM() end --Play Event Menu BGM
 	main.close = false
 	while true do
@@ -799,7 +812,7 @@ local function f_events()
 			motifEvent.event_info.boxCursorData.offsetY = targetY
 		end
 	--draw menu cursor
-		if motifEvent.event_info.menu.boxcursor.visible == 1 and not main.fadeActive then
+		if motifEvent.event_info.menu.boxcursor.visible == 1 and not fadeActive() then
 			local x1 = offx + motifEvent.event_info.menu.pos[1] + motifEvent.event_info.menu.boxcursor.coords[1] + (cursorPosY - 1) * motifEvent.event_info.menu.item.spacing[1]
 			local y1 = motifEvent.event_info.boxCursorData.offsetY
 			local w  = motifEvent.event_info.menu.boxcursor.coords[3] - motifEvent.event_info.menu.boxcursor.coords[1] + 1
@@ -910,11 +923,9 @@ local function f_events()
 		end
 	--draw layerno = 1 backgrounds
 		bgDraw(motifEvent.eventbgdef.BGDef, 1)
-	--draw fadein / fadeout
-		main.f_fadeAnim(main.fadeGroup)
 --;---------------------------------------------------------------------------------------------------------------------
 	--Cursor Move
-		if not main.fadeActive then
+		if not fadeActive() then
 			cursorPosY, moveTxt, item = main.f_menuCommonCalc(t, item, cursorPosY, moveTxt, motifEvent.event_info, motifEvent.event_info.cursor)
 			if currentCursor ~= item then
 				--textImgReset(txt_infoEvent)
@@ -923,20 +934,20 @@ local function f_events()
 			end
 		end
 	--Close Screen
-		if main.close and not main.fadeActive then
+		if main.close and not fadeActive() then
 			bgReset(motif[main.background].BGDef)
-			main.f_fadeReset('fadein', motif[main.group])
+			fadeInInit(motif[main.group].fadein.FadeData)
 			playBgm({source = "motif.title", interrupt = true})
 			main.close = false
 			eventModeActive = false
 			break
 	--Back Button
-		elseif (esc() or getInput(-1, motifEvent.event_info.menu.cancel.key) or (selectedEvent == 'back' and getInput(-1, motifEvent.event_info.menu.done.key))) and not main.fadeActive then
+		elseif (esc() or getInput(-1, motifEvent.event_info.menu.cancel.key) or (selectedEvent == 'back' and getInput(-1, motifEvent.event_info.menu.done.key))) and not fadeActive() then
 			sndPlay(motif.Snd, motifEvent.event_info.cursor.cancel.snd[1], motifEvent.event_info.cursor.cancel.snd[2])
-			main.f_fadeReset('fadeout', motifEvent.event_info)
+			--fadeOutInit(motifEvent.event_info.fadeout.FadeData)
 			main.close = true
 	--Accept Button
-		elseif getInput(-1, motifEvent.event_info.menu.done.key) and not main.fadeActive then
+		elseif getInput(-1, motifEvent.event_info.menu.done.key) and not fadeActive() then
 			if main.t_unlockLua.modes[t[item].itemname] == nil then --If the event is unlocked
 				main.f_default()
 				sndPlay(motif.Snd, motifEvent.event_info.cursor.done.snd[1], motifEvent.event_info.cursor.done.snd[2])
@@ -972,7 +983,7 @@ local function f_events()
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				hook.run("main.t_itemname")
 				main.luaPath = t[item].path
-				main.f_fadeReset('fadeout', motifEvent.event_info)
+				--fadeOutInit(motifEvent.event_info.fadeout.FadeData)
 			--Check Unlocks before enter in Character Select
 				main.f_unlock(false)
 				f_refreshUnlockDat()
@@ -982,7 +993,6 @@ local function f_events()
 				main.f_unlock(false)
 				f_refreshUnlockDat()
 				f_resetEventInfoTxt()
-				main.f_fadeAnim(motif.select_info) --fadein / fadeout
 			end
 		end
 		refresh()
@@ -1002,7 +1012,7 @@ function start.f_selectMode()
 		if not start.f_selectScreen() then
 			sndPlay(motif.Snd, motif.select_info.cancel.snd[1], motif.select_info.cancel.snd[2])
 			bgReset(motif[main.background].BGDef)
-			main.f_fadeReset('fadein', motif[main.group])
+			fadeInInit(motif[main.group].fadein.FadeData)
 			playBgm({source = "motif.title", interrupt = true})
 			return
 		end
@@ -1066,7 +1076,7 @@ function start.f_selectMode()
 --;---------------------------------------------------------------------------------------------------------------------				
 			--EVENTS MODE RESULTS
 				if eventModeActive then f_eventResults() end
---;---------------------------------------------------------------------------------------------------------------------				
+--;---------------------------------------------------------------------------------------------------------------------	
 				--exit to main menu
 				if main.exitSelect then
 					if motif.files.intro.storyboard ~= '' and not motif.attract_mode.enabled then
@@ -1077,7 +1087,7 @@ function start.f_selectMode()
 			end
 			if start.exit then
 				bgReset(motif[main.background].BGDef)
-				main.f_fadeReset('fadein', motif[main.group])
+				fadeInInit(motif[main.group].fadein.FadeData)
 				playBgm({source = "motif.title", interrupt = true})
 				start.exit = false
 				return
