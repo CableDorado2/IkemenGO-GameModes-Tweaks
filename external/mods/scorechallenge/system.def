@@ -1,0 +1,186 @@
+;Loaded automatically from external/mods/**/system.def and merged before the motif system.def.
+;The motif file is loaded last, so anything defined there overrides this file.
+;-------------------------------------------------------------------------------
+[Select Info]
+title.scorechallenge.text = "SCORE CHALLENGE"
+title.scorechallengecoop.text = "SCORE CHALLENGE CO-OP"
+title.netplayscorechallengecoop.text = "ONLINE SCORE CHALLENGE"
+
+;format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
+record.scorechallenge.text = "- BEST RECORD: %n -\n%c: %p PTS"
+record.scorechallengecoop.text = "- BEST RECORD: %n -\n%c: %p PTS"
+record.netplayscorechallengecoop.text = "- BEST RECORD: %n -\n%c: %p PTS"
+
+;-------------------------------------------------------------------------------
+[Hiscore Info]
+;Set per-gamemode ranking criteria: score|time|win. Used to sort hiscores for that mode.
+
+ranking.scorechallenge = "score"
+ranking.scorechallengecoop = "score"
+ranking.netplayscorechallengecoop = "score"
+
+title.scorechallenge.text = "Ranking Score Challenge"
+title.scorechallengecoop.text = "Ranking Score Challenge Co-Op"
+title.netplayscorechallengecoop.text = "Ranking Online Score Challenge"
+
+;-------------------------------------------------------------------------------
+[Win Screen]
+;Set per-gamemode win/results screen variant to use for that mode.
+;Use "Win Screen" (default) or a specific "<X> Results Screen" name.
+
+results.scorechallenge = "Score Challenge Results Screen"
+results.scorechallengecoop = "Score Challenge Co-Op Results Screen"
+results.netplayscorechallengecoop = "Online Score Challenge Results Screen"
+
+;-------------------------------------------------------------------------------
+[Score Challenge Results Screen]
+enabled = 1
+sounds.enabled = 1
+roundstowin = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Score: %i
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[ScoreChallengeResultsBGdef]
+;left blank (character and stage not covered)
+
+;-------------------------------------------------------------------------------
+[Score Challenge Co-Op Results Screen]
+enabled = 1
+sounds.enabled = 1
+roundstowin = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Score: %i
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[ScoreChallengeCo-OpResultsBGdef]
+;left blank (character and stage not covered)
+
+;-------------------------------------------------------------------------------
+[Online Score Challenge Results Screen]
+enabled = 1
+sounds.enabled = 1
+roundstowin = 1
+
+fadein.time = 32
+fadein.col = 0,0,0
+fadein.anim = -1
+fadein.snd = -1, 0
+
+fadeout.time = 64
+fadeout.col = 0,0,0
+fadeout.anim = -1
+fadeout.snd = -1, 0
+
+show.time = 300
+state.time = 0
+
+winstext.displaytime = -1
+winstext.text = Score: %i
+winstext.font = 3,0,0
+winstext.offset = 640,240
+winstext.scale = 1.0, 1.0
+winstext.xshear = 0
+winstext.angle = 0
+winstext.layerno = 2
+;winstext.window = 0,0, 1280,720
+;winstext.localcoord = 
+
+overlay.col = 0,0,0
+overlay.alpha = 20,128
+;overlay.window = 0,0, 1280,720
+;overlay.localcoord = 
+
+cancel.key = a, b, c, x, y, z, s
+
+p1.state = 175, 170
+p1.win.state = 180
+p1.teammate.state = 
+p1.teammate.win.state = 
+
+p2.state = 
+p2.win.state = 
+p2.teammate.state = 
+p2.teammate.win.state = 
+
+;-------------------------------------------------------------------------------
+[OnlineScoreChallengeResultsBGdef]
+;left blank (character and stage not covered)
