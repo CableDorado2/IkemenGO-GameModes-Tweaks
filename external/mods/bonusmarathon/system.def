@@ -6,6 +6,7 @@ title.bonusmarathon.text = "BONUS MARATHON"
 title.bonusmarathoncoop.text = "BONUS MARATHON CO-OP"
 title.netplaybonusmarathoncoop.text = "ONLINE BONUS MARATHON"
 
+;format: %m = minutes, %s = seconds, %x = milliseconds, %p = score, %c = char name, %n = player name, \n = newline
 record.bonusmarathon.text = "- BEST RECORD: %n -\n%c: %p PTS"
 record.bonusmarathoncoop.text = "- BEST RECORD: %n -\n%c: %p PTS"
 record.netplaybonusmarathoncoop.text = "- BEST RECORD: %n -\n%c: %p PTS"
