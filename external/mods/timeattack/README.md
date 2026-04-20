@@ -1,6 +1,6 @@
 # Time Attack Mode Tweaks (I.K.E.M.E.N. GO Module)
 
-This module adds the following personal improvements to make the Time Attack Mode that comes by default with engine more faithful to Commercial Games:
+This module adds the following personal improvements, to make the Time Attack Mode that comes by default with engine, more faithful to Commercial Games:
 
 - Show Best Record in Character Select
 - Enables the "Here Comes a New Challenger" Intermission
@@ -10,9 +10,10 @@ This module adds the following personal improvements to make the Time Attack Mod
 - Disable Victory Screen
 - Adds Co-Op and Netplay Variant
 
-The new co-op modes are detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
-- timeattackcoop
-- netplaytimeattackcoop
+> [!NOTE]
+> The New Co-Op modes are detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
+> - timeattackcoop
+> - netplaytimeattackcoop
 
 ## Installation
 
