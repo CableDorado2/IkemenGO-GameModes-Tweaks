@@ -1,7 +1,7 @@
 # VS 100 Kumite Mode Tweaks (I.K.E.M.E.N. GO Module)
 
 Add the following Personal Improvements for [K4thos VS 100 Kumite Module](https://github.com/ikemen-engine/modules/tree/main/external/mods/vs100kumite) to make it more faithful to   
-Street Fighter Alpha 3 which it is based on:
+***Street Fighter Alpha 3*** which it is based on:
 
 - Enables the "Here Comes a New Challenger" Intermission
 - MatchNo now is displayed in VS Screen
