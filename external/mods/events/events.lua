@@ -2,7 +2,7 @@
 ======================================================================
 Version: 1.5.1
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.24)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
 TODO:
@@ -1036,13 +1036,11 @@ function start.f_selectMode()
 		--lua file with custom arcade path detection
 		local path = main.luaPath
 		if main.charparam.arcadepath then
-			if start.p[2].ratio and start.f_getCharData(start.p[1].t_selected[1].ref).ratiopath ~= '' then
-				path = start.f_getCharData(start.p[1].t_selected[1].ref).ratiopath
-				if not main.f_fileExists(path) then
-					panicError("\n" .. start.f_getCharData(start.p[1].t_selected[1].ref).name .. " ratiopath doesn't exist: " .. path .. "\n")
-				end
-			elseif not start.p[2].ratio and start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath ~= '' then
+			if start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath ~= '' then
 				path = start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath
+			end
+			path = hook.runFirst("start.f_selectMode.luaPath", path) or path
+			if path ~= '' and path ~= main.luaPath then
 				if not main.f_fileExists(path) then
 					panicError("\n" .. start.f_getCharData(start.p[1].t_selected[1].ref).name .. " arcadepath doesn't exist: " .. path .. "\n")
 				end
