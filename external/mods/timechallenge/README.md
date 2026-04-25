@@ -6,7 +6,7 @@ Add the following Personal Improvements for [K4thos Time Challenge Module](https
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set Infinite Round Time
-- Time Record now is Saved in Ranking only if player wins **(MISSING)**
+- Time Record now is Saved in Ranking only if player wins
 - Adds Co-Op and Netplay Variant
 
 > [!NOTE]
