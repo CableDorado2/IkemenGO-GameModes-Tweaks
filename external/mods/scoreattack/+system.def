@@ -1,4 +1,4 @@
-;Loaded automatically from external/mods/**/system.def and merged before the motif system.def.
+;Loaded automatically from external/mods/**/+system.def and merged before the motif system.def.
 ;The motif file is loaded last, so anything defined there overrides this file.
 ;-------------------------------------------------------------------------------
 [Select Info]
