@@ -1,8 +1,8 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.5.1
+Version: 1.5.2
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.24)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.05.16)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
 TODO:
@@ -575,14 +575,19 @@ local function f_events()
 	local defaultRecord = 359999.4
 	f_resetEventInfoTxt()
 --[[
-	local w = main.f_menuWindow(motifEvent.event_info.menu)
 	for _, v in pairs(motifEvent.event_info.menu.item.bg) do
-		animSetWindow(v.AnimData, w[1], w[2], w[3], w[4])
+		animSetWindow(v.AnimData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
 	end
 	for _, v in pairs(motifEvent.event_info.menu.item.active.bg) do
-		animSetWindow(v.AnimData, w[1], w[2], w[3], w[4])
+		animSetWindow(v.AnimData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
 	end
 --]]
+	textImgSetWindow(motifEvent.event_info.menu.item.TextSpriteData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
+	textImgSetWindow(motifEvent.event_info.menu.item.active.TextSpriteData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
+	textImgSetWindow(motifEvent.event_info.menu.item.value.TextSpriteData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
+	textImgSetWindow(motifEvent.event_info.menu.item.value.active.TextSpriteData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
+	--textImgSetWindow(motifEvent.event_info.menu.item.selected.TextSpriteData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
+	--textImgSetWindow(motifEvent.event_info.menu.item.selected.active.TextSpriteData, t_menuWindowEvent[1], t_menuWindowEvent[2], t_menuWindowEvent[3], t_menuWindowEvent[4])
 	if motifEvent.event_info.reload.enabled == 1 then f_loadEvents() end --Reload select.def events data each time that events menu is initialized
 	for k, v in ipairs(t_selEventMode) do
 		table.insert(t,
