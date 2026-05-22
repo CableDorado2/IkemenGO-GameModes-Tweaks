@@ -6,7 +6,6 @@ Add the following Personal Improvements for [K4thos Score Challenge Module](http
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set 50 Seconds to Round Time
-- Score Record now is Saved in Ranking only if player wins **(MISSING)**
 - Adds Co-Op and Netplay Variant
 
 > [!NOTE]
