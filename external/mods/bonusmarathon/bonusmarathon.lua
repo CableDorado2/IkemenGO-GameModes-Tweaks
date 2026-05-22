@@ -1,7 +1,7 @@
 --[[	   				         BONUS MARATHON MODULE
 ==================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.05.22)
 Description: Based on Boss Rush Module.
 Bonus Marathon Mode is about defeat all opponents that are consider bonuses.
 
@@ -152,8 +152,8 @@ end
 
 main.t_bonusmarathonChars = {}
 for _, v in ipairs(main.t_selChars) do
-	if v.bonus ~= nil and v.bonus == 1 then
-		local order = math.max(1, v.order)
+	if v.bonus == 1 and (v.order or 0) > 0 then
+		local order = v.order
 		if main.t_bonusmarathonChars[order] == nil then
 			main.t_bonusmarathonChars[order] = {}
 		end
