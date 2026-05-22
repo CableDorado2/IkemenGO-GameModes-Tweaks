@@ -1,7 +1,7 @@
 --[[	   					       SCORE CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.05.22)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best score.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
@@ -11,7 +11,6 @@ CD2's Tweaks:
 - Enables the "Here Comes a New Challenger" Intermission
 - Set 1 Round to Win
 - Set 50 Seconds to Round Time
-- Score Record now is Saved in Ranking only if player wins (MISSING)
 - Adds Co-Op and Netplay Variant
 =======================================================================================================
 ]]
