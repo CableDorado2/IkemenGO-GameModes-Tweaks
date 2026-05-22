@@ -1,7 +1,7 @@
 --[[	   					       BOSS RUSH MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.05.22)
 Description: A special challenge where player fight multiple bosses consecutively.
 Beating all bosses clears the mode.
 
@@ -173,11 +173,11 @@ end
 main.t_bossChars = {}
 main.t_bossRushChars = {}
 for _, v in ipairs(main.t_selChars) do
-	if v.boss ~= nil and v.boss == 1 then
+	if v.boss == 1 and (v.order or 0) > 0 then
+		local order = v.order
 		if main.t_bossChars == nil then
 			main.t_bossChars = {}
 		end
-		local order = math.max(1, v.order)
 		if main.t_bossRushChars[order] == nil then
 			main.t_bossRushChars[order] = {}
 		end
