@@ -1,14 +1,13 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.5.2
+Version: 1.5.3
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.05.16)
+Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.06.14)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
 TODO:
 - Add "background params" for menu.
 - Custom Fonts support in [Files] .def module section.
-- Fix Fades.
 ======================================================================
 ]]
 local eventMotifPath = "external/mods/events/eventsMenu.def" --Set the Motif/Screenpack Definition File Path
@@ -535,12 +534,12 @@ end
 if motifEvent.event_info.fadein.anim ~= -1 then
 	motifEvent.event_info.fadein.AnimData = f_createAnim(motifEvent.event_info, 'fadein', false, false)
 end
---motifEvent.event_info.fadein.FadeData = f_createAnim(motifEvent.event_info, 'fadein', false, false)
+motifEvent.event_info.fadein.FadeData = fadeNew(motifEvent.event_info.fadein)
 
 if motifEvent.event_info.fadeout.anim ~= -1 then
 	motifEvent.event_info.fadeout.AnimData = f_createAnim(motifEvent.event_info, 'fadeout', false, false)
 end
---motifEvent.event_info.fadeout.FadeData = f_createAnim(motifEvent.event_info, 'fadeout', false, false)
+motifEvent.event_info.fadeout.FadeData = fadeNew(motifEvent.event_info.fadeout)
 
 if gameOption('Debug.DumpLuaTables') then main.f_printTable(motifEvent, "debug/eventsMenuMotif.txt") end
 --===================================================================================
@@ -653,7 +652,7 @@ local function f_events()
 	end
 	if gameOption('Debug.DumpLuaTables') then main.f_printTable(t, 'debug/t_eventsMenu.txt') end
 	bgReset(motifEvent.eventbgdef.BGDef)
-	--fadeInInit(motifEvent.event_info.fadein.FadeData)
+	fadeInInit(motifEvent.event_info.fadein.FadeData)
 	if motifEvent.music.menu.bgm ~= "" then f_playEventBGM() end --Play Event Menu BGM
 	main.close = false
 	while true do
@@ -949,7 +948,7 @@ local function f_events()
 	--Back Button
 		elseif (esc() or getInput(-1, motifEvent.event_info.menu.cancel.key) or (selectedEvent == 'back' and getInput(-1, motifEvent.event_info.menu.done.key))) and not fadeActive() then
 			sndPlay(motif.Snd, motifEvent.event_info.cursor.cancel.snd[1], motifEvent.event_info.cursor.cancel.snd[2])
-			--fadeOutInit(motifEvent.event_info.fadeout.FadeData)
+			fadeOutInit(motifEvent.event_info.fadeout.FadeData)
 			main.close = true
 	--Accept Button
 		elseif getInput(-1, motifEvent.event_info.menu.done.key) and not fadeActive() then
@@ -989,7 +988,7 @@ local function f_events()
 				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
 				hook.run("main.t_itemname")
 				main.luaPath = t[item].path
-				--fadeOutInit(motifEvent.event_info.fadeout.FadeData)
+				fadeOutInit(motifEvent.event_info.fadeout.FadeData)
 			--Check Unlocks before enter in Character Select
 				main.f_unlock(false)
 				f_refreshUnlockDat()
@@ -1016,29 +1015,16 @@ function start.f_selectMode()
 	start.f_selectReset(true)
 	while true do
 		--select screen
+		if gameOption('Config.BootLoadingMode') == 1 then
+			main.f_waitForPreloads()
+		end
 		if not start.f_selectScreen() then
-			sndPlay(motif.Snd, motif.select_info.cancel.snd[1], motif.select_info.cancel.snd[2])
 			bgReset(motif[main.background].BGDef)
 			fadeInInit(motif[main.group].fadein.FadeData)
 			playBgm({source = "motif.title", interrupt = true})
 			return
 		end
-		--first match
-		if start.reset then
-			-- Save current remap state. main.f_restoreInput() should restore to this.
-			main.f_saveBaseRemapInput()
-			main.t_availableChars = main.f_tableCopy(main.t_orderChars)
-			--generate default roster
-			if main.makeRoster then
-				start.t_roster = start.f_makeRoster()
-			end
-			--generate AI ramping table
-			if main.aiRamp then
-				start.f_aiRamp(1)
-			end
-			start.reset = false
-		end
-		--lua file with custom arcade path detection
+		-- lua file with custom arcade path detection
 		local path = main.luaPath
 		if main.charparam.arcadepath then
 			if start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath ~= '' then
@@ -1051,8 +1037,33 @@ function start.f_selectMode()
 				end
 			end
 		end
+		local customArcadePath = main.charparam.arcadepath and path ~= main.luaPath
+		--first match
+		if start.reset then
+			-- Save current remap state. main.f_restoreInput() should restore to this.
+			main.f_saveBaseRemapInput()
+			if customArcadePath then
+				main.t_availableChars = main.f_tableCopy(main.t_orderChars.default)
+			else
+				main.t_availableChars = main.f_tableCopy(start.f_getOrderChars())
+			end
+			--generate default roster
+			if main.makeRoster and not customArcadePath then
+				start.t_roster = start.f_makeRoster()
+			else
+				start.t_roster = {}
+			end
+			--generate AI ramping table
+			if main.aiRamp then
+				start.f_aiRamp(1)
+			end
+			start.reset = false
+		end
 		--external script execution
+		local oldCustomArcadePath = start.customArcadePath
+		start.customArcadePath = customArcadePath
 		assert(loadfile(path))()
+		start.customArcadePath = oldCustomArcadePath
 		--infinite matches flag detected
 		if main.makeRoster and start.t_roster[matchNo()] ~= nil and start.t_roster[matchNo()][1] == -1 then
 			table.remove(start.t_roster, matchNo())
@@ -1078,10 +1089,10 @@ function start.f_selectMode()
 						main.f_storyboard(motif.game_over_screen.storyboard)
 					end
 				end
---;---------------------------------------------------------------------------------------------------------------------				
+--;---------------------------------------------------------------------------------------------------------------------
 			--EVENTS MODE RESULTS
 				if eventModeActive then f_eventResults() end
---;---------------------------------------------------------------------------------------------------------------------	
+--;---------------------------------------------------------------------------------------------------------------------
 				--exit to main menu
 				if main.exitSelect then
 					if motif.files.intro.storyboard ~= '' and not motif.attract_mode.enabled then
