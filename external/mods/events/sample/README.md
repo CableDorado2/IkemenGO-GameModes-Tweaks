@@ -4,9 +4,9 @@
 The structure of Event Mode is similar to that offered by default for story mode / arcade paths, but in a module portable format.
 
 Check the Engine Wiki to learn about it:
-- https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info/#arcs
+- https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#arcade-paths--story-mode-arcs
 
 ## Using launchfight Function
 For all paramvalues available to code your custom matches, check the Engine Wiki:
 
-- https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#launchfight
+- https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#launchfight-1
