@@ -1,7 +1,7 @@
 --[[	   					       SCORE ATTACK MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.04.20)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
 Description: Implements Score Attack game mode (defeat opponents beating previous score record).
 Includes a Co-Op and Netplay variant.
 
