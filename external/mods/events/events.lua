@@ -2,7 +2,7 @@
 ======================================================================
 Version: 1.5.3
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.06.14)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
 TODO:

@@ -135,7 +135,7 @@ path = external/mods/events/sample/event1.lua
 lifebarscorep1 = true
 
 id = event2
-name = THE IKEMEN MAN
+name = THE IKEMAN
 description = Fight Against the High Definition Version of Kung Fu Man!
 path = external/mods/events/sample/event2.lua
 unlock = eventsDat ~= nil and eventsDat.event1 ~= nil and eventsDat.event1.score > 0
