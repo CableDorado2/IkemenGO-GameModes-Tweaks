@@ -51,7 +51,7 @@ Optionally set a maximum number of matches before Bonus Marathon ends:
 
 ;Examples:
 Car Crusher, stages/bonusbg.def, music=sound/bonus.mp3, bonus=1, order=3, exclude=1
-Barrel Buster, stages/bonusbg.def, music=sound/bonus.mp3, bonus=1, order=0, exclude=1, rounds=1, single=1, victoryscreen=0
+Barrel Buster, stages/bonusbg.def, music=sound/bonus.mp3, bonus=1, ordersurvival=0, order=3, exclude=1, rounds=1, single=1, victoryscreen=0
 
 [Options]
 ;Maximum number of normal and ratio matches to play before game ends in Bonus Marathon mode.
