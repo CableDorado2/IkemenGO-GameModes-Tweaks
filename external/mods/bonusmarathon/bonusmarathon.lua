@@ -1,7 +1,7 @@
 --[[	   				         BONUS MARATHON MODULE
 ==================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (Nightly Build - 2026.05.22)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
 Description: Based on Boss Rush Module.
 Bonus Marathon Mode is about defeat all opponents that are consider bonuses.
 
