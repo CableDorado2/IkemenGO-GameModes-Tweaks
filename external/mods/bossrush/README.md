@@ -55,6 +55,10 @@ Optionally set a maximum number of matches before Boss Rush ends:
 ;   IKEMEN feature: Set the paramvalue to 1 to include this character in "Boss Rush" mode.
 ;   At least 1 character needs this parameter for the mode to be playable.
 
+;Examples:
+Suave Dude, stages/stageboss.def, boss=1, order=8
+Gouki, boss=1, order=9, ai=8, hidden=1
+
 [Options]
 ;Maximum number of normal and ratio matches to fight before game ends in Boss Rush mode.
 ;Leave it empty to fight all boss characters (the "order" parameter is still respected).
