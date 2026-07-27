@@ -49,6 +49,10 @@ Optionally set a maximum number of matches before Bonus Marathon ends:
 ;   IKEMEN feature: Set the paramvalue to 1 to include this character in Bonus Marathon mode.
 ;	At least 1 character needs this parameter for the mode to be playable.
 
+;Examples:
+Car Crusher, stages/bonusbg.def, music=sound/bonus.mp3, bonus=1, order=3, exclude=1
+Barrel Buster, stages/bonusbg.def, music=sound/bonus.mp3, bonus=1, order=0, exclude=1, rounds=1, single=1, victoryscreen=0
+
 [Options]
 ;Maximum number of normal and ratio matches to play before game ends in Bonus Marathon mode.
 ;Leave it empty to face all bonus characters (the "order" parameter is still respected).
