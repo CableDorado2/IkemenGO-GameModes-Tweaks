@@ -5,8 +5,7 @@ Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
-TODO:
-- Add "background params" for menu.
+TODO: Add "background params" for menu.
 ======================================================================
 ]]
 local eventMotifPath = "external/mods/events/eventsMenu.def" --Set the Motif/Screenpack Definition File Path
@@ -1020,6 +1019,7 @@ end
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when enter in main menu item
 end
+
 --;===========================================================
 --; MODES LOOP (copied from external/script/start.lua)
 --;===========================================================
