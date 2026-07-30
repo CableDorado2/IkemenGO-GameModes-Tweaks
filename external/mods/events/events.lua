@@ -1,13 +1,12 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.5.3
+Version: 1.6.0
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
 TODO:
 - Add "background params" for menu.
-- Custom Fonts support in [Files] .def module section.
 ======================================================================
 ]]
 local eventMotifPath = "external/mods/events/eventsMenu.def" --Set the Motif/Screenpack Definition File Path
@@ -63,7 +62,7 @@ end
 local function f_updateTextImg(t, sect, textData)
 	local section = f_readSubtable(t, sect)
 	if not section then return nil end
-	textImgSetFont(textData, motif.Fnt[section.font[1]] or -1)
+	textImgSetFont(textData, motifEvent.fontData[section.font[1]] or -1)
 	textImgSetBank(textData, section.font[2] or 0)
 	textImgSetAlign(textData, section.font[3] or 0)
 	textImgSetColor(textData, section.font[4] or 255, section.font[5] or 255, section.font[6] or 255, section.font[7] or 255)
@@ -348,7 +347,8 @@ local function f_loadEvents()
 	t_selEventMode = {}
 --Set Default Data
 	local eventsDef = motif.files.select
-	motifEvent.sprData = sffNew()
+	motifEvent.sprData = sffNew() --Create blank sprite data
+	motifEvent.sndData = motif.Snd --Use default system.def sound data
 --If events files section is detected, replace Default Data with Custom Data
 	if motifEvent.files ~= nil then
 	--Load .def file with Events Items
@@ -362,6 +362,19 @@ local function f_loadEvents()
 	--Load .air file with Events Menu Animations
 		if motifEvent.files.air ~= nil and main.f_fileExists(motifEvent.files.air) then
 			motifEvent.airData = loadAnimTable(motifEvent.files.air, motifEvent.sprData)
+		end
+	--Load .snd file with Events Menu Sounds
+		if motifEvent.files.snd ~= nil and main.f_fileExists(motifEvent.files.snd) then
+			motifEvent.sndData = sndNew(motifEvent.files.snd)
+		end
+	end
+	motifEvent.fontData = motif.Fnt --Use default system.def font data
+--If events fonts section is detected, replace Default Data with Custom Data
+	if motifEvent.fonts ~= nil then
+		local i = 1
+		while motifEvent.fonts["font"..i] ~= nil do
+			motifEvent.fontData[i] = fontNew(motifEvent.fonts["font"..i])
+			i = i + 1
 		end
 	end
 	local section = 0
@@ -563,7 +576,7 @@ end
 local function f_events()
 	eventModeActive = true
 	main.f_default()
-	sndPlay(motif.Snd, motif[main.group].cursor.done.snd.default[1], motif[main.group].cursor.done.snd.default[2])
+	sndPlay(motifEvent.sndData, motif[main.group].cursor.done.snd.default[1], motif[main.group].cursor.done.snd.default[2])
 	local cursorPosY = 1
 	local moveTxt = 0
 	local item = 1
@@ -947,14 +960,14 @@ local function f_events()
 			break
 	--Back Button
 		elseif (esc() or getInput(-1, motifEvent.event_info.menu.cancel.key) or (selectedEvent == 'back' and getInput(-1, motifEvent.event_info.menu.done.key))) and not fadeActive() then
-			sndPlay(motif.Snd, motifEvent.event_info.cursor.cancel.snd[1], motifEvent.event_info.cursor.cancel.snd[2])
+			sndPlay(motifEvent.sndData, motifEvent.event_info.cursor.cancel.snd[1], motifEvent.event_info.cursor.cancel.snd[2])
 			fadeOutInit(motifEvent.event_info.fadeout.FadeData)
 			main.close = true
 	--Accept Button
 		elseif getInput(-1, motifEvent.event_info.menu.done.key) and not fadeActive() then
 			if main.t_unlockLua.modes[t[item].itemname] == nil then --If the event is unlocked
 				main.f_default()
-				sndPlay(motif.Snd, motifEvent.event_info.cursor.done.snd[1], motifEvent.event_info.cursor.done.snd[2])
+				sndPlay(motifEvent.sndData, motifEvent.event_info.cursor.done.snd[1], motifEvent.event_info.cursor.done.snd[2])
 			--START EVENT
 				remapInput(1, getLastInputController())
 				remapInput(getLastInputController(), 1)
@@ -1007,9 +1020,8 @@ end
 main.t_itemname.events = function()
 	return f_events() --Call above function (that contains a custom sub-menu) when enter in main menu item
 end
-
 --;===========================================================
---; MODES LOOP (copy from external/script/start.lua)
+--; MODES LOOP (copied from external/script/start.lua)
 --;===========================================================
 function start.f_selectMode()
 	start.f_selectReset(true)
@@ -1031,13 +1043,17 @@ function start.f_selectMode()
 				path = start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath
 			end
 			path = hook.runFirst("start.f_selectMode.luaPath", path) or path
-			if path ~= '' and path ~= main.luaPath then
+			if path ~= '' and path ~= main.defaultLuaPath then
 				if not main.f_fileExists(path) then
-					panicError("\n" .. start.f_getCharData(start.p[1].t_selected[1].ref).name .. " arcadepath doesn't exist: " .. path .. "\n")
+					local label = "arcadepath"
+					if path ~= main.luaPath then
+						label = start.f_getCharData(start.p[1].t_selected[1].ref).name .. " arcadepath"
+					end
+					panicError("\n" .. label .. " doesn't exist: " .. path .. "\n")
 				end
 			end
 		end
-		local customArcadePath = main.charparam.arcadepath and path ~= main.luaPath
+		local customArcadePath = main.charparam.arcadepath and path ~= main.defaultLuaPath
 		--first match
 		if start.reset then
 			-- Save current remap state. main.f_restoreInput() should restore to this.
@@ -1062,7 +1078,7 @@ function start.f_selectMode()
 		--external script execution
 		local oldCustomArcadePath = start.customArcadePath
 		start.customArcadePath = customArcadePath
-		assert(loadfile(path))()
+		assert(loadFile(path))()
 		start.customArcadePath = oldCustomArcadePath
 		--infinite matches flag detected
 		if main.makeRoster and start.t_roster[matchNo()] ~= nil and start.t_roster[matchNo()][1] == -1 then

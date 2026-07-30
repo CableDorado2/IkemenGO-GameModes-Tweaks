@@ -1,14 +1,14 @@
 [Info]
 ikemenversion = 1.0
 localcoord = 1280,720
-
 ;-------------------------------------------------------------------------------
 [Files]
 def = external/mods/events/events.def ;load the Events Items to show in Events Menu. (If is not defined, events will be loaded from select.def)
 ;sff = external/mods/events/events.sff ;load sprites for Events Items. (If is not defined, nothing will be displayed)
-air = external/mods/events/events.air ;load animations for Events Items. (If is not defined, animations will be loaded from system.def)
-
-;Fonts (If are not defined, fonts will be loaded from system.def) 
+;air = external/mods/events/events.air ;load animations for Events Items. (If is not defined, animations will be loaded from system.def)
+;snd = external/mods/events/events.snd ;load sounds for Events Menu. (If is not defined, sounds will be loaded from system.def)
+;-------------------------------------------------------------------------------
+[Fonts] ;If are not defined, fonts will be loaded from system.def
 font1 = f-4x6.def
 font2 = ikemen1/fonts/Pixel.def
 font3 = ikemen1/fonts/Menu2.def
@@ -18,10 +18,8 @@ font6 = infofont.def
 font7 = Open_Sans.def
 font8 = ikemen1/fonts/Timer.def
 font9 = ikemen1/fonts/PixelFlat.def
-
 ;-------------------------------------------------------------------------------
-[Music]
-;Music to play at event mode screen.
+[Music] ;Music to play at event mode screen.
 menu.bgm = sound/system/Events.mp3
 menu.volume = 100
 menu.loop = 1
@@ -30,7 +28,6 @@ menu.loopend = 0
 menu.startposition = 0
 menu.freqmul = 1.0
 menu.loopcount = -1
-
 ;-------------------------------------------------------------------------------
 [Event Info] ;Events screen definition
 reload.enabled = 0 ;Set to 1 to enable select.def events data reload, each time that events menu is initialized (for debug purposes), 0 to disable.
@@ -153,12 +150,13 @@ menu.arrow.down.spr = 401,0
 menu.arrow.down.offset = 850,495
 menu.arrow.down.facing = 1
 menu.arrow.down.scale = 1.0, 1.0
-
 ;-------------------------------------------------------------------------------
 [EventBGdef] ;Events screen background
 spr = ""
 bgclearcolor = 0,0,0
-;paramvalues to load a model object as BG (Thanks to xcheatdeath for his assistance)
+
+;Paramvalues to load a model object as BG:
+;https://github.com/ikemen-engine/Ikemen-GO/wiki/Background-features#bgdef-definition
 ;model = "stages/stage3d.glb"
 ;scenenumber = 0
 ;fov = 75
