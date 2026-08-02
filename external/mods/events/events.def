@@ -1,5 +1,3 @@
-;Example SELECT.DEF parameters assignments
-;-------------------------------------------------------------------------------
 ;Events Mode custom fights declaration. Assigned events are selectable via Events Mode
 ;submenu ('menu.itemname.events' parameter in screenpack DEF file)
 
@@ -8,26 +6,27 @@
 ; - id (required)
 ;	Set to name that should be returned by GameMode trigger.
 ;	This parameter also initiates new events declaration, so it has to be
-;	assigned before any other parameter used by the same event. All events should
-;	have unique id names.
+;	assigned before any other parameter used by the same event.
+;	All events should have unique id names.
 
 ; - spr (optional)
-;	Set groupNo and indexNo to load from the sff file defined in "events.spr" system.def
-;	[Event Info] paramvalue, to show a preview sprite for event item.
+;	Set groupNo and indexNo to load from the sff file defined in [File] "sff"
+;	paramvalue in eventsMenu.def, to show a preview sprite for event item.
 ;	If is not defined, "preview.unknown.spr" will be displayed.
 
 ; - name (optional)
 ;	Set to name that should be displayed for item in Events Mode submenu.
-;	If is not defined, "itemname.unknown" system.def [Event Info] paramvalue will be used.
+;	If is not defined, "menu.itemname.unknown" eventsMenu.def [Event Info] paramvalue will be used.
 
 ; - description (optional)
 ;	Set to description that should be displayed for item in Events Mode submenu.
-;	If is not defined, "info.unknown" system.def [Event Info] paramvalue will be used.
+;	If is not defined, "info.unknown" eventsMenu.def [Event Info] paramvalue will be used.
 
 ; - path (required)
 ;	Path to file with lua extension (relative to game directory)
 ;	containing event mode custom fight coded in Lua language.
-;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Miscellaneous-Info#arcs
+;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#arcade-paths--story-mode-arcs
+;	https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#launchfight-1
 
 ; - unlock (optional)
 ;	Pure Lua code, executed exactly as is, each time upon loading events menu and after complete one.
