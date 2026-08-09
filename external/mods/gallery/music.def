@@ -12,40 +12,52 @@
 ; - path (required)
 ;	Set Path to file with song (relative to game directory).
 ;	containing music file to play.
+;
+;	Supported Formats: mp3, ogg, flac, wav, mod/xm/s3m/it (modtracker files)
+;	MIDI (requires a soundfont.sf2 file to be present in the sound folder in order to play)
 
 ; - volume (optional)
-;	Set default music volume scale. 100 is for 100% (default: 100)
+;	Set default music volume scale 0-100, clamped to config MaxBGMVolume (default: 100)
 
 ; - loopstart (optional)
-;	Set music loop start sample number. (default: 0)
+;	Set music loop start position sample number. (default: 0)
 
 ; - loopend (optional)
-;	Set music loop end sample number. (default: 0)
+;	Set music loop end position sample number. (default: 0)
+
+; - loopcount (optional)
+;	Set music loop count. Set -1 for infinite. (default: -1)
+
+; - startposition (optional)
+;	Set music initial playback position. (default: 0)
+
+; - freqmul (optional)
+;	Set music frequency multiplier (pitch). (default: 1.0)
 
 ; - previewspr (only used in main gallery screen) [optional]
-;	Set groupNo and indexNo to load from sff file defined in "music.spr"
-;	system.def [Gallery Info] paramvalue, to show preview sprite for items.
-;	If is not defined, "preview.unknown.music.spr" will be displayed.
+;	Set groupNo and indexNo to load from sff file defined in "music.sff"
+;	galleryMenu.def [Files] paramvalue, to show preview sprite for items.
+;	If is not defined, "cell.unknown.music.spr" will be displayed.
 
 ; - previewsize (only used in main gallery screen) [optional]
 ;	Set Width and Height of for gallery preview sprite defined in previewspr paramvalue.
-;	If is not defined, "preview.music.size" system.def [Gallery Info] paramvalue will be used.
+;	If is not defined, "cell.music.size" galleryMenu.def [Gallery Info] paramvalue will be used.
 
 ; - previewpos (only used in main gallery screen) [optional]
 ;	Set posX and posY for gallery preview sprite which is the same defined in previewspr paramvalue.
-;	If is not defined, "preview.music.offset" system.def [Gallery Info] paramvalue will be used.
+;	If is not defined, "cell.music.offset" galleryMenu.def [Gallery Info] paramvalue will be used.
 
 ; - previewspacing (only used in main gallery screen) [optional]
 ;	Set spacingX and spacingY for gallery preview sprite which is the same defined in previewspr paramvalue.
-;	If is not defined, "preview.music.spacing" system.def [Gallery Info] paramvalue will be used.
+;	If is not defined, "cell.music.spacing" galleryMenu.def [Gallery Info] paramvalue will be used.
 
 ; - previewscale (only used in main gallery screen) [optional]
 ;	Set scaleX and scaleY for gallery preview sprite which is the same defined in previewspr paramvalue.
-;	If is not defined, "preview.music.scale" system.def [Gallery Info] paramvalue will be used.
+;	If is not defined, "cell.music.scale" galleryMenu.def [Gallery Info] paramvalue will be used.
 
 ; - info (optional)
 ;	Set to description that should be displayed for music selected.
-;	If is not defined, "info.unknown.text" system.def [Gallery Info] paramvalue will be used.
+;	If is not defined, "info.unknown" galleryMenu.def [Gallery Info] paramvalue will be used.
 
 ; - unlock (optional)
 ;	Pure Lua code, executed exactly as is, each time upon loading gallery menu.
@@ -63,3 +75,18 @@ info = Itty Bitty 8 Bit - Kevin MacLeod (incompetech.com)
 id = music 2
 path = external/mods/gallery/Special Spotlight.mp3
 info = Special Spotlight - Kevin MacLeod (incompetech.com)
+
+id = music 3
+;path = sound/mysong.mp3
+
+id = music 4
+;path = sound/mysong.ogg
+
+id = music 5
+;path = sound/mysong.flac
+
+id = music 6
+;path = sound/mysong.wav
+
+id = music 7
+;path = sound/mysong.xm

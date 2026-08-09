@@ -1,0 +1,380 @@
+[Info]
+ikemenversion = 1.0
+localcoord = 1280,720
+;-------------------------------------------------------------------------------
+[Files]
+common.sff = external/mods/gallery/common.sff ;load sprites for Gallery Menu. (If is not defined, nothing will be displayed)
+;common.snd = external/mods/gallery/common.snd ;load sounds for Gallery Menu. (If is not defined, sounds will be loaded from system.def)
+
+;Load the Gallery Items to show for each category in Gallery Menu. (If is not defined, nothing will be loaded)
+artworks.def = external/mods/gallery/artworks.def
+storyboards.def = external/mods/gallery/storyboards.def
+music.def = external/mods/gallery/music.def
+
+;Load sprites for each Gallery Items. (If is not defined, nothing will be displayed)
+artworks.sff = external/mods/gallery/artworks.sff
+storyboards.sff = external/mods/gallery/storyboards.sff
+music.sff = external/mods/gallery/music.sff
+;-------------------------------------------------------------------------------
+[Fonts] ;If are not defined, fonts will be loaded from system.def
+font1 = f-4x6.def
+font2 = ikemen1/fonts/Pixel.def
+font3 = ikemen1/fonts/Menu2.def
+font4 = ikemen1/fonts/Menu1.def
+font5 = Open_Sans.def
+font6 = infofont.def
+font7 = Open_Sans.def
+font8 = ikemen1/fonts/Timer.def
+font9 = ikemen1/fonts/PixelFlat.def
+
+;-------------------------------------------------------------------------------
+[Music] ;Music to play at gallery menu screen.
+menu.bgm = sound/system/Gallery.mp3
+menu.volume = 100
+menu.loop = 1
+menu.loopstart = 0
+menu.loopend = 0
+menu.startposition = 0
+menu.freqmul = 1.0
+menu.loopcount = -1
+;-------------------------------------------------------------------------------
+[Gallery Info] ;Gallery screen definition
+reload.enabled = 0 ;Set to 1 to enable gallery data reload (.def & .sff files), each time that gallery menu is initialized (for debug purposes), 0 to disable.
+
+fadein.time = 20
+fadein.color = 0,0,0
+fadein.anim = -1
+fadein.sound = -1,0
+
+fadeout.time = 20
+fadeout.color = 0,0,0
+fadeout.anim = -1
+fadeout.sound = -1,0
+
+cursor.move.snd = 100,0
+cursor.category.snd = 100,0
+cursor.done.snd = 100,1
+cursor.cancel.snd = 100,2
+
+title.font = 4,0,0
+title.offset = 640,50
+title.scale = 1.0, 1.0
+title.layerno = 1
+;Text rendered in Gallery Menu
+title.text = "GALLERY"
+title.artworks = "ARTWORKS"
+title.storyboards = "CUTSCENES"
+title.music = "MUSIC"
+
+info.font = 2,0,1
+info.unknown = "???"
+info.offset = 10,690
+info.scale = 1.0, 1.0
+info.length = 93
+info.spacing = 38
+info.delay = 0
+info.layerno = 1
+
+menu.pos = 0,0
+
+;Keys responsible for menu movement
+menu.up.key = U
+menu.left.key = L
+menu.down.key = D
+menu.right.key = R
+menu.nextpage.key = w
+menu.previouspage.key = d
+
+;Key for selecting menu item
+menu.done.key = a, b, c, x, y, z, s
+menu.back.key = m
+
+cell.columns = 4
+cell.hiddencolumns = 0
+cell.rows = 3
+cell.hiddenrows = 2
+
+cell.art.offset = 154,154
+cell.art.spacing = -965,-524
+cell.art.scale = 0.2116, 0.21
+cell.art.window = 0,0, 1280,650
+
+cell.storyboard.offset = 154,154
+cell.storyboard.spacing = -965,-524
+cell.storyboard.size = 1280,720
+cell.storyboard.scale = 0.2116, 0.21
+cell.storyboard.window = 0,0, 1280,650
+
+cell.music.offset = 154,154
+cell.music.spacing = -965,-524
+cell.music.size = 1280,720
+cell.music.scale = 0.2116, 0.21
+cell.music.window = 0,0, 1280,650
+
+;cell.bg.anim = -1
+cell.bg.spr = 0,0
+cell.bg.offset = 10,70
+cell.bg.spacing = 220,140
+cell.bg.facing = 1
+cell.bg.size = 96,56
+cell.bg.scale = 3, 3
+cell.bg.window = 0,0, 1280,650
+
+;cell.cursor.anim = -1
+cell.cursor.spr = 1,0
+cell.cursor.offset = 10,70
+cell.cursor.spacing = 220,140
+cell.cursor.facing = 1
+cell.cursor.size = 96,56
+cell.cursor.scale = 3, 3
+cell.cursor.window = 0,0, 1280,650
+
+;cell.locked.anim = -1
+cell.locked.spr = 2,0
+cell.locked.offset = 18,78
+cell.locked.spacing = 226.5,145
+cell.locked.facing = 1
+cell.locked.size = 90,50
+cell.locked.scale = 3, 3
+cell.locked.window = 0,0, 1280,650
+
+;cell.unknown.anim = -1
+cell.unknown.spr = 3,0
+cell.unknown.offset = 18.5,78.5
+cell.unknown.spacing = 226.5,145
+cell.unknown.facing = 1
+cell.unknown.size = 90,50
+cell.unknown.scale = 3, 3
+cell.unknown.window = 0,0, 1280,650
+
+;cell.unknown.music.anim = -1
+cell.unknown.music.spr = 4,0
+cell.unknown.music.offset = 18,78
+cell.unknown.music.spacing = 226.5,145
+cell.unknown.music.facing = 1
+cell.unknown.music.size = 90,50
+cell.unknown.music.scale = 3, 3
+cell.unknown.music.window = 0,0, 1280,650
+;-------------------------------------------------------------------------------
+[GalleryBGdef] ;Gallery screen background
+spr = ""
+bgclearcolor = 0,0,0
+
+;Paramvalues to load a model object as BG:
+;https://github.com/ikemen-engine/Ikemen-GO/wiki/Background-features#bgdef-definition
+;model = "stages/stage3d.glb"
+;scenenumber = 0
+;fov = 75
+;near = 0.1
+;far = 100.0
+;modeloffset = 0, -0.2, -0.47
+;modelscale = 0.1, 0.1, 0.1
+
+[GalleryBG Background Sky]
+type = normal
+spriteno = 100,0
+layerno = 0
+start = -640,0
+
+[GalleryBG Background Clouds Top]
+type = normal
+spriteno = 100,2
+layerno = 0
+start = -640, -50
+tile = 1,0
+velocity = -0.1, 0
+window = 0,0, 1279,959
+mask = 1
+
+[GalleryBG Background Clouds Bottom]
+type = normal
+spriteno = 100,3
+layerno = 0
+start = -640, 0
+tile = 1,0
+velocity = -0.7, 0
+window = 0,0, 1279,959
+mask = 1
+
+[GalleryBG Info]
+type = normal
+spriteno = 700,0
+layerno = 0
+start = -640,650
+scalestart = 3.1, 1
+trans = add1
+
+;-------------------------------------------------------------------------------
+[ArtViewer Info] ;Artwork Viewer screen definition
+fadein.time = 20
+fadein.color = 0,0,0
+fadein.anim = -1
+fadein.sound = -1,0
+
+fadeout.time = 20
+fadeout.color = 0,0,0
+fadeout.anim = -1
+fadeout.sound = -1,0
+
+cursor.move.snd = 100,0
+cursor.done.snd = 100,2
+
+menu.pos = 0,0
+
+art.offset = 160.5,120
+art.size = 1280,720
+art.scale = 0.3335, 0.3335
+art.movespeed = 14
+art.movelimit = -700,-768, 1800,1100
+art.zoomspeed = 0.01
+art.zoomlimit = 0.025, 1.99
+
+;Keys responsible for art movement
+up.key = U
+down.key = D
+left.key = L
+right.key = R
+
+;Keys responsible for art manipulation
+zoomin.key = y
+zoomout.key = x
+slot.key = c
+reset.key = a
+hide.key = s
+
+;Keys responsible for menu behavior
+next.key = w
+previous.key = d
+back.key = b, m
+
+info.font = 2,0,1
+info.offset = 10,690
+info.scale = 1.0, 1.0
+info.length = 93
+info.spacing = 38
+info.delay = 0
+info.layerno = 1
+
+page.font = 2,0,-1
+page.text = "PAGE "
+page.offset = 1264,41
+page.scale = 1.0, 1.0
+page.layerno = 1
+
+;menu.arrow.left.anim = -1
+menu.arrow.left.spr = 5,0
+menu.arrow.left.offset = 30,360
+menu.arrow.left.facing = -1
+menu.arrow.left.scale = 1.0, 1.0
+
+;menu.arrow.right.anim = -1
+menu.arrow.right.spr = 5,0
+menu.arrow.right.offset = 1245,360
+menu.arrow.right.facing = 1
+menu.arrow.right.scale = 1.0, 1.0
+;-------------------------------------------------------------------------------
+[ArtViewerBGdef] ;Artwork Viewer screen background
+spr = ""
+bgclearcolor = 255,255,255
+
+[ArtViewerBG Info]
+type = normal
+spriteno = 700,0
+start = -640,650
+scalestart = 3.1, 1
+layerno = 1
+trans = add1
+
+[ArtViewerBG Page Info]
+type = normal
+spriteno = 700,0
+start = 440,10
+scalestart = 0.47, 0.8
+layerno = 1
+trans = add1
+
+;-------------------------------------------------------------------------------
+[MusicPlayer Info] ;Music Player screen definition
+fadein.time = 20
+fadein.color = 0,0,0
+fadein.anim = -1
+fadein.sound = -1,0
+
+fadeout.time = 20
+fadeout.color = 0,0,0
+fadeout.anim = -1
+fadeout.sound = -1,0
+
+menu.pos = 0,0
+
+cursor.move.snd = 100, 0
+cursor.change.snd = 100, 1
+cursor.done.snd = -1,-1
+
+;Keys responsible for music manipulation
+loop.key = a, s
+volumeup.key = U
+volumedown.key = D
+
+;Keys responsible for menu behavior
+;next.key = R, w
+;previous.key = L, d
+back.key = b, m
+
+info.font = 4,0,0
+info.offset = 640,360
+info.scale = 1.0, 1.0
+info.length = 30
+info.spacing = 45
+info.delay = 0
+info.layerno = 1
+
+;menu.arrow.left.anim = -1,
+;menu.arrow.left.spr = 5,0
+menu.arrow.left.offset = 30,360
+menu.arrow.left.facing = -1
+menu.arrow.left.scale = 1.0, 1.0
+
+;menu.arrow.right.anim = -1
+;menu.arrow.right.spr = 5,0
+menu.arrow.right.offset = 1245,360
+menu.arrow.right.facing = 1
+menu.arrow.right.scale = 1.0, 1.0
+;-------------------------------------------------------------------------------
+[MusicPlayerBGdef] ;Music Player screen background
+spr = ""
+bgclearcolor = 255,255,255
+
+[MusicPlayerBG Background Sky]
+type = normal
+spriteno = 100,0
+layerno = 0
+start = -640,0
+
+[MusicPlayerBG Background Clouds Top]
+type = normal
+spriteno = 100,2
+layerno = 0
+start = -640, -50
+tile = 1,0
+velocity = -0.1, 0
+window = 0,0, 1279,959
+mask = 1
+
+[MusicPlayerBG Background Clouds Bottom]
+type = normal
+spriteno = 100,3
+layerno = 0
+start = -640, 0
+tile = 1,0
+velocity = -0.7, 0
+window = 0,0, 1279,959
+mask = 1
+
+[MusicPlayerBG Info]
+type = normal
+spriteno = 700,0
+layerno = 0
+start = -640,300
+scalestart = 3.1, 2.0
+trans = add1
