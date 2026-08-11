@@ -50,3 +50,11 @@ When an image inside the "Artworks" category is selected, the player can control
 - **X** = Zoom-Out
 - **A** = Reset Position
 - **C** = Slot Page Change (Not implemented yet)
+
+## MUSIC PLAYER COMMANDS
+
+When a song inside the "Music" category is selected, the player can control it using the following customizable default keys:
+
+- **UP** = Increase Music Volume
+- **DOWN** = Decrease Music Volume
+- **A / START** = Enable or Disable Music Loop
