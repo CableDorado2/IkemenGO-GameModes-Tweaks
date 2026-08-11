@@ -95,18 +95,18 @@ cell.rows = 3
 cell.hiddenrows = 2
 
 cell.art.offset = 154,154
-cell.art.spacing = -965,-524
+cell.art.spacing = -964,-524
 cell.art.scale = 0.2116, 0.21
 cell.art.window = 0,0, 1280,650
 
 cell.storyboard.offset = 154,154
-cell.storyboard.spacing = -965,-524
+cell.storyboard.spacing = -964,-524
 cell.storyboard.size = 1280,720
 cell.storyboard.scale = 0.2116, 0.21
 cell.storyboard.window = 0,0, 1280,650
 
 cell.music.offset = 154,154
-cell.music.spacing = -965,-524
+cell.music.spacing = -964,-524
 cell.music.size = 1280,720
 cell.music.scale = 0.2116, 0.21
 cell.music.window = 0,0, 1280,650
