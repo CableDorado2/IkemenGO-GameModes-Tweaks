@@ -1,20 +1,6 @@
 # Gallery Mode (I.K.E.M.E.N. GO Module)
 
-This module allows add Artworks, Storyboards and Music to play in a customizable grid.
-During Artwork Viewer, player can control Artworks with the following customizable default keys:
-
-Move Up = UP
-Move Down = DOWN
-Move Left = LEFT
-Move Right = RIGHT
-Next Item = W
-Previous Item = D
-Return to Gallery = B / MENU
-Hide UI (Affects Layer 1 Only) = START
-Zoom-In = Y
-Zoom-Out = X
-Reset Position = A
-Slot Change = C (Not implemented yet)
+This module allows add **Artworks**, **Storyboards** and **Music** to play in a customizable grid.
 
 ## Installation
 
@@ -47,3 +33,20 @@ A dedicated:
 [storyboards.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/storyboards.def)
 [music.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/music.def)
 files are provided with instructions to setup and adding content to each gallery category.
+
+## ARTWORK VIEWER COMMANDS 
+
+When a image inside "Artworks" category is selected, player can control Artworks with the following customizable default keys:
+
+- UP = Move the Image Up
+- DOWN = Move the Image Down
+- LEFT = Move the Image to the Left
+- RIGHT = Move the Image to the Right
+- W = Next Item
+- D = Previous Item
+- B / MENU = Return to Gallery Menu
+- START = Hide UI (Affects **only** ArtViewerBG **layerno = 1**)
+- Y = Zoom-In
+- X = Zoom-Out
+- A = Reset Position
+- C = Slot Page Change (Not implemented yet)
