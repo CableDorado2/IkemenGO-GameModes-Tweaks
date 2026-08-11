@@ -17,7 +17,7 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Gallery Mode
-menu.itemname.gallery` = "GALLERY"
+menu.itemname.gallery = "GALLERY"
 ````
 
 ## Screenpack / `system.def` defaults
@@ -26,27 +26,27 @@ The module includes its own `galleryMenu.def` (next to the script) with **defaul
 
 You can leave these defaults in the module or overwrite as your needs.
 
-## `Item grid` customization
+## Item grid customization
 
 A dedicated:
-[artworks.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/artworks.def)
-[storyboards.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/storyboards.def)
+[artworks.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/artworks.def),
+[storyboards.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/storyboards.def) and
 [music.def](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/blob/main/external/mods/gallery/music.def)
 files are provided with instructions to setup and adding content to each gallery category.
 
 ## ARTWORK VIEWER COMMANDS 
 
-When a image inside "Artworks" category is selected, player can control Artworks with the following customizable default keys:
+When an image inside the "Artworks" category is selected, the player can control Artworks using the following customizable default keys:
 
-- UP = Move the Image Up
-- DOWN = Move the Image Down
-- LEFT = Move the Image to the Left
-- RIGHT = Move the Image to the Right
-- W = Next Item
-- D = Previous Item
-- B / MENU = Return to Gallery Menu
-- START = Hide UI (Affects **only** ArtViewerBG **layerno = 1**)
-- Y = Zoom-In
-- X = Zoom-Out
-- A = Reset Position
-- C = Slot Page Change (Not implemented yet)
+- **UP** = Move the Image Up
+- **DOWN** = Move the Image Down
+- **LEFT** = Move the Image to the Left
+- **RIGHT** = Move the Image to the Right
+- **W** = Next Item
+- **D** = Previous Item
+- **B / MENU** = Return to Gallery Menu
+- **START** = Hide UI (Affects **only** ArtViewerBG **layerno = 1**)
+- **Y** = Zoom-In
+- **X** = Zoom-Out
+- **A** = Reset Position
+- **C** = Slot Page Change (Not implemented yet)
