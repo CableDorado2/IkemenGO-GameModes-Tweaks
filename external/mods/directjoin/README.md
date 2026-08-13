@@ -1,6 +1,6 @@
 # Netplay Direct Join (I.K.E.M.E.N. GO Module)
 
-***Netplay Direct Join*** Restores **S-SIZE I.K.E.M.E.N.** direct Netplay Join behavior, allowing Player 2 to enter an IP address and connect immediately to Player 1 (Host).
+***Netplay Direct Join*** Restores **S-SIZE I.K.E.M.E.N.** Netplay Guest/Client behavior, allowing Player 2 to enter an IP address and connect immediately to Player 1 (Host).
 
 ## Installation
 
