@@ -17,7 +17,7 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Gallery Mode
-menu.itemname.gallery = "GALLERY"
+menu.itemname.gallery = GALLERY
 ````
 
 ## Screenpack / `system.def` defaults
