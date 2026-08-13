@@ -31,9 +31,9 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;VS 100 Kumite Modes
-menu.itemname.vs100kumite = "VS 100 KUMITE"
-menu.itemname.vs100kumitecoop = "VS 100 KUMITE CO-OP"
-menu.itemname.server.netplayvs100kumitecoop = "VS 100 KUMITE CO-OP"
+menu.itemname.vs100kumite = VS 100 KUMITE
+menu.itemname.vs100kumitecoop = VS 100 KUMITE CO-OP
+menu.itemname.server.netplayvs100kumitecoop = VS 100 KUMITE CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
