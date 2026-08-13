@@ -31,9 +31,9 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Score Challenge Modes
-menu.itemname.scorechallenge = "SCORE CHALLENGE"
-menu.itemname.scorechallengecoop = "SCORE CHALLENGE CO-OP"
-menu.itemname.server.netplayscorechallengecoop = "SCORE CHALLENGE CO-OP"
+menu.itemname.scorechallenge = SCORE CHALLENGE
+menu.itemname.scorechallengecoop = SCORE CHALLENGE CO-OP
+menu.itemname.server.netplayscorechallengecoop = SCORE CHALLENGE CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
