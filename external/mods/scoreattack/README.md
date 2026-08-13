@@ -23,9 +23,9 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Score Attack Modes
-menu.itemname.scoreattack = "SCORE ATTACK"
-menu.itemname.scoreattackcoop = "SCORE ATTACK CO-OP"
-menu.itemname.server.netplayscoreattackcoop = "SCORE ATTACK CO-OP"
+menu.itemname.scoreattack = SCORE ATTACK
+menu.itemname.scoreattackcoop = SCORE ATTACK CO-OP
+menu.itemname.server.netplayscoreattackcoop = SCORE ATTACK CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
