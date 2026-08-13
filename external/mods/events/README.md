@@ -20,7 +20,7 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Events Mode
-menu.itemname.events = "EVENTS"
+menu.itemname.events = EVENTS
 ````
 
 ## Screenpack / `system.def` defaults
