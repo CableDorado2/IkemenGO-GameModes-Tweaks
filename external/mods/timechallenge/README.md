@@ -31,9 +31,9 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Time Challenge Modes
-menu.itemname.timechallenge = "TIME CHALLENGE"
-menu.itemname.timechallengecoop = "TIME CHALLENGE CO-OP"
-menu.itemname.server.netplaytimechallengecoop = "TIME CHALLENGE CO-OP"
+menu.itemname.timechallenge = TIME CHALLENGE
+menu.itemname.timechallengecoop = TIME CHALLENGE CO-OP
+menu.itemname.server.netplaytimechallengecoop = TIME CHALLENGE CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
