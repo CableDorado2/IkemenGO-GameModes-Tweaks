@@ -32,9 +32,9 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Boss Rush Modes
-menu.itemname.bossrush = "BOSS RUSH"
-menu.itemname.bossrushcoop = "BOSS RUSH CO-OP"
-menu.itemname.server.netplaybossrushcoop = "BOSS RUSH CO-OP"
+menu.itemname.bossrush = BOSS RUSH
+menu.itemname.bossrushcoop = BOSS RUSH CO-OP
+menu.itemname.server.netplaybossrushcoop = BOSS RUSH CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
