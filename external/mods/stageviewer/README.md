@@ -21,28 +21,28 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Stage Viewer Mode
-menu.itemname.stageviewer = "STAGE VIEWER"
+menu.itemname.stageviewer = STAGE VIEWER
 ````
 
 ## Optional Screenpack / `system.def` customization
 
 ```ini
 [Select Info]
-title.stageviewer.text = "Stage Viewer"
+title.stageviewer.text = Stage Viewer
 ````
 
 ```ini
 [StageViewer Pause Menu] ;Custom Pause Menu
-menu.itemname.back = "Continue"
+menu.itemname.back = Continue
 menu.itemname.commandlist = 
-menu.itemname.menuinput = "Button Config"
-menu.itemname.menuinput.keyboard = "Key Config"
-menu.itemname.menuinput.gamepad = "Joystick Config"
+menu.itemname.menuinput = Button Config
+menu.itemname.menuinput.keyboard = Key Config
+menu.itemname.menuinput.gamepad = Joystick Config
 menu.itemname.menuinput.spacer = "-"
-menu.itemname.menuinput.inputdefault = "Default"
-menu.itemname.menuinput.back = "Back"
-menu.itemname.characterchange = "Stage Change"
-menu.itemname.exit = "Exit"
+menu.itemname.menuinput.inputdefault = Default
+menu.itemname.menuinput.back = Back
+menu.itemname.characterchange = Stage Change
+menu.itemname.exit = Exit
 ````
 
 ## BASIC COMMANDS 
