@@ -28,8 +28,8 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;New Time Attack Modes
-menu.itemname.timeattackcoop = "TIME ATTACK CO-OP"
-menu.itemname.server.netplaytimeattackcoop = "TIME ATTACK CO-OP"
+menu.itemname.timeattackcoop = TIME ATTACK CO-OP
+menu.itemname.server.netplaytimeattackcoop = TIME ATTACK CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
