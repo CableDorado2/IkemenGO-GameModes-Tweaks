@@ -26,9 +26,9 @@ Without this, the mode won't show up in main menu.
 ```ini
 [Title Info]
 ;Bonus Marathon Modes
-menu.itemname.bonusmarathon = "BONUS MARATHON"
-menu.itemname.bonusmarathoncoop = "BONUS MARATHON CO-OP"
-menu.itemname.server.netplaybonusmarathoncoop = "BONUS MARATHON CO-OP"
+menu.itemname.bonusmarathon = BONUS MARATHON
+menu.itemname.bonusmarathoncoop = BONUS MARATHON CO-OP
+menu.itemname.server.netplaybonusmarathoncoop = BONUS MARATHON CO-OP
 ````
 
 ## Screenpack / `system.def` defaults
