@@ -32,8 +32,9 @@ title.stageviewer.text = Stage Viewer
 ````
 
 ```ini
-;If not overridden, values used for [Pause Menu] are shared with this group.
-[StageViewer Pause Menu] ;Custom Stage Viewer Pause Menu
+;-------------------------------------------------------------------------------
+;Custom Stage Viewer Pause Menu
+[StageViewer Pause Menu] ;If not overridden, values used for [Pause Menu] are shared with this group.
 menu.itemname.back = Continue
 menu.itemname.commandlist =
 
@@ -47,8 +48,9 @@ menu.itemname.menuinput.back = Back
 menu.itemname.characterchange = Stage Change
 menu.itemname.exit = Exit
 ;-------------------------------------------------------------------------------
-[StageViewerPauseBgDef] ;Custom Stage Viewer Pause Menu Background
-;If not overridden, values used for [PauseBgDef] are shared with this group.
+;Custom Stage Viewer Pause Menu Background
+[StageViewerPauseBgDef] ;If not overridden, values used for [PauseBgDef] are shared with this group.
+
 ````
 
 ## BASIC COMMANDS 
