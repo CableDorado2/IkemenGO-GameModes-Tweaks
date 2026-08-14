@@ -32,17 +32,23 @@ title.stageviewer.text = Stage Viewer
 ````
 
 ```ini
-[StageViewer Pause Menu] ;Custom Pause Menu
+;If not overridden, values used for [Pause Menu] are shared with this group.
+[StageViewer Pause Menu] ;Custom Stage Viewer Pause Menu
 menu.itemname.back = Continue
-menu.itemname.commandlist = 
+menu.itemname.commandlist =
+
 menu.itemname.menuinput = Button Config
 menu.itemname.menuinput.keyboard = Key Config
 menu.itemname.menuinput.gamepad = Joystick Config
-menu.itemname.menuinput.spacer = "-"
+menu.itemname.menuinput.spacer = -
 menu.itemname.menuinput.inputdefault = Default
 menu.itemname.menuinput.back = Back
+
 menu.itemname.characterchange = Stage Change
 menu.itemname.exit = Exit
+;-------------------------------------------------------------------------------
+[StageViewerPauseBgDef] ;Custom Stage Viewer Pause Menu Background
+;If not overridden, values used for [PauseBgDef] are shared with this group.
 ````
 
 ## BASIC COMMANDS 
