@@ -1,12 +1,12 @@
 # Ikemen GO - Custom Game Modes
 
-External Modules for [**Ikemen GO Engine**](https://ikemen-engine.github.io) that improves the originals and adds New Features to the engine.
+External Modules for [**Ikemen GO Engine**](https://ikemen-engine.github.io) that improves the [official ones](https://github.com/ikemen-engine/modules) and adds New Features to the engine.
 
 > [!NOTE]
 > If you are using Ikemen GO:
-> - [**v1.0.0-rc.2**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/v1.0.0-rc.2), download the modules using the green **<> Code** button in this repo to get the most updated version.
+> - [**v1.0.0-rc.3**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/v1.0.0-rc.3), download the modules using the green **<> Code** button in this repo to get the most updated version.
 > 
-> - [**Nightly Build**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/nightly), you can also follow rc.2 steps, but modules functionality is not fully guaranteed at the moment you're testing it due the nature of this engine build.
+> - [**Nightly Build**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/nightly), you can also follow rc.3 steps, but modules functionality is not fully guaranteed at the moment you're testing it due the nature of this engine build.
 > 
 > - [**v0.99.0**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/v0.99.0) or [**v0.98.2**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/v0.98.2) stable releases, please download and use the ***Legacy Modules*** [**here**](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/releases/tag/legacy)
 
