@@ -65,7 +65,7 @@ info = Ending Cutscene for Kung Fu Man's story.
 unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and (stats.modes.arcade.clearcount.kfm720 ~= nil or stats.modes.arcade.clearcount.kfmz ~= nil or stats.modes.arcade.clearcount.kfm_zss ~= nil or stats.modes.arcade.clearcount.kfm_zaxis ~= nil)
 
 id = Storyboard 4
-path = data/credits.def
+path = data/ikemen1/credits.def
 previewspr = 1,4
 info = Scrolling Ending Credits.
 
