@@ -1,7 +1,7 @@
 --[[	   					       BOSS RUSH MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.3)
 Description: A special challenge where player fight multiple bosses consecutively.
 Beating all bosses clears the mode.
 
