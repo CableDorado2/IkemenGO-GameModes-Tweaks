@@ -22,6 +22,10 @@ A Shop Menu to spend In-Game Currency ➤ https://www.youtube.com/watch?v=fKo6Ag
 A Custom Gallery Mode entry for the Main Menu ➤ https://www.youtube.com/watch?v=DD5PvthonTU
 [![Alt text](https://i.ytimg.com/vi/DD5PvthonTU/maxresdefault.jpg)](https://www.youtube.com/watch?v=DD5PvthonTU)
 
+## _[Stage Viewer](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/stageviewer) (New Feature)_
+A dedicated Game Mode Main Menu Entry for Yoshin222's Stage Viewer Character ➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
+[![Alt text](https://i.ytimg.com/vi/W4BxhKvDBmg/maxresdefault.jpg)](https://www.youtube.com/watch?v=W4BxhKvDBmg)
+
 ##  _[Events Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/events) (New Feature)_
 A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-RuoI
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
@@ -35,10 +39,6 @@ https://github.com/user-attachments/assets/99e5b26e-de09-4ebd-aa53-3cd9f521bddd
 A Game Mode that consist in clear All Bonus Games added in a row.
 
 https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
-
-## _[Stage Viewer](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/stageviewer) (Feature)_
-A dedicated Game Mode Main Menu Entry for Yoshin222's Stage Viewer Character ➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
-[![Alt text](https://i.ytimg.com/vi/W4BxhKvDBmg/maxresdefault.jpg)](https://www.youtube.com/watch?v=W4BxhKvDBmg)
 
 ##  _[Time Attack](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/timeattack) (Tweaks)_
 https://github.com/user-attachments/assets/3dc49d2c-df82-4e21-a78c-9a407d5575d2
