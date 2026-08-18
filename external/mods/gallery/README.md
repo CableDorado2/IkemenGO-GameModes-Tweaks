@@ -1,6 +1,6 @@
 # Gallery Mode (I.K.E.M.E.N. GO Module)
 
-This module allows add external **Artworks**, **Storyboards** and **Music** to play in a customizable grid.
+***Gallery*** allows add and display external **Artworks**, **Storyboards** and **Music** to play in a customizable grid.
 
 ## Installation
 
