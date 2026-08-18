@@ -1,7 +1,7 @@
 --[[	   					       NETPLAY DIRECT JOIN MODULE
 =======================================================================================================
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.3)
 Description: Restores S-SIZE I.K.E.M.E.N. direct Netplay Join behavior, allowing Player 2 to
 enter an IP address and connect immediately to Player 1 (Host).
 
