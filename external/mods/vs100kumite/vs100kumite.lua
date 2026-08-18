@@ -1,7 +1,7 @@
 --[[	   					       	 VS 100 KUMITE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.3)
 Description: Defeat as many opponents as possible across 100 consecutive matches.
 Based on Street Fighter Alpha 3.
 
