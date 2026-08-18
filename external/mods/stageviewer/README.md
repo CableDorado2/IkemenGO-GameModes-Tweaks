@@ -1,6 +1,6 @@
 # Stage Viewer Mode (I.K.E.M.E.N. GO Module)
 
-***Stage Viewer*** originally created by Yoshin222 for M.U.G.E.N (inspired from ***Project Justice: Rival Schools 2***) is a pre-loaded character that allows view the background graphics of each stage loaded and unlocked.
+***Stage Viewer*** originally created by Yoshin222 for M.U.G.E.N (inspired from ***Project Justice: Rival Schools 2***) is a fixed no playable character that allows view the background graphics of each stage loaded and unlocked.
 
 > [!NOTE]
 > This mode is detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
