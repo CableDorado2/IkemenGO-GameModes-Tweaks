@@ -14,37 +14,24 @@ External Modules for [**Ikemen GO Engine**](https://ikemen-engine.github.io) tha
 - Extract archive content into "**./external/mods**" directory.
 - Edit select.def or system.def depending of module installed (Each module contains its installation instructions within its folder or lua file).
 
-##  _[Shop Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/shop) (New Feature)_
+##  _[Shop Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/shop)_
 A Shop Menu to spend In-Game Currency ➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
-##  _[Gallery Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/gallery) (New Feature)_
+##  _[Gallery Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/gallery)_
 A Custom Gallery Mode entry for the Main Menu ➤ https://www.youtube.com/watch?v=DD5PvthonTU
 [![Alt text](https://i.ytimg.com/vi/DD5PvthonTU/maxresdefault.jpg)](https://www.youtube.com/watch?v=DD5PvthonTU)
 
-## _[Stage Viewer](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/stageviewer) (New Feature)_
+## _[Stage Viewer](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/stageviewer)_
 A dedicated Game Mode Main Menu Entry for Yoshin222's Stage Viewer Character ➤ https://www.youtube.com/watch?v=W4BxhKvDBmg
 [![Alt text](https://i.ytimg.com/vi/W4BxhKvDBmg/maxresdefault.jpg)](https://www.youtube.com/watch?v=W4BxhKvDBmg)
 
-##  _[Events Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/events) (New Feature)_
+##  _[Events Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/events)_
 A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-RuoI
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
 
-##  _[Score Attack](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/scoreattack) (New Feature)_
-A Game Mode that consist in defeat opponents beating previous score record.
+# PERSONAL RECOMMENDATIONS
 
-https://github.com/user-attachments/assets/99e5b26e-de09-4ebd-aa53-3cd9f521bddd
-
-##  _[Bonus Marathon](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/bonusmarathon) (New Feature)_
-A Game Mode that consist in clear All Bonus Games added in a row.
-
-https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
-
-##  _[Time Attack](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/timeattack) (Tweaks)_
-https://github.com/user-attachments/assets/3dc49d2c-df82-4e21-a78c-9a407d5575d2
-
-##  _[Boss Rush](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/bossrush) (Tweaks)_
-https://github.com/user-attachments/assets/60dc5431-4a9a-434b-9eea-327b6c9b38a8
-
-## _Attract Mode Netplay (Legacy Tweak)_
-https://github.com/user-attachments/assets/4b814aba-2a4a-4538-b5fd-2902a2a7d863
+## _[Trials Mode](https://github.com/two4teezee/Ikemen-GO-Trials-Mode) (By two4teezee)_
+A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
+[![Alt text](https://i.ytimg.com/vi/HsXv_Eum7A0/maxresdefault.jpg)](https://www.youtube.com/watch?v=HsXv_Eum7A0)
