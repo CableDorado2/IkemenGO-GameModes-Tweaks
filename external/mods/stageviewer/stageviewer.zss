@@ -2,7 +2,7 @@
 # 						     STAGE VIEWER MODULE
 #===============================================================================
 # Author: Cable Dorado 2 (CD2)
-# Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.1)
+# Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.5)
 # Description: Skip Round and Fight Calls when Match Starts for Stage Viewer.
 #===============================================================================
 [StateDef -4] #Global states (not halted by Pause/SuperPause, no helper limitations)
