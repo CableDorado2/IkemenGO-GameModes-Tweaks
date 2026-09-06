@@ -53,6 +53,8 @@ A Commercial-style Frame Data display.
 ## _[Record Replay](https://github.com/saintjr2004/Ikemen-GO-RecordReplay) (By jay_ts & m14)_
 A Dummy Record/Replay (Playback) system.
 
+https://github.com/user-attachments/assets/4cb11b8e-4fa4-4ac7-8de2-467cf6b7298c
+
 ## _[Palette Select Plus+](https://github.com/dionednd/paletteselect-plus) (By dionednd)_
 Expands the Palette Select feature of Ikemen GO v1.0 with custom names, a palette box and unlock conditions.
 <img width="1440" height="804" alt="image" src="https://github.com/user-attachments/assets/1097f198-af51-4f60-8ae3-5427bb952d5f" />
@@ -67,6 +69,8 @@ A overhauls intro behavior that replicate BlazBlue Cross Tag Battle–esque team
 
 ## _[Universal Round Transition](https://github.com/kamekaze-world/ikemenroundendfx) (By kamekaze)_
 A transition FX for match Round Start and Round End.
+
+https://github.com/user-attachments/assets/86eb97c9-216a-4996-a6d8-2a96ef9bc92b
 
 ## _[Rematch](https://github.com/kamekaze-world/ikemenrematch) (By kamekaze)_
 A Rematch prompt to end of match.
