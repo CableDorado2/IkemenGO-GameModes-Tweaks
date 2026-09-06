@@ -35,3 +35,12 @@ A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-Ru
 ## _[Trials Mode](https://github.com/two4teezee/Ikemen-GO-Trials-Mode) (By two4teezee)_
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
 [![Alt text](https://i.ytimg.com/vi/HsXv_Eum7A0/maxresdefault.jpg)](https://www.youtube.com/watch?v=HsXv_Eum7A0)
+
+## _[Palette Select Plus+](https://github.com/dionednd/paletteselect-plus) (By dionednd)_
+Expands the Palette Select feature of Ikemen GO v1.0 with custom names, a palette box and unlock conditions.
+
+## _[Subtitle System](https://github.com/dionednd/ikemen-go-subtitle-system) (By dionednd)_
+A universal subtitle system.
+
+## _[Intro Delay](https://github.com/dionednd/intro-delay-module) (By dionednd)_
+A overhauls intro behavior that replicate BlazBlue Cross Tag Battle–esque team intros.
