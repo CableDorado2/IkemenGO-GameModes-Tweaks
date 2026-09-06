@@ -44,17 +44,16 @@ A character Color Editor ➤ https://www.youtube.com/watch?v=5xvTTVMZm8s
 A Commercial-style Input Display.
 <img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/a8b446c5-b0d0-49a5-b5ea-ed8115a5efc6" />
 
-## _[Record Replay](https://github.com/saintjr2004/Ikemen-GO-RecordReplay) (By jay_ts & m14)_
-A Dummy Record/Replay (Playback) system.
-
 ## _[Frame Data Display](https://github.com/saintjr2004/Ikemen-GO-FrameDisplay) (By jay_ts & m14)_
 A Commercial-style frame data display.
 <img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/242b9f50-f094-4b8d-8cf0-9a1308158bd0" />
 
+## _[Record Replay](https://github.com/saintjr2004/Ikemen-GO-RecordReplay) (By jay_ts & m14)_
+A Dummy Record/Replay (Playback) system.
+
 ## _[Palette Select Plus+](https://github.com/dionednd/paletteselect-plus) (By dionednd)_
 Expands the Palette Select feature of Ikemen GO v1.0 with custom names, a palette box and unlock conditions.
 <img width="1440" height="804" alt="image" src="https://github.com/user-attachments/assets/1097f198-af51-4f60-8ae3-5427bb952d5f" />
-
 
 ## _[Subtitle System](https://github.com/dionednd/ikemen-go-subtitle-system) (By dionednd)_
 A universal subtitle system.
