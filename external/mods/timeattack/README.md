@@ -8,6 +8,8 @@ This module adds the following personal improvements, to make the Time Attack Mo
 - Disable Continue Screen
 - Adds Co-Op and Netplay Variant
 
+https://github.com/user-attachments/assets/3dc49d2c-df82-4e21-a78c-9a407d5575d2
+
 > [!NOTE]
 > The New Co-Op modes are detectable by [GameMode](https://github.com/ikemen-engine/Ikemen-GO/wiki/Triggers-(new)#gamemode) trigger as:
 > - timeattackcoop
