@@ -38,7 +38,7 @@ A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
 
 ## _[Color Edit Mode](https://github.com/saintjr2004/Ikemen-GO-ColorEdit) (By jay_ts & m14)_
 A character Color Editor ➤ https://www.youtube.com/watch?v=5xvTTVMZm8s
-[![Alt text](https://i.ytimg.com/vi/5xvTTVMZm8s/maxresdefault.jpg)](https://www.youtube.com/watch?v=5xvTTVMZm8s)
+<img width="974" height="542" alt="image" src="https://github.com/user-attachments/assets/f8a6a4b1-2f62-48b0-a28e-f3f482325a69" />
 
 ## _[Advanced Input Display](https://github.com/saintjr2004/Ikemen-GO-Advanced-Input-Display) (By jay_ts & m14)_
 A Commercial-style Input Display.
