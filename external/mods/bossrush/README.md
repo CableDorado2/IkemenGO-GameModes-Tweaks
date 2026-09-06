@@ -7,6 +7,8 @@ Add the following Personal Improvements for [K4thos Boss Rush Module](https://gi
 - Adds Co-Op and Netplay Variant
 - main.t_bossChars renamed to main.t_bossRushChars for planned Single Boss Fight variant like Bonus Games Mode
 
+https://github.com/user-attachments/assets/60dc5431-4a9a-434b-9eea-327b6c9b38a8
+
 > [!NOTE]
 > - **This module overwrites the [original](https://github.com/ikemen-engine/modules/tree/main/external/mods/bossrush) Boss Rush module**, so if you're using it, make a backup.
 > - **Only characters with select.def "boss = 1" parameter assigned are valid for this mode.**
