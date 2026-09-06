@@ -45,7 +45,7 @@ A Commercial-style Input Display.
 <img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/a8b446c5-b0d0-49a5-b5ea-ed8115a5efc6" />
 
 ## _[Frame Data Display](https://github.com/saintjr2004/Ikemen-GO-FrameDisplay) (By jay_ts & m14)_
-A Commercial-style frame data display.
+A Commercial-style Frame Data display.
 <img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/242b9f50-f094-4b8d-8cf0-9a1308158bd0" />
 
 ## _[Record Replay](https://github.com/saintjr2004/Ikemen-GO-RecordReplay) (By jay_ts & m14)_
