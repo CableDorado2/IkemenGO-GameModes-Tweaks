@@ -60,3 +60,15 @@ A universal subtitle system.
 
 ## _[Intro Delay](https://github.com/dionednd/intro-delay-module) (By dionednd)_
 A overhauls intro behavior that replicate BlazBlue Cross Tag Battle–esque team intros.
+
+## _[Rematch](https://github.com/kamekaze-world/ikemenrematch) (By kamekaze)_
+Introduce a Rematch prompt to end of match.
+
+## _[Universal Round Transition](https://github.com/kamekaze-world/ikemenroundendfx) (By kamekaze)_
+Display transition FX for Round Start and Round End.
+
+## _[Free-For-All Mode](https://github.com/kamekaze-world/freeforall) (By kamekaze)_
+A Game Mode where everyone is an enemy, inspired by Guilty Gear Isuka.
+
+## _[MapOptionsPlus](https://github.com/rakieldev/MapOptionsPlus) (By rakieldev)_
+New powerful parameters for Options menu items.
