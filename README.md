@@ -31,7 +31,8 @@ A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-Ru
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
 
 # PERSONAL RECOMMENDATIONS
-Any Fighting Game made with I.K.E.M.E.N. Engine, should also have the following features (Click on the highlighted module name to go to its download page).
+Any Fighting Game made with I.K.E.M.E.N. Engine should also have the following features
+(Click on the highlighted module name to go to its download page).
 
 ## _[Trials Mode](https://github.com/two4teezee/Ikemen-GO-Trials-Mode) (By two4teezee)_
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
@@ -64,13 +65,13 @@ https://github.com/user-attachments/assets/0d68c5e3-74ec-4739-b56c-f26211c072a3
 ## _[Intro Delay](https://github.com/dionednd/intro-delay-module) (By dionednd)_
 A overhauls intro behavior that replicate BlazBlue Cross Tag Battle–esque team intros.
 
+## _[Universal Round Transition](https://github.com/kamekaze-world/ikemenroundendfx) (By kamekaze)_
+A transition FX for match Round Start and Round End.
+
 ## _[Rematch](https://github.com/kamekaze-world/ikemenrematch) (By kamekaze)_
 A Rematch prompt to end of match.
 
 https://github.com/user-attachments/assets/57c58c62-25a5-4648-b2a4-51c7e3203331
-
-## _[Universal Round Transition](https://github.com/kamekaze-world/ikemenroundendfx) (By kamekaze)_
-A transition FX for match Round Start and Round End.
 
 ## _[Free-For-All Mode](https://github.com/kamekaze-world/freeforall) (By kamekaze)_
 A Game Mode where everyone is an enemy, inspired by Guilty Gear Isuka.
