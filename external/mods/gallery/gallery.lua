@@ -2,7 +2,7 @@
 ===================================================================
 Version: 1.3.0
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.3)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.5)
 Description: Adds a Custom Gallery Mode entry to the Main Menu.
 
 TODO: Implement Multiple Artworks in a same Slot/Cell to Switch in Artwork Viewer.
