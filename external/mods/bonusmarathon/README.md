@@ -1,6 +1,7 @@
 # Bonus Marathon Mode (I.K.E.M.E.N. GO Module)
 
 ***Bonus Marathon*** is a special challenge where player face multiple bonus characters consecutively and tries to beat their previous best score.
+
 https://github.com/user-attachments/assets/0779c096-c938-4569-b939-73657cbe8593
 
 > [!NOTE]
