@@ -62,13 +62,17 @@ A universal subtitle system.
 A overhauls intro behavior that replicate BlazBlue Cross Tag Battle–esque team intros.
 
 ## _[Rematch](https://github.com/kamekaze-world/ikemenrematch) (By kamekaze)_
-Introduce a Rematch prompt to end of match.
+A Rematch prompt to end of match.
+
+https://github.com/user-attachments/assets/57c58c62-25a5-4648-b2a4-51c7e3203331
 
 ## _[Universal Round Transition](https://github.com/kamekaze-world/ikemenroundendfx) (By kamekaze)_
-Display transition FX for Round Start and Round End.
+A transition FX for match Round Start and Round End.
 
 ## _[Free-For-All Mode](https://github.com/kamekaze-world/freeforall) (By kamekaze)_
 A Game Mode where everyone is an enemy, inspired by Guilty Gear Isuka.
 
 ## _[MapOptionsPlus](https://github.com/rakieldev/MapOptionsPlus) (By rakieldev)_
 New powerful parameters for Options menu items.
+
+https://github.com/user-attachments/assets/42341ad6-7158-4531-8ad1-1dedf90d8657
