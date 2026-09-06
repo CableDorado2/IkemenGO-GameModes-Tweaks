@@ -31,7 +31,7 @@ A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-Ru
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
 
 # PERSONAL RECOMMENDATIONS
-Any Fighting Game should also feature the following features (Click on the highlighted module name to go to its download page).
+Any Fighting Game made with I.K.E.M.E.N. Engine, should also have the following features (Click on the highlighted module name to go to its download page).
 
 ## _[Trials Mode](https://github.com/two4teezee/Ikemen-GO-Trials-Mode) (By two4teezee)_
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
@@ -59,6 +59,8 @@ Expands the Palette Select feature of Ikemen GO v1.0 with custom names, a palett
 ## _[Subtitle System](https://github.com/dionednd/ikemen-go-subtitle-system) (By dionednd)_
 A universal subtitle system.
 
+https://github.com/user-attachments/assets/0d68c5e3-74ec-4739-b56c-f26211c072a3
+
 ## _[Intro Delay](https://github.com/dionednd/intro-delay-module) (By dionednd)_
 A overhauls intro behavior that replicate BlazBlue Cross Tag Battle–esque team intros.
 
@@ -72,6 +74,8 @@ A transition FX for match Round Start and Round End.
 
 ## _[Free-For-All Mode](https://github.com/kamekaze-world/freeforall) (By kamekaze)_
 A Game Mode where everyone is an enemy, inspired by Guilty Gear Isuka.
+
+https://github.com/user-attachments/assets/6845d922-6dbd-400d-9aa8-9d6be761cd53
 
 ## _[MapOptionsPlus](https://github.com/rakieldev/MapOptionsPlus) (By rakieldev)_
 New powerful parameters for Options menu items.
