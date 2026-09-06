@@ -1,7 +1,7 @@
 --[[	   					       SCORE CHALLENGE MODULE
 =======================================================================================================
 Original Author: K4thos | Edited By: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.3)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.5)
 Description: A special challenge where player fight a selected opponent and tries to beat their previous best score.
 Based on Super Street Fighter II: The New Challengers (Sega Mega Drive).
 
