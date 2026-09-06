@@ -31,6 +31,7 @@ A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-Ru
 [![Alt text](https://i.ytimg.com/vi/1FcPYB-RuoI/maxresdefault.jpg)](https://www.youtube.com/watch?v=1FcPYB-RuoI)
 
 # PERSONAL RECOMMENDATIONS
+Any Fighting Game should also feature the following features (Click on the highlighted module name to go to its download page).
 
 ## _[Trials Mode](https://github.com/two4teezee/Ikemen-GO-Trials-Mode) (By two4teezee)_
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
