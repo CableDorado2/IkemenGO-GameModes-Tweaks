@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.6.0
+Version: 1.6.1
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.5)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -558,6 +558,7 @@ if gameOption('Debug.DumpLuaTables') then main.f_printTable(motifEvent, "debug/e
 --								 EVENTS MENU
 --===================================================================================
 eventModeActive = false
+local eventCharSelectBack = false
 local function f_playEventBGM()
 	playBgm({
 		bgm = motifEvent.music.menu.bgm,
@@ -570,6 +571,25 @@ local function f_playEventBGM()
 		loopcount = tonumber(motifEvent.music.menu.loopcount),
 		interrupt = true
 	})
+end
+
+--Character Select BGM monkey patching logic by dionednd
+local playBgmBackup = playBgm
+function playBgm(t)
+	if motifEvent.music.menu.bgm ~= "" and eventModeActive and t and t.source and t.source == 'motif.select' then
+		return playBgmBackup({
+			bgm = motifEvent.music.menu.bgm,
+			loop = tonumber(motifEvent.music.menu.loop),
+			volume = tonumber(motifEvent.music.menu.volume),
+			loopstart = tonumber(motifEvent.music.menu.loopstart),
+			loopend = tonumber(motifEvent.music.menu.loopend),
+			startposition = tonumber(motifEvent.music.menu.startposition),
+			freqmul = tonumber(motifEvent.music.menu.freqmul),
+			loopcount = tonumber(motifEvent.music.menu.loopcount),
+			interrupt = true
+		})
+	end
+	return playBgmBackup(t)
 end
 
 local function f_events()
@@ -1005,11 +1025,13 @@ local function f_events()
 				main.f_unlock(false)
 				f_refreshUnlockDat()
 				start.f_selectMode()
-				if motifEvent.music.menu.bgm ~= "" then f_playEventBGM() end --Play Event Menu BGM
 			--Check Unlocks after play events
 				main.f_unlock(false)
 				f_refreshUnlockDat()
 				f_resetEventInfoTxt()
+			--Play Event Menu BGM
+				if motifEvent.music.menu.bgm ~= "" and not eventCharSelectBack then f_playEventBGM() end
+				eventCharSelectBack = false
 			end
 		end
 		refresh()
@@ -1033,7 +1055,11 @@ function start.f_selectMode()
 		if not start.f_selectScreen() then
 			bgReset(motif[main.background].BGDef)
 			fadeInInit(motif[main.group].fadein.FadeData)
-			playBgm({source = "motif.title", interrupt = true})
+			if not eventModeActive then
+				playBgm({source = "motif.title", interrupt = true})
+			else
+				eventCharSelectBack = true
+			end
 			return
 		end
 		-- lua file with custom arcade path detection
