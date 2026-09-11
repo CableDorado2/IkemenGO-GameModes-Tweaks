@@ -63,6 +63,12 @@
 ;	when Character Select is Enabled for Event Selected.
 ;	Default: false.
 
+; - coopmode (optional)
+;	If it Evalues to boolean "true" multiplayer Co-Op will be active
+;	when Character Select is Enabled for Event Selected.
+;	Only Simul and Tag team modes will be selectable, when coopmode paramvalue is true.
+;	Default: false.
+
 ; - stageselect (optional)
 ;	If it Evalues to boolean "true" stage select will be displayed for the Event Selected.
 ;	Default: false.
@@ -123,7 +129,6 @@
 ; - lifebarailevelp2 (optional)
 ;	If it Evalues to boolean "true" AI Level for p2 side will be displayed in Lifebar.
 ;	Default: false.
-
 ;Examples:
  
 [EventsMode]
@@ -145,6 +150,7 @@ simulmode = true
 tagmode = true
 turnsmode = true
 ratiomode = true
+;coopmode = true
 
 vsscreen = true
 orderselect = true

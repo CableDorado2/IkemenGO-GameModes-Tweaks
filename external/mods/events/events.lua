@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.6.1
+Version: 1.6.2
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.5)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -404,6 +404,7 @@ local function f_loadEvents()
 						--character select vars
 							characterselect = false,
 							stageselect = false,
+							coopmode = false,
 							vsscreen = false,
 							orderselect = false,
 							victoryscreen = true,
@@ -445,6 +446,7 @@ local function f_loadEvents()
 		local setfalse = "false"
 		if t_selEventMode[i].characterselect == settrue then t_selEventMode[i].characterselect = true end
 		if t_selEventMode[i].stageselect == settrue then t_selEventMode[i].stageselect = true end
+		if t_selEventMode[i].coopmode == settrue then t_selEventMode[i].coopmode = true end
 		if t_selEventMode[i].vsscreen == settrue then t_selEventMode[i].vsscreen = true end
 		if t_selEventMode[i].orderselect == settrue then t_selEventMode[i].orderselect = true end
 		if t_selEventMode[i].victoryscreen == setfalse then t_selEventMode[i].victoryscreen = false end
@@ -645,6 +647,7 @@ local function f_events()
 				tag = v.tagmode,
 				turns = v.turnsmode,
 				ratio = v.ratiomode,
+				coop = v.coopmode,
 				
 				lfbar = v.lifebar,
 				lfbarmatchno = v.lifebarmatchno,
@@ -988,15 +991,24 @@ local function f_events()
 				main.f_default()
 				sndPlay(motifEvent.sndData, motifEvent.event_info.cursor.done.snd[1], motifEvent.event_info.cursor.done.snd[2])
 			--START EVENT
+				textImgSetText(motif.select_info.title.TextSpriteData, motifEvent.event_info.title.select) --Set Character Select Title
 				remapInput(1, getLastInputController())
 				remapInput(getLastInputController(), 1)
-				textImgSetText(motif.select_info.title.TextSpriteData, motifEvent.event_info.title.select) --Character Select Title
+				if t[item].coop then
+					main.teamMenu[1].single = false
+					main.teamMenu[1].turns = false
+					main.teamMenu[1].ratio = false
+					main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
+					main.numTag = {2, math.min(4, gameOption('Config.Players'))}
+				else
+					main.teamMenu[1].single = t[item].single
+					main.teamMenu[1].turns = t[item].turns
+					main.teamMenu[1].ratio = t[item].ratio
+				end
 				main.selectMenu[1] = t[item].charsel --Enable or Disable Character Select for Event Selected
-				main.teamMenu[1].single = t[item].single
+				main.coop = t[item].coop --if mode should be recognized as coop
 				main.teamMenu[1].simul = t[item].simul
 				main.teamMenu[1].tag = t[item].tag
-				main.teamMenu[1].turns = t[item].turns
-				main.teamMenu[1].ratio = t[item].ratio
 				main.stageMenu = t[item].stgsel --Enable or Disable Stage Select for Event Selected
 				main.motif.vsscreen = t[item].vsscreen --Enable or Disable Versus Screen for Event Selected
 				main.orderSelect[1] = t[item].ordersel --Enable or Disable Order Select for Event Selected
