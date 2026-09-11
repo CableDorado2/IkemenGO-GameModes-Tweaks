@@ -1006,7 +1006,7 @@ local function f_events()
 					main.teamMenu[1].ratio = t[item].ratio
 				end
 				main.selectMenu[1] = t[item].charsel --Enable or Disable Character Select for Event Selected
-				main.coop = t[item].coop --if mode should be recognized as coop
+				main.coop = t[item].coop --if co-op mode should be enabled for this event (thanks to FreeGilio by the sample code for its implementation)
 				main.teamMenu[1].simul = t[item].simul
 				main.teamMenu[1].tag = t[item].tag
 				main.stageMenu = t[item].stgsel --Enable or Disable Stage Select for Event Selected
