@@ -34,6 +34,10 @@ A "Portal" to any custom game mode ➤ https://www.youtube.com/watch?v=1FcPYB-Ru
 Any Fighting Game made with I.K.E.M.E.N. Engine should also have the following features
 (Click on the highlighted module name to go to its download page).
 
+## _[V-IKEMEN The Fighting Grounds](https://www.youtube.com/watch?v=dHrDdfuZEGI) (By EnzoReventon)_
+A Lifebar package that mix several Gameplay mechanics from many Fighting Games.
+[![Alt text](https://i.ytimg.com/vi/dHrDdfuZEGI/maxresdefault.jpg)](https://www.youtube.com/watch?v=dHrDdfuZEGI)
+
 ## _[Trials Mode](https://github.com/two4teezee/Ikemen-GO-Trials-Mode) (By two4teezee)_
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
 [![Alt text](https://i.ytimg.com/vi/HsXv_Eum7A0/maxresdefault.jpg)](https://www.youtube.com/watch?v=HsXv_Eum7A0)
@@ -41,6 +45,15 @@ A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
 ## _[Color Edit Mode](https://github.com/saintjr2004/Ikemen-GO-ColorEdit) (By jay_ts & m14)_
 A character Color Editor ➤ https://www.youtube.com/watch?v=5xvTTVMZm8s
 <img width="974" height="542" alt="image" src="https://github.com/user-attachments/assets/f8a6a4b1-2f62-48b0-a28e-f3f482325a69" />
+
+## _[Free-For-All Mode](https://github.com/kamekaze-world/freeforall) (By kamekaze)_
+A Game Mode where everyone is an enemy, inspired by Guilty Gear Isuka.
+
+https://github.com/user-attachments/assets/6845d922-6dbd-400d-9aa8-9d6be761cd53
+
+## _[Attack Data Display](https://mugenguild.com/forum/topics/attack-data-display-training-mode-199004.0.html) (By Phantom.of.the.Server)_
+Display Damage, Frame advantage and Hit properties/Guard level.
+<img width="960" height="720" alt="attackDataSample" src="https://github.com/user-attachments/assets/f84d0711-2724-482c-8402-59a0b88a17e9" />
 
 ## _[Advanced Input Display](https://github.com/saintjr2004/Ikemen-GO-Advanced-Input-Display) (By jay_ts & m14)_
 A Commercial-style Input Display.
@@ -77,16 +90,7 @@ A Rematch prompt to end of match.
 
 https://github.com/user-attachments/assets/57c58c62-25a5-4648-b2a4-51c7e3203331
 
-## _[Free-For-All Mode](https://github.com/kamekaze-world/freeforall) (By kamekaze)_
-A Game Mode where everyone is an enemy, inspired by Guilty Gear Isuka.
-
-https://github.com/user-attachments/assets/6845d922-6dbd-400d-9aa8-9d6be761cd53
-
 ## _[MapOptionsPlus](https://github.com/rakieldev/MapOptionsPlus) (By rakieldev)_
 New powerful parameters for Options menu items.
 
 https://github.com/user-attachments/assets/42341ad6-7158-4531-8ad1-1dedf90d8657
-
-## _[V-IKEMEN The Fighting Grounds](https://www.youtube.com/watch?v=dHrDdfuZEGI) (By EnzoReventon)_
-A Lifebar package that mix several Gameplay mechanics from many Fighting Games.
-[![Alt text](https://i.ytimg.com/vi/dHrDdfuZEGI/maxresdefault.jpg)](https://www.youtube.com/watch?v=dHrDdfuZEGI)
