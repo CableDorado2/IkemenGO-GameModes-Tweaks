@@ -73,7 +73,7 @@ Expands the Palette Select feature of Ikemen GO v1.0 with custom names, a palett
 <img width="1440" height="804" alt="image" src="https://github.com/user-attachments/assets/1097f198-af51-4f60-8ae3-5427bb952d5f" />
 
 ## _[Groove Select](https://github.com/dionednd/groove-select) (By dionednd)_
-Expands the Character Select with a Groove Select where player control what grooves each character has.
+Expands the Character Select with a [Map](https://github.com/ikemen-engine/Ikemen-GO/wiki/Character-features#map) Select where player control what map each character has active.
 
 https://github.com/user-attachments/assets/d34f8e4e-32f9-4e6e-8711-be31d742c537
 
