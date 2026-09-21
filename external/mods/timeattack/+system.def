@@ -1,4 +1,4 @@
-;Loaded automatically from external/mods/**/+system.def and merged before the motif system.def.
+;Loaded automatically from external/mods/**/system.def and merged before the motif system.def.
 ;The motif file is loaded last, so anything defined there overrides this file.
 ;-------------------------------------------------------------------------------
 [Select Info]
@@ -77,7 +77,6 @@ p2.state =
 p2.win.state = 
 p2.teammate.state = 
 p2.teammate.win.state = 
-
 ;-------------------------------------------------------------------------------
 [TimeAttackCo-OpResultsBGdef]
 ;left blank (character and stage not covered)
@@ -127,7 +126,6 @@ p2.state =
 p2.win.state = 
 p2.teammate.state = 
 p2.teammate.win.state = 
-
 ;-------------------------------------------------------------------------------
 [OnlineTimeAttackResultsBGdef]
 ;left blank (character and stage not covered)
