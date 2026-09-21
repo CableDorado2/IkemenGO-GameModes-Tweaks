@@ -1,8 +1,8 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.6.2
+Version: 1.6.3
 Author: Cable Dorado 2 (CD2)
-Tested on: I.K.E.M.E.N. GO Engine (v1.0.0-rc.5)
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
 
 TODO: Add "background params" for menu.
@@ -598,6 +598,8 @@ local function f_events()
 	eventModeActive = true
 	main.f_default()
 	sndPlay(motifEvent.sndData, motif[main.group].cursor.done.snd.default[1], motif[main.group].cursor.done.snd.default[2])
+	local eventStartFadeActive = false
+	local eventStart = false
 	local cursorPosY = 1
 	local moveTxt = 0
 	local item = 1
@@ -988,63 +990,71 @@ local function f_events()
 	--Accept Button
 		elseif getInput(-1, motifEvent.event_info.menu.done.key) and not fadeActive() then
 			if main.t_unlockLua.modes[t[item].itemname] == nil then --If the event is unlocked
-				main.f_default()
 				sndPlay(motifEvent.sndData, motifEvent.event_info.cursor.done.snd[1], motifEvent.event_info.cursor.done.snd[2])
-			--START EVENT
-				textImgSetText(motif.select_info.title.TextSpriteData, motifEvent.event_info.title.select) --Set Character Select Title
-				remapInput(1, getLastInputController())
-				remapInput(getLastInputController(), 1)
-				if t[item].coop then
-					main.teamMenu[1].single = false
-					main.teamMenu[1].turns = false
-					main.teamMenu[1].ratio = false
-					main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
-					main.numTag = {2, math.min(4, gameOption('Config.Players'))}
-				else
-					main.teamMenu[1].single = t[item].single
-					main.teamMenu[1].turns = t[item].turns
-					main.teamMenu[1].ratio = t[item].ratio
-				end
-				main.selectMenu[1] = t[item].charsel --Enable or Disable Character Select for Event Selected
-				main.coop = t[item].coop --if co-op mode should be enabled for this event (thanks to FreeGilio by the sample code for its implementation)
-				main.teamMenu[1].simul = t[item].simul
-				main.teamMenu[1].tag = t[item].tag
-				main.stageMenu = t[item].stgsel --Enable or Disable Stage Select for Event Selected
-				main.motif.vsscreen = t[item].vsscreen --Enable or Disable Versus Screen for Event Selected
-				main.orderSelect[1] = t[item].ordersel --Enable or Disable Order Select for Event Selected
-			--Which fight screen elements should be rendered
-				main.fightscreen.bars = t[item].lfbar --main.fightscreen.active = t[item].lfbar
-				main.fightscreen.match = t[item].lfbarmatchno
-				main.fightscreen.timer = t[item].lfbartimer
-				main.fightscreen.p1score = t[item].lfbarscorep1
-				main.fightscreen.p2score = t[item].lfbarscorep2
-				main.fightscreen.p1aiLevel = t[item].lfbaraip1
-				main.fightscreen.p2aiLevel = t[item].lfbaraip2
-				main.fightscreen.p1winCount = t[item].lfbarwinp1
-				main.fightscreen.p2winCount = t[item].lfbarwinp2
-			--Hiscore Stuff
-				--main.motif.hiscore = false
-				--main.rankingCondition = true
-				main.motif.victoryScreen = t[item].winscreen --Enable or Disable Victory Screen for Event Selected
-				main.motif.continueScreen = t[item].continue --Enable or Disable Continue Screen for Event Selected
-				main.quickContinue = t[item].quickcontinue --Enable or Disable skip player selection when continuing for Event Selected
-				main.exitSelect = t[item].charsel --Automatically Exit from Character Select if is enabled
-				setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
-				hook.run("main.t_itemname")
-				main.luaPath = t[item].path
 				fadeOutInit(motifEvent.event_info.fadeout.FadeData)
-			--Check Unlocks before enter in Character Select
-				main.f_unlock(false)
-				f_refreshUnlockDat()
-				start.f_selectMode()
-			--Check Unlocks after play events
-				main.f_unlock(false)
-				f_refreshUnlockDat()
-				f_resetEventInfoTxt()
-			--Play Event Menu BGM
-				if motifEvent.music.menu.bgm ~= "" and not eventCharSelectBack then f_playEventBGM() end
-				eventCharSelectBack = false
+				eventStartFadeActive = true
 			end
+		end
+	--START EVENT
+		if not fadeActive() and eventStartFadeActive then
+			eventStartFadeActive = false
+			eventStart = true
+		end
+		if not fadeActive() and eventStart then
+			main.f_default()
+			textImgSetText(motif.select_info.title.TextSpriteData, motifEvent.event_info.title.select) --Set Character Select Title
+			remapInput(1, getLastInputController())
+			remapInput(getLastInputController(), 1)
+			if t[item].coop then
+				main.teamMenu[1].single = false
+				main.teamMenu[1].turns = false
+				main.teamMenu[1].ratio = false
+				main.numSimul = {2, math.min(4, gameOption('Config.Players'))}
+				main.numTag = {2, math.min(4, gameOption('Config.Players'))}
+			else
+				main.teamMenu[1].single = t[item].single
+				main.teamMenu[1].turns = t[item].turns
+				main.teamMenu[1].ratio = t[item].ratio
+			end
+			main.selectMenu[1] = t[item].charsel --Enable or Disable Character Select for Event Selected
+			main.coop = t[item].coop --if co-op mode should be enabled for this event (thanks to FreeGilio by the sample code for its implementation)
+			main.teamMenu[1].simul = t[item].simul
+			main.teamMenu[1].tag = t[item].tag
+			main.stageMenu = t[item].stgsel --Enable or Disable Stage Select for Event Selected
+			main.motif.vsscreen = t[item].vsscreen --Enable or Disable Versus Screen for Event Selected
+			main.orderSelect[1] = t[item].ordersel --Enable or Disable Order Select for Event Selected
+		--Which fight screen elements should be rendered
+			main.fightscreen.bars = t[item].lfbar --main.fightscreen.active = t[item].lfbar
+			main.fightscreen.match = t[item].lfbarmatchno
+			main.fightscreen.timer = t[item].lfbartimer
+			main.fightscreen.p1score = t[item].lfbarscorep1
+			main.fightscreen.p2score = t[item].lfbarscorep2
+			main.fightscreen.p1aiLevel = t[item].lfbaraip1
+			main.fightscreen.p2aiLevel = t[item].lfbaraip2
+			main.fightscreen.p1winCount = t[item].lfbarwinp1
+			main.fightscreen.p2winCount = t[item].lfbarwinp2
+		--Hiscore Stuff
+			--main.motif.hiscore = false
+			--main.rankingCondition = true
+			main.motif.victoryScreen = t[item].winscreen --Enable or Disable Victory Screen for Event Selected
+			main.motif.continueScreen = t[item].continue --Enable or Disable Continue Screen for Event Selected
+			main.quickContinue = t[item].quickcontinue --Enable or Disable skip player selection when continuing for Event Selected
+			main.exitSelect = t[item].charsel --Automatically Exit from Character Select if is enabled
+			setGameMode(t[item].itemname) --This uses t_selEventMode[id] name
+			hook.run("main.t_itemname")
+			main.luaPath = t[item].path
+		--Check Unlocks before enter in Character Select
+			main.f_unlock(false)
+			f_refreshUnlockDat()
+			start.f_selectMode()
+		--Check Unlocks after play events
+			main.f_unlock(false)
+			f_refreshUnlockDat()
+			f_resetEventInfoTxt()
+		--Play Event Menu BGM
+			if motifEvent.music.menu.bgm ~= "" and not eventCharSelectBack then f_playEventBGM() end
+			eventCharSelectBack = false
+			eventStart = false
 		end
 		refresh()
 	end
