@@ -1,6 +1,6 @@
 --[[					GALLERY MODULE
 ===================================================================
-Version: 1.3.0
+Version: 1.3.1
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: Adds a Custom Gallery Mode entry to the Main Menu.
@@ -1224,7 +1224,7 @@ local function f_galleryMenu()
 			textData,
 			infoTextCnt,
 			motifGallery.gallery_info.menu.pos[1] + motifGallery.gallery_info.info.offset[1],
-			motifGallery.gallery_info.menu.pos[1] + motifGallery.gallery_info.info.offset[2],
+			motifGallery.gallery_info.menu.pos[2] + motifGallery.gallery_info.info.offset[2],
 			motifGallery.gallery_info.info.scale[1],
 			motifGallery.gallery_info.info.scale[2],
 			motifGallery.gallery_info.info.spacing,
