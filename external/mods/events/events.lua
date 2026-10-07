@@ -1,6 +1,6 @@
 --[[	   				  EVENTS MODULE
 ======================================================================
-Version: 1.6.3
+Version: 1.6.4
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: Adds a Custom Game Mode entry (Events) to the Main Menu.
@@ -314,7 +314,7 @@ local function f_saveEventData()
 	jsonEncode(eventsDat, eventSavePath) --Write in eventSavePath file
 end
 
-local function f_eventResults()
+function f_eventResults()
 	local t_stats = start.f_accStats()
 	if gameOption('Debug.DumpLuaTables') then main.f_printTable(t_stats, "debug/t_EventResults.txt") end
 --Save Event Data only if player complete event
@@ -1067,6 +1067,7 @@ end
 --;===========================================================
 --; MODES LOOP (copied from external/script/start.lua)
 --;===========================================================
+if currency == nil then --Ensure compatibility with Shop Module
 function start.f_selectMode()
 	start.f_selectReset(true)
 	while true do
@@ -1179,4 +1180,5 @@ function start.f_selectMode()
 			end
 		end
 	end
+end
 end
