@@ -15,7 +15,7 @@ External Modules for [**Ikemen GO Engine**](https://ikemen-engine.github.io) tha
 - Edit select.def or system.def depending of module installed (Each module contains its installation instructions within its folder or lua file).
 
 ##  _[Shop Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/shop)_
-A Shop Menu to spend In-Game Currency ➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
+A Shop Menu to spend [In-Game Currency](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/currency) ➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
 ##  _[Gallery Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/gallery)_
