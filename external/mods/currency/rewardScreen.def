@@ -1,0 +1,114 @@
+[Info]
+ikemenversion = 1.0
+localcoord = 1280,720
+;-------------------------------------------------------------------------------
+[Files]
+def = external/mods/currency/currency.def ;load the currency to use in-Game.
+;snd = external/mods/currency/reward.snd ;load sounds for Reward screen. (If is not defined, sounds will be loaded from system.def)
+;-------------------------------------------------------------------------------
+[Fonts] ;If are not defined, fonts will be loaded from system.def
+font1 = f-4x6.def
+font2 = ikemen1/fonts/Pixel.def
+font3 = ikemen1/fonts/Menu2.def
+font4 = ikemen1/fonts/Menu1.def
+font5 = Open_Sans.def
+font6 = infofont.def
+font7 = Open_Sans.def
+font8 = ikemen1/fonts/Timer.def
+font9 = ikemen1/fonts/PixelFlat.def
+;-------------------------------------------------------------------------------
+[Music] ;Music to play at reward screen.
+menu.bgm = sound/system/Reward.mp3
+menu.volume = 100
+menu.loop = 1
+menu.loopstart = 0
+menu.loopend = 0
+menu.startposition = 0
+menu.freqmul = 1.0
+menu.loopcount = -1
+;-------------------------------------------------------------------------------
+[Currency Info] ;Currency display definition
+currency.font = 3,0,-1
+currency.suffix = P$
+currency.offset = 1270,45
+currency.scale = 1.0, 1.0
+;-------------------------------------------------------------------------------
+[Reward Info] ;Reward screen definition
+fadein.time = 20
+fadein.color = 0,0,0
+fadein.anim = -1
+fadein.sound = -1,0
+
+fadeout.time = 20
+fadeout.color = 0,0,0
+fadeout.anim = -1
+fadeout.sound = -1,0
+
+menu.pos = 0,0
+menu.done.key = a, b, c, x, y, z, s, m
+
+victory.reward = 500
+firstattack.reward = 100
+specialko.reward = 1000
+superko.reward = 1500
+perfectko.reward = 2000
+
+reward.snd = 600,0
+reward.font = 3,0,0
+reward.text = Earned!
+reward.offset = 640,300
+reward.scale = 1.0, 1.0
+
+accept.snd = 100,2
+accept.font = 4,0,0
+accept.text = Accept
+accept.offset = 640,450
+accept.scale = 1.0, 1.0
+;-------------------------------------------------------------------------------
+[RewardBGdef] ;Reward screen background
+spr = ""
+bgclearcolor = 255,255,255
+
+;Paramvalues to load a model object as BG:
+;https://github.com/ikemen-engine/Ikemen-GO/wiki/Background-features#bgdef-definition
+;model = "stages/stage3d.glb"
+;scenenumber = 0
+;fov = 75
+;near = 0.1
+;far = 100.0
+;modeloffset = 0, -0.2, -0.47
+;modelscale = 0.1, 0.1, 0.1
+
+[RewardBG Background Sky]
+type = normal
+spriteno = 100,0
+layerno = 0
+start = -640,0
+
+[RewardBG Background Clouds Top]
+type = normal
+spriteno = 100,2
+layerno = 0
+start = -640, -50
+tile = 1,0
+velocity = -0.1, 0
+window = 0,0, 1279,959
+mask = 1
+
+[RewardBG Background Clouds Bottom]
+type = normal
+spriteno = 100,3
+layerno = 0
+start = -640, 0
+tile = 1,0
+velocity = -0.7, 0
+window = 0,0, 1279,959
+mask = 1
+
+[RewardBG Window]
+type = normal
+spriteno = 700,0
+layerno = 0
+start = -450,220
+scalestart = 2.15, 4
+trans = add1
