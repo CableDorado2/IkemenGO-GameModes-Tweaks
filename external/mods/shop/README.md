@@ -4,19 +4,20 @@
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
 > [!NOTE]
-> This module requires a [Currency System](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/currency) module to work.
-> [Palette Select Plus+](https://github.com/dionednd/paletteselect-plus) module by dionednd, is recommended to setup characters palette/color unlocks.
+> - This module requires a [Currency System](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/currency) module to work.
+>
+> - [Palette Select Plus+](https://github.com/dionednd/paletteselect-plus) module by dionednd, is recommended to setup characters palette/color unlocks.
 
 > [!CAUTION]
-In Network/Netplay (Online Mode), as happens with Game Settings, a desynchronization may occur
-if the host and client have not unlocked the same content.
-
-Due to current engine limitations, to manage this case [netPlay()](https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#netplay) function has been added
-to the shop item examples that will temporarily cause the content to be unlocked
-(even if online partner has purchased it), only during online session.
-
-Following the engine's wiki recommendation:
-https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#example-allow-unlocks-during-netplay
+> In Network/Netplay (Online Mode), as happens with Game Settings, a desynchronization may occur
+> if the host and client have not unlocked the same content.
+>
+> Due to current engine limitations, to manage this case [netPlay()](https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#netplay) function has been added
+> to the shop item examples that will temporarily cause the content to be unlocked
+> (even if online partner has purchased it), only during online session.
+>
+> Following the engine's wiki recommendation:
+> https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#example-allow-unlocks-during-netplay
 
 ## Installation
 
