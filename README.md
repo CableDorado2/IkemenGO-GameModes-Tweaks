@@ -11,8 +11,10 @@ External Modules for [**Ikemen GO Engine**](https://ikemen-engine.github.io) tha
 > - [**v0.99.0**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/v0.99.0) or [**v0.98.2**](https://github.com/ikemen-engine/Ikemen-GO/releases/tag/v0.98.2) stable releases, please download and use the ***Legacy Modules*** [**here**](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/releases/tag/legacy)
 
 ##  _Installation:_
+<img width="446" height="398" alt="Download Steps" src="https://github.com/user-attachments/assets/918816a8-f77f-45e3-81e3-cbbc0a3457ae" />
+
 - Extract archive content into "**./external/mods**" directory.
-- Edit select.def or system.def depending of module installed (Each module contains its installation instructions within its folder or lua file).
+- Edit select.def or system.def depending of module installed (Each module contains its installation/setting instructions within its folder as README file).
 
 ##  _[Shop Mode](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/shop)_
 A Shop Menu to spend [In-Game Currency](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/currency) ➤ https://www.youtube.com/watch?v=fKo6Ag_lZO4
