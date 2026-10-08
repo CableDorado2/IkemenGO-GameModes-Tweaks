@@ -97,7 +97,7 @@ movelimit = -320,-480, 470,600
 info = Unofficial Artwork of Kung Fu Man By Esaka
 previewspacing = -285,-604
 previewscale = 0.2, 0.186
-unlock = stats.shopstock ~= nil and stats.shopstock["Artworks"] ~= nil and stats.shopstock["Artworks"]["art4"] == false
+unlock = shopDat.shopstock ~= nil and shopDat.shopstock["Artworks"] ~= nil and shopDat.shopstock["Artworks"]["art4"] == false
 ;The above unlock condition example is compatible with the following external module:
 ;https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/shop
 
