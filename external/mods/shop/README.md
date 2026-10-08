@@ -14,7 +14,7 @@
 >
 > Due to current engine limitations, to manage this case [netPlay()](https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#netplay) function has been added
 > to the shop item examples that will temporarily cause the content to be unlocked
-> (even if online partner has purchased it), only during online session.
+> (even if online partner has not purchased it), only during online session.
 >
 > Following the engine's wiki recommendation:
 > https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#example-allow-unlocks-during-netplay
