@@ -1,0 +1,314 @@
+[Info]
+ikemenversion = 1.0
+localcoord = 1280,720
+;-------------------------------------------------------------------------------
+[Files]
+def = external/mods/shop/items.def ;load the Shop Items to be sold in Shop Menu. (If is not defined, nothing will be loaded)
+sff = external/mods/shop/items.sff ;load sprites for Shop Items. (If is not defined, nothing will be displayed)
+;air = external/mods/shop/items.air ;load animations for Shop Items. (If is not defined, animations will be loaded from system.def)
+;snd = external/mods/shop/shop.snd ;load sounds for Shop Menu. (If is not defined, sounds will be loaded from system.def)
+;-------------------------------------------------------------------------------
+[Fonts] ;If are not defined, fonts will be loaded from system.def
+font1 = f-4x6.def
+font2 = ikemen1/fonts/Pixel.def
+font3 = ikemen1/fonts/Menu2.def
+font4 = ikemen1/fonts/Menu1.def
+font5 = Open_Sans.def
+font6 = infofont.def
+font7 = Open_Sans.def
+font8 = ikemen1/fonts/Timer.def
+font9 = ikemen1/fonts/PixelFlat.def
+;-------------------------------------------------------------------------------
+[Music] ;Music to play at event mode screen.
+menu.bgm = sound/system/Shop.mp3
+menu.volume = 100
+menu.loop = 1
+menu.loopstart = 0
+menu.loopend = 0
+menu.startposition = 0
+menu.freqmul = 1.0
+menu.loopcount = -1
+;-------------------------------------------------------------------------------
+[Shop Info] ;Shop screen definition
+reload.enabled = 0 ;Set to 1 to enable shop data reload, each time that shop menu is initialized (for debug purposes), 0 to disable.
+
+fadein.time = 20
+fadein.color = 0,0,0
+fadein.anim = -1
+fadein.sound = -1,0
+
+fadeout.time = 20
+fadeout.color = 0,0,0
+fadeout.anim = -1
+fadeout.sound = -1,0
+
+cursor.move.snd = 100,0
+cursor.category.snd = 100,0
+cursor.done.snd = 100,1
+cursor.purchase.snd = 600,0
+cursor.error.snd = 600,1
+cancel.snd = 100,2
+
+;preview.bg.anim = -1
+preview.bg.spr = 0,1
+preview.bg.offset = 780,80
+preview.bg.facing = 1
+preview.bg.scale = 3.2, 3.2
+preview.bg.window = 0,0, 1280,720
+
+;preview.unknown.anim = -1
+preview.unknown.spr = 0,2
+preview.unknown.offset = 787,92
+preview.unknown.facing = 1
+preview.unknown.scale = 3.2, 3.2
+preview.unknown.window = 0,0, 1280,720
+
+character.preview.resetanim = 0 ;Set to 1 to Reset Character Preview Animation when move cursor.
+character.preview.anim = 0 ;By default it uses stand animation, but if you want to use a exclusive one, read the note in the shop.lua file.
+;character.preview.spr = 9000,1
+character.preview.offset = 1010,575
+character.preview.facing = 1
+character.preview.scale = 0.8, 0.8
+character.preview.window = 0,0, 1280,720
+character.preview.layerno = 0
+
+stage.preview.resetanim = 0 ;Set to 1 to Reset Stage Preview Animation when move cursor.
+;stage.preview.anim = -1
+stage.preview.spr = 9000,1 ;By default it uses stage select portrait, but if you want to use a exclusive one, read the note in the shop.lua file.
+stage.preview.offset = 787,92
+stage.preview.facing = 1
+stage.preview.scale = 0.48, 1.22
+stage.preview.window = 0,0, 1280,720
+stage.preview.layerno = 0
+
+custom.preview.offset = 640,20
+custom.preview.scale = 1.0, 1.0
+custom.preview.window = 0,0, 1280,720
+
+title.font = 4,0,1
+title.text = ITEM SHOP
+title.offset = 8,49
+title.scale = 1.0, 1.0
+
+category.font = 3,5,0
+category.offset = 350,110
+category.scale = 1.0, 1.0
+
+currency.font = 3,0,-1
+currency.offset = 1270,46
+currency.scale = 1.0, 1.0
+
+price.font = 3,0,0
+price.sold = SOLD OUT
+price.default = 500 ;If a shop item does not have a price assigned, it will be assigned this price by default.
+price.offset = 1030,640
+price.scale = 1.0, 1.0
+
+info.font = 2,0,1
+info.offset = 10,690
+info.scale = 1.0, 1.0
+info.purchase = Purchase
+info.unknown = ???
+info.unlock = Unlocks
+info.color = Color
+info.locked = This item has yet to be discovered...
+
+menu.pos = 0,0
+
+;Keys for menu movement
+menu.next.key = D, R
+menu.previous.key = U, L
+
+menu.nextcategory.key = w
+menu.previouscategory.key = d
+
+;Key for selecting menu item
+menu.done.key = a, b, c, x, y, z, s
+menu.cancel.key = m
+
+menu.itemname.new = NEW!
+menu.itemname.purchased = OWNED
+menu.itemname.unknown = ???
+
+menu.item.font = 7,0,1
+menu.item.offset = 10,161
+menu.item.scale = 1.0, 1.0
+menu.item.spacing = 0,45 ;active items also uses this
+menu.item.tween.factor = 0.5, 0
+
+menu.item.active.font = 7,0,1
+menu.item.active.offset = 10,161
+menu.item.active.scale = 1.0, 1.0
+
+menu.item.value.font = 7,0,-1
+menu.item.value.offset = 770,161
+menu.item.value.scale = 1.0, 1.0
+menu.item.value.spacing = 0,42
+
+menu.item.value.active.font = 7,0,-1
+menu.item.value.active.offset = 770,161
+menu.item.value.active.scale = 1.0, 1.0
+
+menu.tween.factor = 0.5, 0
+menu.tween.wrap.snap = 0
+
+menu.window.margins.y = 21,2
+menu.window.visibleitems = 10
+
+menu.boxcursor.visible = 1
+menu.boxcursor.coords = -5,128, 778,172
+menu.boxcursor.col = 255,255,255
+menu.boxcursor.pulse = 30,20,30
+menu.boxcursor.tween.factor = 0.5, 0
+menu.boxcursor.tween.snap = 0
+menu.boxcursor.tween.wrap.snap = 0
+
+menu.boxbg.visible = 1
+menu.boxbg.col = 0,0,0
+menu.boxbg.alpha = 0,128
+
+;menu.arrow.up.anim = -1
+menu.arrow.up.spr = 400,0
+menu.arrow.up.offset = 700,100
+menu.arrow.up.facing = 1
+menu.arrow.up.scale = 1.5, 1.5
+
+;menu.arrow.down.anim = -1
+menu.arrow.down.spr = 401,0
+menu.arrow.down.offset = 700,590
+menu.arrow.down.facing = 1
+menu.arrow.down.scale = 1.5, 1.5
+
+;Fade BG during Purchase Screen
+purchase.overlay.window = 0,0, 1280,720
+purchase.overlay.col = 0,0,0
+purchase.overlay.alpha = 0,128
+
+;purchase.bg.anim = -1
+purchase.bg.spr = 0,1
+purchase.bg.offset = 196,189
+purchase.bg.facing = 1
+purchase.bg.scale = 6.0, 2.2
+purchase.bg.window = 0,0, 1280,720
+
+;Show Custom Cursor during Purchase Screen
+;purchase.cursor.anim = -1
+;purchase.cursor.spr = -1
+purchase.cursor.offset = 80.6,100
+purchase.cursor.spacing = 0,15
+purchase.cursor.facing = 1
+purchase.cursor.scale = 1.0, 1.0
+purchase.cursor.window = 0,0, 1280,720
+
+purchase.boxcursor.spacing = 0,60
+purchase.boxcursor.visible = 1
+purchase.boxcursor.coords = 209,408, 1077,470
+purchase.boxcursor.col = 255,255,255
+purchase.boxcursor.pulse = 30,20,30
+purchase.boxcursor.tween.factor = 0.5, 0
+purchase.boxcursor.tween.snap = 0
+purchase.boxcursor.tween.wrap.snap = 0
+
+purchase.info.font = 2,0,0
+purchase.info.text = You do not have enough P$ to buy this content.
+purchase.info.offset = 648,240
+purchase.info.scale = 1.1, 1.1
+purchase.info.length = 25
+purchase.info.spacing = 38
+purchase.info.delay = 0
+
+purchase.question.font = 2,5,0
+purchase.question.text = Purchase with P$?
+purchase.question.offset = 648,240
+purchase.question.scale = 1.1, 1.1
+
+purchase.yes.text = Yes
+purchase.ok.text = Accept ;This text appears when don't have enough currency
+purchase.no.text = No
+
+purchase.yes.font = 4,0,0, 191,191,191
+purchase.yes.offset = 646,457
+purchase.yes.scale = 1.0, 1.0
+
+purchase.yes.active.font = 4,0,0, 255,255,255
+purchase.yes.active.offset = 646,457
+purchase.yes.active.scale = 1.0, 1.0
+
+purchase.no.font = 4,0,0, 191,191,191
+purchase.no.offset = 646,520
+purchase.no.scale = 1.0, 1.0
+
+purchase.no.active.font = 4,0,0, 255,255,255
+purchase.no.active.offset = 646,520
+purchase.no.active.scale = 1.0, 1.0
+
+balance.old.font = 3,0,-1
+balance.old.offset = 590,350
+balance.old.scale = 1.0, 1.0
+
+balance.new.font = 3,0,1
+balance.new.offset = 695,350
+balance.new.scale = 1.0, 1.0
+
+;balance.arrow.anim = -1
+balance.arrow.spr = 0,0
+balance.arrow.offset = 640,310
+balance.arrow.facing = 1
+balance.arrow.scale = 1.5, 1.5
+balance.arrow.window = 0,0, 1280,720
+;-------------------------------------------------------------------------------
+[ShopBGdef] ;Shop screen background
+spr = ""
+bgclearcolor = 0,0,0
+
+;Paramvalues to load a model object as BG:
+;https://github.com/ikemen-engine/Ikemen-GO/wiki/Background-features#bgdef-definition
+;model = "stages/stage3d.glb"
+;scenenumber = 0
+;fov = 75
+;near = 0.1
+;far = 100.0
+;modeloffset = 0, -0.2, -0.47
+;modelscale = 0.1, 0.1, 0.1
+
+[ShopBG Background Sky]
+type = normal
+spriteno = 100,0
+layerno = 0
+start = -640,0
+
+[ShopBG Background Clouds Top]
+type = normal
+spriteno = 100,2
+layerno = 0
+start = -640, -50
+tile = 1,0
+velocity = -0.1, 0
+window = 0,0, 1279,959
+mask = 1
+
+[ShopBG Background Clouds Bottom]
+type = normal
+spriteno = 100,3
+layerno = 0
+start = -640, 0
+tile = 1,0
+velocity = -0.7, 0
+window = 0,0, 1279,959
+mask = 1
+
+[ShopBG Title BG]
+type = normal
+spriteno = 700,0
+layerno = 0
+start = -640,0
+scalestart = 3.1, 0.89
+trans = add1
+
+[ShopBG Info BG]
+type = normal
+spriteno = 700,0
+layerno = 0
+start = -640,650
+scalestart = 3.1, 1
+trans = add1

@@ -1,583 +1,78 @@
 --[[					 		   SHOP MODULE
 ===========================================================================================
-Version: 1.2.1
+Version: 1.3.0
 Author: Cable Dorado 2 (CD2)
-Tested on: IKEMEN GO v0.98.2, v0.99.0 and 2025-10-01 Nightly Build
-Description:
-Adds:
-- In-Game Currency System (Player Currency will increase after win a match).
-- Shop Mode entry for the Main Menu (To spend In-Game Currency).
+Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
+Description: A menu dedicated to spend In-Game Currency and Unlock Content
+
+Module Dependencies Required:
+- Currency System: https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/currency
+- Palette Select Plus+ by dionednd (for unlock colors): https://github.com/dionednd/paletteselect-plus
 ===========================================================================================
 						           DISCLAIMER
-In Network (Online Mode), as happens with Game Settings, a desynchronization may occur
+In Network/Netplay (Online Mode), as happens with Game Settings, a desynchronization may occur
 if the host and client have not unlocked the same content.
 
-Due to current engine limitations, to manage this situation, network() function has been added
+Due to current engine limitations, to manage this case netPlay() function has been added
 to the shop item examples that will temporarily cause the content to be unlocked
-(even if neither party has purchased it), only during online session.
+(even if online partner has purchased it), only during online session.
+
+Following the engine's wiki recommendation:
+https://github.com/ikemen-engine/Ikemen-GO/wiki/Lua#example-allow-unlocks-during-netplay
 ===========================================================================================
 ]]
-local nightlyVer = true --Indicates if you are using Nightly IkemenGO version, to setup some stuff...
---[[README!
-- HOW TO FIX:
-shop.lua: "attempt to index a non-table object(nil) with key 'p1score" error (appears after win a fight):
-GO TO "external/script/start.lua" AND FOR "local t_gameStats = {}" remove "local" and save the file.
+local shopMotifPath = "external/mods/shop/shopMenu.def" --Set the Motif/Screenpack Definition File Path
+local shopSavePath = "save/shopDat.json" --Set the Shop Save Data File Path
 
-- HOW TO LOAD CUSTOM PORTRAITS for CHARACTERS or STAGES using [Shop Info] .preview paramvalues:
-GO TO "external/script/main.lua" and below: "--generate preload stage spr/anim list"
-copy and paste the next block of code above "warning display" function:
+--[[README!
+
+- HOW TO LOAD CUSTOM PORTRAITS/ANIMS for CHARACTERS or STAGES using [Shop Info] .preview paramvalues:
+GO TO "external/script/main.lua" and below: main.t_unlockLua = {chars = {}, stages = {}, modes = {}}
+copy and paste the next block of code:
 
 --generate preload custom shop character preview spr/anim list
-f_preloadList(motif.shop_info.character_preview_anim)
-f_preloadList(motif.shop_info.character_preview_spr)
+preloadListChar(group, index) --For a custom character portrait
+preloadListChar(actionNo) --For a custom character animation
 
 --generate preload custom shop stage preview spr/anim list
-if #motif.shop_info.stage_preview_spr >= 2 and motif.shop_info.stage_preview_spr[1] >= 0 then
-	preloadListStage(motif.shop_info.stage_preview_spr[1], motif.shop_info.stage_preview_spr[2])
-end
-if motif.shop_info.stage_preview_anim ~= nil and motif.shop_info.stage_preview_anim >= 0 then
-	preloadListStage(motif.shop_info.stage_preview_anim)
-end
+preloadListStage(group, index) --For a custom stage portrait
+preloadListStage(actionNo) --For a custom stage animation
 
 ]]
---;===========================================================================================
---; 							      MOTIF STUFF
---;===========================================================================================
---[Music]
-if motif.music.shop_bgm == nil then
-	motif.music.shop_bgm = ""
-end
-if motif.music.shop_bgm_volume == nil then
-	motif.music.shop_bgm_volume = 100
-end
-if motif.music.shop_bgm_loop == nil then
-	motif.music.shop_bgm_loop = 1
-end
-if motif.music.shop_bgm_loopstart == nil then
-	motif.music.shop_bgm_loopstart = 0
-end
-if motif.music.shop_bgm_loopend == nil then
-	motif.music.shop_bgm_loopend = 0
-end
-
---[Shop Info] default parameters (used for rendering shop menu screen assets)
-local t_base = {
-	reload_enabled = 0,
-	
-	fadein_time = 20,
-	fadein_col = {0, 0, 0},
-	fadein_anim = -1,
-	
-	fadeout_time = 20,
-	fadeout_col = {0, 0, 0},
-	fadeout_anim = -1,
-	
-	menu_uselocalcoord = 1,
-	menu_pos = {0, 0},
-	
-	cursor_move_snd = {100, 0},
-	cursor_done_snd = {100, 1},
-	cursor_category_snd = {100, 0},
-	cursor_purchase_snd = {600, 0},
-	cursor_error_snd = {600, 1},
-	cancel_snd = {100, 2},
-	
-	title_offset = {5, 15},
-	title_font = {'jg.fnt', 0, 1, 255, 255, 255, -1},
-	title_scale = {1.0, 1.0},
-	title_text = 'ITEM SHOP',
-	
-	category_offset = {77, 45},
-	category_font = {'jg.fnt', 5, 0, 255, 255, 255, -1},
-	category_scale = {1.0, 1.0},
-	category_text = 'CATEGORIES',
-	
-	currency_offset = {318, 15},
-	currency_font = {'jg.fnt', 0, -1, 255, 255, 255, -1},
-	currency_scale = {1.0, 1.0},
-	currency_text = 'P$',
-	
-	price_offset = {240, 197},
-	price_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
-	price_scale = {1.0, 1.0},
-	price_text = '',
-	price_text_sold = 'SOLD OUT',
-	price_default = 500,
-	
-	info_offset = {5, 230},
-	info_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
-	info_scale = {0.95, 0.95},
-	info_text = '',
-	info_text_unknown = '???',
-	info_text_unlock = 'Unlocks',
-	info_text_locked = 'This item has yet to be discovered...',
-	info_text_purchase = 'Purchase',
-	
-	items_def = "external/mods/shop/items.def",
-	items_spr = "external/mods/shop/items.sff",
-	
-	preview_bg_anim = -1,
-	preview_bg_spr = {0, 1},
-	preview_bg_offset = {80.6, 14},
-	preview_bg_facing = 1,
-	preview_bg_scale = {1.05, 1.1},
-	preview_bg_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	preview_unknown_anim = -1,
-	preview_unknown_spr = {0, 2},
-	preview_unknown_offset = {82.395, 16},
-	preview_unknown_facing = 1,
-	preview_unknown_scale = {1.03, 1.1},
-	preview_unknown_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	character_preview_resetanim = 0,
-	character_preview_anim = -1,
-	character_preview_spr = {9000, 1},
-	character_preview_offset = {177, 45},
-	character_preview_facing = 1,
-	character_preview_scale = {1.0, 1.0},
-	character_preview_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	stage_preview_resetanim = 0,
-	stage_preview_anim = -1,
-	stage_preview_spr = {9000, 1},
-	stage_preview_offset = {163, 31},
-	stage_preview_facing = 1,
-	stage_preview_scale = {0.63, 1.68},
-	stage_preview_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	custom_preview_offset = {0, 0},
-	custom_preview_scale = {1.0, 1.0},
-	custom_preview_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	--menu_bg_<itemname>_anim = -1,
-	--menu_bg_<itemname>_spr = {},
-	--menu_bg_<itemname>_offset = {0, 0},
-	--menu_bg_<itemname>_facing = 1,
-	--menu_bg_<itemname>_scale = {1.0, 1.0},
-	--menu_bg_active_<itemname>_anim = -1,
-	--menu_bg_active_<itemname>_spr = {},
-	--menu_bg_active_<itemname>_offset = {0, 0},
-	--menu_bg_active_<itemname>_facing = 1,
-	--menu_bg_active_<itemname>_scale = {1.0, 1.0},
-	
-	menu_item_offset = {5, 61},
-	menu_item_font = {'f-6x9.def', 0, 1, 191, 191, 191, -1},
-	menu_item_scale = {1.0, 1.0},
-	menu_item_active_offset = {5, 61},
-	menu_item_active_font = {'f-6x9.def', 0, 1, 255, 255, 255, -1},
-	menu_item_active_scale = {1.0, 1.0},
-	menu_item_spacing = {0, 15},
-	
-	menu_window_margins_y = {0, 0},
-	menu_window_visibleitems = 10,
-	
-	menu_boxcursor_visible = 1,
-	menu_boxcursor_coords = {-5, 50, 156, 65},
-	menu_boxcursor_col = {255, 255, 255},
-	menu_boxcursor_alpharange = {10, 40, 2, 255, 255, 0},
-	
-	menu_boxbg_visible = 1,
-	menu_boxbg_col = {0, 0, 0},
-	menu_boxbg_alpha = {0, 128},
-	
-	menu_arrow_up_anim = -1,
-	menu_arrow_up_spr = {400, 0},
-	menu_arrow_up_offset = {146, 42},
-	menu_arrow_up_facing = 1,
-	menu_arrow_up_scale = {0.5, 0.5},
-	
-	menu_arrow_down_anim = -1,
-	menu_arrow_down_spr = {401, 0},
-	menu_arrow_down_offset = {146, 203},
-	menu_arrow_down_facing = 1,
-	menu_arrow_down_scale = {0.5, 0.5},
-	
-	purchase_overlay_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	purchase_overlay_col = {0, 0, 0},
-	purchase_overlay_alpha = {0, 128},
-	
-	purchase_bg_anim = -1,
-	purchase_bg_spr = {0, 1},
-	purchase_bg_offset = {22, 35},
-	purchase_bg_facing = 1,
-	purchase_bg_scale = {1.5, 0.7},
-	purchase_bg_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	purchase_cursor_anim = -1,
-	purchase_cursor_spr = {},
-	purchase_cursor_offset = {80.6, 100},
-	purchase_cursor_spacing = {0, 15},
-	purchase_cursor_facing = 1,
-	purchase_cursor_scale = {1.0, 1.0},
-	purchase_cursor_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	purchase_boxcursor_visible = 1,
-	purchase_boxcursor_spacing = {0, 20},
-	purchase_boxcursor_coords = {47, 138, 262, 153},
-	purchase_boxcursor_col = {255, 255, 255},
-	purchase_boxcursor_alpharange = {10, 40, 2, 255, 255, 0},
-	
-	purchase_info_offset = {160, 90},
-	purchase_info_spacing = {0, 5},
-	purchase_info_window = {50, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	purchase_info_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
-	purchase_info_scale = {1.0, 1.0},
-	purchase_info_text = 'You do not have enough P$ to buy this content.',
-	
-	purchase_question_offset = {160, 90},
-	purchase_question_font = {'jg.fnt', 5, 0, 255, 255, 255, -1},
-	purchase_question_scale = {1.0, 1.0},
-	purchase_question_text = 'Purchase with P$?',
-	
-	purchase_yes_text = 'Yes',
-	purchase_ok_text = 'Accept',
-	purchase_no_text = 'No',
-	
-	purchase_yes_offset = {155, 150},
-	purchase_yes_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
-	purchase_yes_scale = {1.0, 1.0},
-	
-	purchase_yes_active_offset = {155, 150},
-	purchase_yes_active_font = {'jg.fnt', 5, 0, 255, 255, 255, -1},
-	purchase_yes_active_scale = {1.0, 1.0},
-	
-	purchase_no_offset = {155, 170},
-	purchase_no_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
-	purchase_no_scale = {1.0, 1.0},
-	
-	purchase_no_active_offset = {155, 170},
-	purchase_no_active_font = {'jg.fnt', 5, 0, 255, 255, 255, -1},
-	purchase_no_active_scale = {1.0, 1.0},
-	
-	balance_old_offset = {140, 125},
-	balance_old_font = {'jg.fnt', 0, -1, 255, 255, 255, -1},
-	balance_old_scale = {1.0, 1.0},
-	balance_old_text = '',
-	
-	balance_arrow_anim = -1,
-	balance_arrow_spr = {0, 0},
-	balance_arrow_offset = {77, 58},
-	balance_arrow_facing = 1,
-	balance_arrow_scale = {0.5, 0.5},
-	balance_arrow_window = {0, 0, main.SP_Localcoord[1], main.SP_Localcoord[2]},
-	
-	balance_new_offset = {170, 125},
-	balance_new_font = {'jg.fnt', 0, 1, 255, 255, 255, -1},
-	balance_new_scale = {1.0, 1.0},
-	balance_new_text = '',
-}
-if motif.shop_info == nil then
-	motif.shop_info = {}
-end
-motif.shop_info = main.f_tableMerge(t_base, motif.shop_info)
-
---If not defined [ShopBGdef]
-if motif.shopbgdef == nil then
-	motif.shopbgdef = {
-		spr = '',
-		bgclearcolor = {0, 0, 0},
-	}
-end
-
--- This code creates data out of optional [ShopBGdef] sff file.
--- Defaults to motif.files.spr_data, defined in screenpack, if not declared.
-if motif.shopbgdef.spr ~= nil and motif.shopbgdef.spr ~= '' then
-	motif.shopbgdef.spr = searchFile(motif.shopbgdef.spr, {motif.fileDir, '', 'data/'})
-	motif.shopbgdef.spr_data = sffNew(motif.shopbgdef.spr)
-else
-	motif.shopbgdef.spr = motif.files.spr
-	motif.shopbgdef.spr_data = motif.files.spr_data
-end
-
--- Background data generation.
--- Refer to official Elecbyte docs for information how to define backgrounds.
--- http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
-motif.shopbgdef.bg = bgNew(motif.shopbgdef.spr_data, motif.def, 'shopbg')
-
--- fadein/fadeout anim data generation.
-if motif.shop_info.fadein_anim ~= -1 then
-	motif.f_loadSprData(motif.shop_info, {s = 'fadein_'})
-end
-if motif.shop_info.fadeout_anim ~= -1 then
-	motif.f_loadSprData(motif.shop_info, {s = 'fadeout_'})
-end
-
---arrows spr/anim data
-for _, v in ipairs({motif.shop_info}) do
-	motif.f_loadSprData(v, {s = 'menu_arrow_up_',   x = v.menu_pos[1], y = v.menu_pos[2]})
-	motif.f_loadSprData(v, {s = 'menu_arrow_down_', x = v.menu_pos[1], y = v.menu_pos[2]})
-end
-
---[Reward Info] default parameters (used for rendering reward screen assets)
-local t_base2 = {
-	fadein_time = 20,
-	fadein_col = {0, 0, 0},
-	fadein_anim = -1,
-	
-	fadeout_time = 20,
-	fadeout_col = {0, 0, 0},
-	fadeout_anim = -1,
-	
-	menu_pos = {0, 0},
-	
-	reward_snd = {600, 0},
-	accept_snd = {100, 2},
-	
-	victory_reward = 500,
-	firstattack_reward = 100,
-	specialko_reward = 1000,
-	superko_reward = 1500,
-	perfectko_reward = 2000,
-	
-	reward_offset = {160, 100},
-	reward_font = {'jg.fnt', 0, 0, 255, 255, 255, -1},
-	reward_scale = {1.0, 1.0},
-	reward_text = 'P$ Earned!',
-	
-	accept_offset = {160, 135},
-	accept_font = {'jg.fnt', 5, 0, 255, 255, 255, -1},
-	accept_scale = {1.0, 1.0},
-	accept_text = 'Accept',
-}
-if motif.reward_info == nil then
-	motif.reward_info = {}
-end
-motif.reward_info = main.f_tableMerge(t_base2, motif.reward_info)
-
---If not defined [RewardBGdef]
-if motif.rewardbgdef == nil then
-	motif.rewardbgdef = {
-		spr = '',
-		bgclearcolor = {0, 0, 0},
-	}
-end
-
--- This code creates data out of optional [RewardBGdef] sff file.
--- Defaults to motif.files.spr_data, defined in screenpack, if not declared.
-if motif.rewardbgdef.spr ~= nil and motif.rewardbgdef.spr ~= '' then
-	motif.rewardbgdef.spr = searchFile(motif.rewardbgdef.spr, {motif.fileDir, '', 'data/'})
-	motif.rewardbgdef.spr_data = sffNew(motif.rewardbgdef.spr)
-else
-	motif.rewardbgdef.spr = motif.files.spr
-	motif.rewardbgdef.spr_data = motif.files.spr_data
-end
-
--- Background data generation.
--- Refer to official Elecbyte docs for information how to define backgrounds.
--- http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
-motif.rewardbgdef.bg = bgNew(motif.rewardbgdef.spr_data, motif.def, 'rewardbg')
-
--- fadein/fadeout anim data generation.
-if motif.reward_info.fadein_anim ~= -1 then
-	motif.f_loadSprData(motif.reward_info, {s = 'fadein_'})
-end
-if motif.reward_info.fadeout_anim ~= -1 then
-	motif.f_loadSprData(motif.reward_info, {s = 'fadeout_'})
-end
-
---disabled scaling if element uses default values (non-existing in mugen)
-motif.defaultShop = motif.shop_info.menu_uselocalcoord == 0
-
---Setup argument for bgDraw functions
-if nightlyVer then
-	trueBool = 1
-	falseBool = 0
-else
-	trueBool = true
-	falseBool = false
-end
-
---Setup function to use for preloaded data
-local function f_getPreloadedData(dataType, id, group, index)
-	local animDat = nil
-	if nightlyVer then --For the lastest nightly
-		if dataType == 'char' then
-			animDat = animGetPreloadedCharData(id, group, index)
-		elseif dataType == 'stage' then
-			animDat = animGetPreloadedStageData(id, group, index)
-		end
-	else --For Old Ikemen GO versions
-		animDat = animGetPreloadedData(dataType, id, group, index)
+--===================================================================================
+--								 COMMON FUNCTIONS
+--===================================================================================
+--calculate menu.tween and boxcursor.tween (copy from external/script/main.lua)
+local function f_tweenStep(val, target, factor)
+	if not factor or factor <= 0 then
+		return target
 	end
-	return animDat
-end
---;===========================================================================================
---; 									SHOP LOGIC
---;===========================================================================================
-local txt_shopTitle = main.f_createTextImg(motif.shop_info, 'title', {defsc = motif.defaultShop})
-local txt_shopCategory = main.f_createTextImg(motif.shop_info, 'category', {defsc = motif.defaultShop})
-local txt_shopItemInfo = main.f_createTextImg(motif.shop_info, 'info', {defsc = motif.defaultShop})
-
-local txt_shopCurrency = main.f_createTextImg(motif.shop_info, 'currency', {defsc = motif.defaultShop})
-local txt_shopPriceInfo = main.f_createTextImg(motif.shop_info, 'price', {defsc = motif.defaultShop})
-
-local txt_shopBalanceOld = main.f_createTextImg(motif.shop_info, 'balance_old', {defsc = motif.defaultShop})
-local txt_shopBalanceNew = main.f_createTextImg(motif.shop_info, 'balance_new', {defsc = motif.defaultShop})
-
-local txt_shopPurchaseQuestion = main.f_createTextImg(motif.shop_info, 'purchase_question', {defsc = motif.defaultShop})
-local txt_shopPurchaseInfo = main.f_createTextImg(motif.shop_info, 'purchase_info', {defsc = motif.defaultShop})
-local txt_shopPurchaseYes = main.f_createTextImg(motif.shop_info, 'purchase_yes', {defsc = motif.defaultShop})
-local txt_shopPurchaseNo = main.f_createTextImg(motif.shop_info, 'purchase_no', {defsc = motif.defaultShop})
-
-local rect_boxcursor = rect:create({})
-local rect_boxbg = rect:create({})
-local t_menuWindowShop = main.f_menuWindow(motif.shop_info)
-
-local overlay_purchase = main.f_createOverlay(motif.shop_info, 'purchase_overlay')
-local rect_purchaseboxcursor = rect:create({})
-
---common menu calculations
-local function f_menuCommonCalc(t, item, cursorPosY, moveTxt, section, keyPrev, keyNext)
-	local startItem = 1
-	for _, v in ipairs(t) do
-		if v.itemname ~= 'empty' then
-			break
-		end
-		startItem = startItem + 1
+	local newVal = val + (target - val) * math.min(factor, 1)
+	if math.abs(newVal - target) < 1 then
+		return target
 	end
-	if main.f_input(main.t_players, keyNext) then
-		sndPlay(motif.files.snd_data, motif[section].cursor_move_snd[1], motif[section].cursor_move_snd[2])
-		while true do
-			item = item + 1
-			if cursorPosY < motif[section].menu_window_visibleitems then
-				cursorPosY = cursorPosY + 1
-			end
-			if t[item] == nil or t[item].itemname ~= 'empty' then
-				break
-			end
-		end
-	elseif main.f_input(main.t_players, keyPrev) then
-		sndPlay(motif.files.snd_data, motif[section].cursor_move_snd[1], motif[section].cursor_move_snd[2])
-		while true do
-			item = item - 1
-			if cursorPosY > startItem then
-				cursorPosY = cursorPosY - 1
-			end
-			if t[item] == nil or t[item].itemname ~= 'empty' then
-				break
-			end
-		end
-	end
-	if item > #t or (item == 1 and t[item].itemname == 'empty') then
-		item = 1
-		while true do
-			if t[item].itemname ~= 'empty' or item >= #t then
-				break
-			else
-				item = item + 1
-			end
-		end
-		cursorPosY = item
-	elseif item < 1 then
-		item = #t
-		while true do
-			if t[item].itemname ~= 'empty' or item <= 1 then
-				break
-			else
-				item = item - 1
-			end
-		end
-		if item > motif[section].menu_window_visibleitems then
-			cursorPosY = motif[section].menu_window_visibleitems
-		else
-			cursorPosY = item
-		end
-	end
-	if cursorPosY >= motif[section].menu_window_visibleitems then
-		moveTxt = (item - motif[section].menu_window_visibleitems) * motif[section].menu_item_spacing[2]
-	elseif cursorPosY <= startItem then
-		moveTxt = (item - startItem) * motif[section].menu_item_spacing[2]
-	end
-	return cursorPosY, moveTxt, item
+	return newVal
 end
 
-local function f_saveStats()
-	if main.debugLog then main.f_printTable(stats, 'debug/t_stats.txt') end --Print Debug Info
-	main.f_fileWrite(main.flags['-stats'], json.encode(stats, {indent = 2})) --Write in stats.json file
+--function for navigating into subtables
+local function f_readSubtable(tDat, subt)
+	if not subt or subt == "" then return tDat end
+	local t = tDat
+	for part in subt:gmatch("[^%.]+") do
+		t = t and t[part]
+		if not t then return nil end
+	end
+	return t
 end
 
-if stats.playerCurrency == nil then stats.playerCurrency = 0 end --Create space to save money
-stats.playerCurrencyOLD = stats.playerCurrency --Save player currency backup to do calculations
-local function f_earnMoney()
-	if stats.playerCurrencyOLD == -1 then stats.playerCurrencyOLD = stats.playerCurrency end
-	stats.playerCurrency = stats.playerCurrency + motif.reward_info.victory_reward
-	if firstattack() then stats.playerCurrency = stats.playerCurrency + motif.reward_info.firstattack_reward end
-	if winspecial() then stats.playerCurrency = stats.playerCurrency + motif.reward_info.specialko_reward end
-	if winhyper() then stats.playerCurrency = stats.playerCurrency + motif.reward_info.superko_reward end
-	if winperfect() then stats.playerCurrency = stats.playerCurrency + motif.reward_info.perfectko_reward end
-	f_saveStats()
-end
-
-function start.f_saveData()
-	if main.debugLog then main.f_printTable(t_gameStats, 'debug/t_gameStats.txt') end
-	if winnerteam() == -1 then
-		return
+--Set thousand format to a number value
+local function f_setThousandsFormat(num)
+	local txt = tostring(num)
+	txt = txt:reverse():gsub("(...)", "%1."):reverse()
+	if txt:sub(1, 1) == "." then
+		txt = txt:sub(2)
 	end
-	--win/lose matches count, total score
-	if winnerteam() == 1 then
-		f_earnMoney() --Win money
-		start.t_savedData.win[1] = start.t_savedData.win[1] + 1
-		start.t_savedData.lose[2] = start.t_savedData.lose[2] + 1
-		start.t_savedData.score.total[1] = t_gameStats.p1score
-	else --if winnerteam() == 2 then
-		start.t_savedData.win[2] = start.t_savedData.win[2] + 1
-		start.t_savedData.lose[1] = start.t_savedData.lose[1] + 1
-		if main.resetScore and matchno() ~= -1 then --loosing sets score for the next match to lose count
-			start.t_savedData.score.total[1] = start.t_savedData.lose[1]
-			start.t_savedData.debugflag[1] = false
-		else
-			start.t_savedData.score.total[1] = t_gameStats.p1score
-		end
-	end
-	start.t_savedData.score.total[2] = t_gameStats.p2score
-	--total time
-	start.t_savedData.time.total = start.t_savedData.time.total + t_gameStats.matchTime
-	--time in each round
-	table.insert(start.t_savedData.time.matches, t_gameStats.timerRounds)
-	--score in each round
-	table.insert(start.t_savedData.score.matches, t_gameStats.scoreRounds)
-	--max consecutive wins
-	for side = 1, 2 do
-		if getConsecutiveWins(side) > start.t_savedData.consecutive[side] then
-			start.t_savedData.consecutive[side] = getConsecutiveWins(side)
-		end
-	end
-	if main.debugLog then main.f_printTable(start.t_savedData, 'debug/t_savedData.txt') end
-end
-
-if stats.shopstock == nil then stats.shopstock = {} end --Create space to sell shop items
-local function f_setShopStock(t)
-	for item=1, #t do
-	--Add Category to shop stock
-		local category = t.category --t[item].category
-		if stats.shopstock[category] == nil then stats.shopstock[category] = {} end
-	--Add item to shop stock
-		local itemname = t[item].id
-		if stats.shopstock[category][itemname] == nil then stats.shopstock[category][itemname] = true end
-	end
-end
-
---asserts shop unlock conditions
-local function f_unlockShop(permanent)
-	for group, t in pairs(main.t_unlockLua) do
-		local t_del = {}
-		for k, v in pairs(t) do
-			local bool = assert(loadstring('return ' .. v))()
-			if type(bool) == 'boolean' then
-				if bool and (permanent or group == 'modes' or group == 'shop') then
-					table.insert(t_del, k)
-				end
-			else
-				panicError("\nmain.t_unlockLua." .. group .. "[" .. k .. "]\n" .. "Following Lua code does not return boolean value: \n" .. v .. "\n")
-			end
-		end
-		--clean lua code that already returned true
-		for k, v in ipairs(t_del) do
-			t[v] = nil
-		end
-	end
-	if main.debugLog then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
+	return txt
 end
 
 --Check if a table is empty
@@ -592,7 +87,7 @@ local function f_isEmpty(t)
 end
 
 --Reindex numerically
-local function reindexTableInPlace(t)
+local function f_reindexTableInPlace(t)
 	local newIndex = 1
 	for i = 1, #t do
 		if t[i] ~= nil then
@@ -619,7 +114,291 @@ local function f_cleanTable(t)
 		end
 	end
 --Reindex after clean the table, to avoid discontinuous items that cause issues when iterating over table
-	reindexTableInPlace(t)
+	f_reindexTableInPlace(t)
+end
+
+--shortcut for updating text
+local function f_updateTextImg(t, sect, textData)
+	local section = f_readSubtable(t, sect)
+	if not section then return nil end
+	textImgSetFont(textData, motifShop.fontData[section.font[1]] or -1)
+	textImgSetBank(textData, section.font[2] or 0)
+	textImgSetAlign(textData, section.font[3] or 0)
+	textImgSetColor(textData, section.font[4] or 255, section.font[5] or 255, section.font[6] or 255, section.font[7] or 255)
+	if section.localcoord ~= nil then --Need to be ALWAYS BEFORE textImgSetPos() to draw the text
+		textImgSetLocalcoord(textData, section.localcoord[1], section.localcoord[2])
+	else
+		textImgSetLocalcoord(textData, motifShop.info.localcoord[1], motifShop.info.localcoord[2])
+	end
+	if section.offset ~= nil then textImgSetPos(textData, section.offset[1] or 0, section.offset[2] or 0) end
+	if section.scale ~= nil then textImgSetScale(textData, section.scale[1] or 1.0, section.scale[2] or 1.0) end
+	textImgSetXShear(textData, section.xshear or 0)
+	textImgSetAngle(textData, section.angle or 0)
+	textImgSetXAngle(textData, section.xangle or 0)
+	textImgSetYAngle(textData, section.yangle or 0)
+	textImgSetProjection(textData, section.projection or "orthographic")
+	textImgSetFocalLength(textData, section.focallength or 2048)
+	textImgSetText(textData, section.text or "")
+	textImgSetLayerno(textData, section.layerno or 0)
+	if section.window ~= nil then
+		textImgSetWindow(textData, section.window[1], section.window[2], section.window[3], section.window[4])
+	else
+		textImgSetWindow(textData, 0, 0, motifShop.info.localcoord[1], motifShop.info.localcoord[2])
+	end
+	--textImgSetTextDelay(textData, section.delay or 0)
+	--if section.spacing ~= nil then textImgSetTextSpacing(textData, section.spacing[1] or 0, section.spacing[2] or 0) end
+	--if section.textwrap ~= nil then textImgSetTextWrap(textData, true) end
+	return textData
+end
+
+--shortcut for creating new text
+local function f_createTextImg(t, sect)
+	local textData = textImgNew()
+	f_updateTextImg(t, sect, textData)
+	return textData
+end
+
+--[[Wrap a long string. Source: http://lua-users.org/wiki/StringRecipes
+str: string to wrap
+limit: maximum line length
+indent: regular indentation
+indent1: indentation of first line
+]]
+local function f_wrap(str, limit, indent, indent1)
+	indent = indent or ''
+	indent1 = indent1 or indent
+	limit = limit or 72
+	local here = 1 - #indent1
+	return indent1 .. str:gsub("(%s+)()(%S+)()",
+	function(sp, st, word, fi)
+		if fi - here > limit then
+			here = st - #indent
+			return '\n' .. indent .. word
+		end
+	end)
+end
+
+--[[Draw string letter by letter + wrap lines:
+textData: text data
+str: string (text to draw)
+counter: external counter (values should be increased each frame by 1 starting from 1)
+x: first line X position
+y: first line Y position
+scaleX: scale X axis
+scaleY: scale Y axis
+spacing: spacing between lines (rendering Y position increasement for each line)
+delay (optional): ticks (frames) delay between each letter is rendered, defaults to 0 (all text rendered immediately)
+limit (optional): maximum line length (string wraps when reached), if omitted line wraps only if string contains '\n'
+maxLimit (optional): maximum number of lines allowed before truncating
+]]
+local function f_textRender(textData, str, counter, x, y, scaleX, scaleY, spacing, delay, limit, maxlimit)
+	local delay = delay or 0
+	local limit = limit or -1
+	local maxLimit = maxlimit or 0 --0= No Max Limits
+	str = tostring(str)
+--Process line breaks and wrapping if necessary
+	if limit == -1 then
+		str = str:gsub('\\n', '\n')
+	else
+		str = str:gsub('%s*\\n%s*', ' ')
+		if math.floor(#str / limit) + 1 > 1 then
+			str = f_wrap(str, limit, indent, indent1)
+		end
+	end
+--Determine how much text to display
+	local subEnd = math.floor(#str - (#str - counter / delay))
+	local t = {}
+	for line in str:gmatch('([^\r\n]*)[\r\n]?') do
+		t[#t + 1] = line
+	end
+	t[#t] = nil --get rid of the last blank line
+--If maxLimit > 0 and we have exceeded that limit, replace the last line with "..."
+	if maxLimit > 0 and #t > maxLimit then
+		for i=1, maxLimit - 1 do
+		--draw the first lines normally
+			local line = t[i]
+			if subEnd < #str then
+				local length = #line
+				local totalLength = 0
+				for j=1, i-1 do
+					totalLength = totalLength + #t[j] + 1
+				end
+				if subEnd < totalLength + length then
+					line = line:sub(1, subEnd - totalLength)
+				end
+			end
+			textImgSetText(textData, line)
+			textImgSetPos(textData, x, y + spacing * (i - 1))
+			textImgSetScale(textData, scaleX, scaleY)
+			textImgDraw(textData)
+		end
+	--replace the last allowed line with "..."
+		textImgSetText(textData, "...")
+		textImgSetPos(textData, x, y + spacing * (maxLimit - 1))
+		textImgSetScale(textData, scaleX, scaleY)
+		textImgDraw(textData)
+		--return lengthCnt
+	else
+		local lengthCnt = 0
+		for i=1, #t do
+			if subEnd < #str then
+				local length = #t[i]
+				if i > 1 and i <= #t then
+					length = length + 1
+				end
+				lengthCnt = lengthCnt + length
+				if subEnd < lengthCnt then
+					t[i] = t[i]:sub(0, subEnd - lengthCnt)
+				end
+			end
+			textImgSetText(textData, t[i])
+			textImgSetPos(textData, x, y + spacing * (i - 1))
+			textImgSetScale(textData, scaleX, scaleY)
+			textImgDraw(textData)
+		end
+		return lengthCnt
+	end
+end
+
+--shortcut for updating animation/sprite
+local function f_updateAnim(section, animData)
+	animSetLocalcoord(animData, motifShop.info.localcoord[1], motifShop.info.localcoord[2]) --Need to be ALWAYS BEFORE animSetPos() to draw the animation/sprite
+	if section.scale ~= nil then animSetScale(animData, section.scale[1] or 1.0, section.scale[2] or 1.0) end
+	animSetFacing(animData, section.facing or 0)
+	animSetAngle(animData, section.angle or 0)
+	animSetXAngle(animData, section.xangle or 0)
+	animSetYAngle(animData, section.yangle or 0)
+	animSetFocalLength(animData, section.focallength or 2048)
+	animSetProjection(animData, section.projection or "orthographic")
+	animSetLayerno(animData, section.layerno or 0)
+	if section.window then
+		animSetWindow(animData, section.window[1], section.window[2], section.window[3], section.window[4])
+	else
+		animSetWindow(animData, 0, 0, motifShop.info.localcoord[1], motifShop.info.localcoord[2])
+	end
+	return animData
+end
+
+--shortcut for creating new animation/sprite
+local function f_createAnim(t, sect, moduleSff, moduleActions)
+	local section = f_readSubtable(t, sect)
+	if not section then return nil end
+	local sffDat = nil
+	local airDat = nil
+	local actionData = "-1,0, 0,0, -1" --create dummy data
+--Use [Files] "spr = " data from system.def
+	if not moduleSff then
+		sffDat = motif.Sff
+--Use "events.spr" data from module shopMotifPath, instead system.def file
+	else
+		sffDat = motifShop.sprData
+	end
+--Use Animations/Actions data from system.def file
+	if (moduleActions and motifShop.airData == nil) or not moduleActions then
+		airDat = motif.AnimTable
+--Use "events.air" data from module shopMotifPath, instead system.def file
+	else
+		airDat = motifShop.airData
+	end
+--Load Animation Data logic by jay_ts & m14
+	if section.anim then
+		local actionNo = tonumber(section.anim)
+		if actionNo then
+			if airDat[actionNo] then
+				actionNo = airDat[actionNo]
+				actionData = actionNo or actionData
+			end
+		end
+--Load Sprite Data logic by jay_ts & m14
+	elseif section.spr then
+		local group, item = section.spr[1], section.spr[2]
+		group = group or -1
+		item = item or 0
+		actionData = string.format("%s,%s, 0,0, -1", group, item)
+	end
+--Create Data
+	local animData = animNew(sffDat, actionData)
+	f_updateAnim(section, animData)
+	return animData
+end
+
+--Setup function to use for preloaded data
+local function f_getPreloadedData(dataType, id, group, index)
+	if dataType == 'char' then
+		animDat = animGetPreloadedCharData(id, group, index)
+	elseif dataType == 'stage' then
+		animDat = animGetPreloadedStageData(id, group, index)
+	end
+	return animDat
+end
+
+--shortcut for updating rectangle
+local function f_updateRect(t, sect, rectData)
+	local section = f_readSubtable(t, sect)
+	if not section then return nil end
+	if section.localcoord ~= nil then
+		rectSetLocalcoord(rectData, section.localcoord[1], section.localcoord[2])
+	else
+		rectSetLocalcoord(rectData, motifShop.info.localcoord[1], motifShop.info.localcoord[2])
+	end
+	rectSetColor(rectData, section.col[1] or 0, section.col[2] or 0, section.col[3] or 0)
+	if section.alpha ~= nil then
+		rectSetAlpha(rectData, section.alpha[1] or 0, section.alpha[2] or 128)
+	end
+	if section.pulse ~= nil then
+		rectSetAlphaPulse(rectData, section.pulse[1] or 30, section.pulse[2] or 20, section.pulse[3] or 30)
+	end
+	if section.coords ~= nil then
+		rectSetWindow(rectData, section.coords[1], section.coords[2], section.coords[3], section.coords[4])
+	end
+	rectSetLayerno(rectData, section.layerno or 0)
+	return rectData
+end
+
+--shortcut for creating new rectangle
+local function f_createRect(t, sect)
+	local rectData = rectNew()
+	f_updateRect(t, sect, rectData)
+	return rectData
+end
+--===================================================================================
+--								SHOP DATA GENERATION
+--===================================================================================
+motifShop = loadIni(shopMotifPath) --Load Motif/Screenpack Data
+if gameOption('Debug.DumpLuaTables') then main.f_printTable(motifShop, "debug/shopMenumotifShop.txt") end
+
+local file = io.open(shopSavePath, "r") --Check that file exists
+if not file then
+	file = io.open(shopSavePath, "w") --Create file
+	file:write("{}")
+	file:close() --Close file in writting mode
+else
+	file:close() --Close file in reading mode
+end
+--Data loading from shopSavePath
+shopDat = jsonDecode(shopSavePath)
+
+--Data saving to shopSavePath
+local function f_saveShopData()
+	if gameOption('Debug.DumpLuaTables') then main.f_printTable(shopDat, 'debug/t_shopDat.txt') end --Print Debug Info
+	jsonEncode(shopDat, shopSavePath) --Write in shopSavePath file
+end
+
+--Refresh t_unlockLua table
+local function f_refreshUnlockDat()
+	if gameOption('Debug.DumpLuaTables') then main.f_printTable(main.t_unlockLua, 'debug/t_unlockLua.txt') end
+end
+
+if shopDat.shopstock == nil then shopDat.shopstock = {} end --Create space to sell shop items
+local function f_setShopStock(t)
+	for item=1, #t do
+	--Add Category to shop stock
+		local category = t.category --t[item].category
+		if shopDat.shopstock[category] == nil then shopDat.shopstock[category] = {} end
+	--Add item to shop stock
+		local itemname = t[item].id
+		if shopDat.shopstock[category][itemname] == nil then shopDat.shopstock[category][itemname] = true end
+	end
 end
 
 --Store characters "name" content from .def files.
@@ -654,57 +433,260 @@ end
 
 local function f_loadCharPreviewData(charNo)
 --anim data
-	for _, v in pairs({{motif.shop_info.character_preview_anim, -1}, motif.shop_info.character_preview_spr}) do
+	for _, v in pairs({{motifShop.shop_info.character.preview.anim, -1}, motifShop.shop_info.character.preview.spr}) do
 		if #v > 0 and v[1] ~= -1 then
-			main.t_selChars[charNo+1].shopAnim_data = f_getPreloadedData('char', charNo, v[1], v[2])
-			if main.t_selChars[charNo+1].shopAnim_data ~= nil then
-				local xscale = start.f_getCharData(charNo).portrait_scale / (main.SP_Viewport43[3] / main.SP_Localcoord[1])
+			main.t_selChars[charNo + 1].shopAnim_data = f_getPreloadedData('char', charNo, v[1], v[2])
+			if main.t_selChars[charNo + 1].shopAnim_data ~= nil then
+				local charData = start.f_getCharData(charNo)
+				local xscale = start.f_getCharData(charNo).portraitscale * motif.info.localcoord[1] / start.f_getCharData(charNo).localcoord
 				local yscale = xscale
 				if v[2] == -1 then
-					xscale = xscale * (start.f_getCharData(charNo).cns_scale[1] or 1)
-					yscale = yscale * (start.f_getCharData(charNo).cns_scale[2] or 1)
+					xscale = xscale * (charData.cns_scale[1] or 1)
+					yscale = yscale * (charData.cns_scale[2] or 1)
 				end
+				animSetLocalcoord(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motif.info.localcoord[1],
+					motif.info.localcoord[2]
+				)
+				animSetLayerno(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.layerno
+				)
+			--[[
+				animSetVelocity(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.velocity[1],
+					motifShop.shop_info.character.preview.velocity[2]
+				)
+				animSetMaxDist(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.maxdist[1],
+					motifShop.shop_info.character.preview.maxdist[2]
+				)
+				animSetAccel(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.accel[1],
+					motifShop.shop_info.character.preview.accel[2]
+				)
+				animSetFriction(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.friction[1],
+					motifShop.shop_info.character.preview.friction[2]
+				)
+			]]
+				animSetPos(main.t_selChars[charNo + 1].shopAnim_data, 0, 0)
 				animSetScale(
-					main.t_selChars[charNo+1].shopAnim_data,
-					motif.shop_info.character_preview_scale[1] * xscale,
-					motif.shop_info.character_preview_scale[2] * yscale,
-					false
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.scale[1] * xscale,
+					motifShop.shop_info.character.preview.scale[2] * yscale
 				)
+				animSetFacing(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.facing
+				)
+			--[[
+				animSetXShear(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.xshear
+				)
+				animSetAngle(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.angle
+				)
+				animSetXAngle(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.xangle
+				)
+				animSetYAngle(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.yangle
+				)
+				animSetProjection(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.projection
+				)
+				animSetFocalLength(
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.focallength
+				)
+			]]
 				animSetWindow(
-					main.t_selChars[charNo+1].shopAnim_data,
-					motif.shop_info.character_preview_window[1],
-					motif.shop_info.character_preview_window[2],
-					motif.shop_info.character_preview_window[3],
-					motif.shop_info.character_preview_window[4]
+					main.t_selChars[charNo + 1].shopAnim_data,
+					motifShop.shop_info.character.preview.window[1],
+					motifShop.shop_info.character.preview.window[2],
+					motifShop.shop_info.character.preview.window[3],
+					motifShop.shop_info.character.preview.window[4]
 				)
-				animUpdate(main.t_selChars[charNo+1].shopAnim_data)
+				animUpdate(main.t_selChars[charNo + 1].shopAnim_data)
 				break
 			end
 		end
 	end
-	if main.t_selChars[charNo+1].shopAnim_data == nil then
-		main.t_selChars[charNo+1].shopAnim_data = animNew(main.dummySff, '-1,0, 0,0, -1')
+	if main.t_selChars[charNo + 1].shopAnim_data == nil then
+		main.t_selChars[charNo + 1].shopAnim_data = animNew(main.dummySff, '-1,0, 0,0, -1')
+	end
+end
+
+local function f_loadCharColorPreviewData(charNo, color)
+--anim data
+	for _, v in pairs({{motifShop.shop_info.character.preview.anim, -1}, motifShop.shop_info.character.preview.spr}) do
+		if #v > 0 and v[1] ~= -1 then
+			if main.t_selChars[charNo + 1].shopPalAnim_data == nil then
+				main.t_selChars[charNo + 1].shopPalAnim_data = {}
+			end
+			main.t_selChars[charNo + 1].shopPalAnim_data[color] = f_getPreloadedData('char', charNo, v[1], v[2])
+			if main.t_selChars[charNo + 1].shopPalAnim_data[color] ~= nil then
+				local charData = start.f_getCharData(charNo)
+				local xscale = start.f_getCharData(charNo).portraitscale * motif.info.localcoord[1] / start.f_getCharData(charNo).localcoord
+				local yscale = xscale
+				if v[2] == -1 then
+					xscale = xscale * (charData.cns_scale[1] or 1)
+					yscale = yscale * (charData.cns_scale[2] or 1)
+				end
+				animSetLocalcoord(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motif.info.localcoord[1],
+					motif.info.localcoord[2]
+				)
+				animSetLayerno(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.layerno
+				)
+			--[[
+				animSetVelocity(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.velocity[1],
+					motifShop.shop_info.character.preview.velocity[2]
+				)
+				animSetMaxDist(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.maxdist[1],
+					motifShop.shop_info.character.preview.maxdist[2]
+				)
+				animSetAccel(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.accel[1],
+					motifShop.shop_info.character.preview.accel[2]
+				)
+				animSetFriction(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.friction[1],
+					motifShop.shop_info.character.preview.friction[2]
+				)
+			]]
+				animSetPos(main.t_selChars[charNo + 1].shopPalAnim_data[color], 0, 0)
+				animSetScale(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.scale[1] * xscale,
+					motifShop.shop_info.character.preview.scale[2] * yscale
+				)
+				animSetFacing(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.facing
+				)
+			--[[
+				animSetXShear(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.xshear
+				)
+				animSetAngle(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.angle
+				)
+				animSetXAngle(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.xangle
+				)
+				animSetYAngle(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.yangle
+				)
+				animSetProjection(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.projection
+				)
+				animSetFocalLength(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.focallength
+				)
+			]]
+				animSetWindow(
+					main.t_selChars[charNo + 1].shopPalAnim_data[color],
+					motifShop.shop_info.character.preview.window[1],
+					motifShop.shop_info.character.preview.window[2],
+					motifShop.shop_info.character.preview.window[3],
+					motifShop.shop_info.character.preview.window[4]
+				)
+			--Apply color palette
+				main.t_selChars[charNo + 1].shopPalAnim_data[color] = start.loadPalettes(main.t_selChars[charNo + 1].shopPalAnim_data[color], main.t_selChars[charNo + 1].char_ref, color)
+				animUpdate(main.t_selChars[charNo + 1].shopPalAnim_data[color])
+				break
+			end
+		end
+	end
+	if main.t_selChars[charNo + 1].shopPalAnim_data[color] == nil then
+		main.t_selChars[charNo + 1].shopPalAnim_data[color] = animNew(main.dummySff, '-1,0, 0,0, -1')
 	end
 end
 
 local function f_loadStagePreviewData(stageNo)
 --anim data
-	for _, v in pairs({{motif.shop_info.stage_preview_anim, -1}, motif.shop_info.stage_preview_spr}) do
-		if #v > 0 and v[1] ~= -1 then
+	for _, v in pairs({{motifShop.shop_info.stage.preview.anim, -1}, motifShop.shop_info.stage.preview.spr}) do
+		if v ~= nil and #v > 0 and v[1] ~= -1 and v[1] ~= nil then
 			main.t_selStages[stageNo].shopAnim_data = f_getPreloadedData('stage', stageNo, v[1], v[2])
 			if main.t_selStages[stageNo].shopAnim_data ~= nil then
+				animSetLocalcoord(
+					main.t_selStages[stageNo].shopAnim_data,
+					motif.info.localcoord[1],
+					motif.info.localcoord[2]
+				)
+				animSetLayerno(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.layerno
+				)
+				animSetPos(main.t_selStages[stageNo].shopAnim_data, 0, 0)
 				animSetScale(
 					main.t_selStages[stageNo].shopAnim_data,
-					motif.shop_info.stage_preview_scale[1] * main.t_selStages[stageNo].portrait_scale / (main.SP_Viewport43[3] / main.SP_Localcoord[1]),
-					motif.shop_info.stage_preview_scale[2] * main.t_selStages[stageNo].portrait_scale / (main.SP_Viewport43[3] / main.SP_Localcoord[1]),
-					false
+					motifShop.shop_info.stage.preview.scale[1] * main.t_selStages[stageNo].portraitscale * motif.info.localcoord[1] / main.t_selStages[stageNo].localcoord,
+					motifShop.shop_info.stage.preview.scale[2] * main.t_selStages[stageNo].portraitscale * motif.info.localcoord[1] / main.t_selStages[stageNo].localcoord
 				)
+				animSetFacing(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.facing
+				)
+			--[[
+				animSetXShear(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.xshear
+				)
+				animSetAngle(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.angle
+				)
+				animSetXAngle(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.xangle
+				)
+				animSetYAngle(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.yangle
+				)
+				animSetProjection(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.projection
+				)
+				animSetFocalLength(
+					main.t_selStages[stageNo].shopAnim_data,
+					motifShop.shop_info.stage.preview.focallength
+				)
+			]]
 				animSetWindow(
 					main.t_selStages[stageNo].shopAnim_data,
-					motif.shop_info.stage_preview_window[1],
-					motif.shop_info.stage_preview_window[2],
-					motif.shop_info.stage_preview_window[3],
-					motif.shop_info.stage_preview_window[4]
+					motifShop.shop_info.stage.preview.window[1],
+					motifShop.shop_info.stage.preview.window[2],
+					motifShop.shop_info.stage.preview.window[3],
+					motifShop.shop_info.stage.preview.window[4]
 				)
 				animUpdate(main.t_selStages[stageNo].shopAnim_data)
 				break
@@ -717,11 +699,44 @@ local function f_loadStagePreviewData(stageNo)
 end
 
 local function f_loadShop() --Load def file which contains shop items data
+--Set Default Data
+	local shopItemsDef = nil
+	motifShop.sprData = sffNew() --Create blank sprite data
+	motifShop.sndData = motif.Snd --Use default system.def sound data
+--If events files section is detected, replace Default Data with Custom Data
+	if motifShop.files ~= nil then
+	--Load .def file with Shop Items
+		if motifShop.files.def ~= nil and main.f_fileExists(motifShop.files.def) then
+			shopItemsDef = motifShop.files.def
+		end
+	--Load .sff file with Shop Preview Items
+		if motifShop.files.sff ~= nil and main.f_fileExists(motifShop.files.sff) then
+			motifShop.sprData = sffNew(motifShop.files.sff)
+		end
+	--Load .air file with Shop Menu Animations
+		if motifShop.files.air ~= nil and main.f_fileExists(motifShop.files.air) then
+			motifShop.airData = loadAnimTable(motifShop.files.air, motifShop.sprData)
+		end
+	--Load .snd file with Shop Menu Sounds
+		if motifShop.files.snd ~= nil and main.f_fileExists(motifShop.files.snd) then
+			motifShop.sndData = sndNew(motifShop.files.snd)
+		end
+	end
+	motifShop.fontData = motif.Fnt --Use default system.def font data
+--If shop fonts section is detected, replace Default Data with Custom Data
+	if motifShop.fonts ~= nil then
+		local i = 1
+		while motifShop.fonts["font"..i] ~= nil do
+			motifShop.fontData[i] = fontNew(motifShop.fonts["font"..i])
+			i = i + 1
+		end
+	end
+--Load Data
 	t_shopMenu = {}
 	local t_tempShop = {}
 	local sectionName = nil
 	local section = 0
-	local content = main.f_fileRead(motif.shop_info.items_def)
+	local content = main.f_fileRead(shopItemsDef)
 	content = content:gsub('([^\r\n;]*)%s*;[^\r\n]*', '%1')
 	content = content:gsub('\n%s*\n', '\n')
 	for line in content:gmatch('[^\r\n]+') do
@@ -739,13 +754,13 @@ local function f_loadShop() --Load def file which contains shop items data
 					table.insert(t_tempShop[section],
 						{
 							id = value,
-							name = motif.shop_info.info_text_unknown,
+							name = motifShop.shop_info.info.unknown,
 							info = nil,
-							price = motif.shop_info.price_default,
+							price = motifShop.shop_info.price.default,
 							spr = {},
-							offset = motif.shop_info.custom_preview_offset,
-							scale = motif.shop_info.custom_preview_scale,
-							window = motif.shop_info.custom_preview_window,
+							offset = motifShop.shop_info.custom.preview.offset,
+							scale = motifShop.shop_info.custom.preview.scale,
+							window = motifShop.shop_info.custom.preview.window,
 							unlock = 'true'
 						}
 					)
@@ -764,40 +779,43 @@ local function f_loadShop() --Load def file which contains shop items data
 			end
 		end
 	end
-	if main.debugLog then main.f_printTable(t_tempShop, 'debug/t_tempShop.txt') end
+	if gameOption('Debug.DumpLuaTables') then main.f_printTable(t_tempShop, 'debug/t_tempShop.txt') end
 --Check that the added items exist to add them to the shop menu 
 	for categoryNo=1, #t_tempShop do
 		if t_tempShop[categoryNo].category ~= nil then t_shopMenu[categoryNo] = {} end
 	--Filter Chars/Costumes
-		if t_tempShop[categoryNo].category == "Characters" or t_tempShop[categoryNo].category == "Chars"
-		or t_tempShop[categoryNo].category == "chars" or t_tempShop[categoryNo].category == "characters"
-		or t_tempShop[categoryNo].category == "CHARS" or t_tempShop[categoryNo].category == "CHARACTERS"
-		or t_tempShop[categoryNo].category == "Costumes" or t_tempShop[categoryNo].category == "costumes"
-		or t_tempShop[categoryNo].category == "COSTUMES" then
+		if t_tempShop[categoryNo].category:lower() == "chars" or t_tempShop[categoryNo].category:lower() == "costumes"
+		or t_tempShop[categoryNo].category:lower() == "characters" then
 			for itemNo=1, #t_tempShop[categoryNo] do
 				local pathID = t_tempShop[categoryNo][itemNo].id:lower()
 				if main.t_charDef[pathID] ~= nil then --If char has been added via select.def, add to the shop
-					t_shopMenu[categoryNo][itemNo] = {data = text:create({window = t_menuWindowShop})} --Create text data
+					t_shopMenu[categoryNo][itemNo] = {data = textImgNew()} --Create text data
 					t_shopMenu[categoryNo]['category'] = t_tempShop[categoryNo].category
-					t_shopMenu[categoryNo]['info'] = motif.shop_info.info_text_purchase..' '..t_tempShop[categoryNo].category
+					t_shopMenu[categoryNo]['info'] = motifShop.shop_info.info.purchase..' '..t_tempShop[categoryNo].category
 					f_loadCharPreviewData(main.t_charDef[pathID])
-					f_readCharName(main.t_charDef[pathID]+1)
-					local baseName = main.t_selChars[main.t_charDef[pathID]+1].basename
-					local displayName = main.t_selChars[main.t_charDef[pathID]+1].name
+					f_readCharName(main.t_charDef[pathID] + 1)
+					local baseName = main.t_selChars[main.t_charDef[pathID] + 1].basename
+					local displayName = main.t_selChars[main.t_charDef[pathID] + 1].name
 					local infoData = t_tempShop[categoryNo][itemNo].info
 					if baseName then
 						t_shopMenu[categoryNo][itemNo]['itemname'] = baseName
+						t_shopMenu[categoryNo][itemNo]['displayname'] = baseName
+						t_shopMenu[categoryNo][itemNo]['displaynameunlocked'] = baseName
+						t_shopMenu[categoryNo][itemNo]['vardisplay'] = ""
 						if infoData ~= nil then
 							t_shopMenu[categoryNo][itemNo]['info'] = infoData
 						else
-							t_shopMenu[categoryNo][itemNo]['info'] = motif.shop_info.info_text_unlock..' '..baseName
+							t_shopMenu[categoryNo][itemNo]['info'] = motifShop.shop_info.info.unlock..' '..baseName
 						end
 					else
 						t_shopMenu[categoryNo][itemNo]['itemname'] = displayName
+						t_shopMenu[categoryNo][itemNo]['displayname'] = displayName
+						t_shopMenu[categoryNo][itemNo]['displaynameunlocked'] = displayName
+						t_shopMenu[categoryNo][itemNo]['vardisplay'] = ""
 						if infoData ~= nil then
 							t_shopMenu[categoryNo][itemNo]['info'] = infoData
 						else
-							t_shopMenu[categoryNo][itemNo]['info'] = motif.shop_info.info_text_unlock..' '..displayName
+							t_shopMenu[categoryNo][itemNo]['info'] = motifShop.shop_info.info.unlock..' '..displayName
 						end
 					end
 					t_shopMenu[categoryNo][itemNo]['id'] = pathID
@@ -807,25 +825,76 @@ local function f_loadShop() --Load def file which contains shop items data
 					
 				end
 			end
+	--Filter Colors
+		elseif t_tempShop[categoryNo].category:lower() == "colors"
+		or t_tempShop[categoryNo].category:lower() == "palettes" then
+			for itemNo=1, #t_tempShop[categoryNo] do
+				local pathID = t_tempShop[categoryNo][itemNo].char:lower()
+				local color = tonumber(t_tempShop[categoryNo][itemNo].color)
+				if main.t_charDef[pathID] ~= nil then --If char has been added via select.def, add to the shop
+					t_shopMenu[categoryNo][itemNo] = {data = textImgNew()} --Create text data
+					t_shopMenu[categoryNo]['category'] = t_tempShop[categoryNo].category
+					t_shopMenu[categoryNo]['info'] = motifShop.shop_info.info.purchase..' '..t_tempShop[categoryNo].category
+					if color ~= nil and color > 0 then
+						f_loadCharColorPreviewData(main.t_charDef[pathID], color)
+					end
+					f_readCharName(main.t_charDef[pathID] + 1)
+					local baseName = main.t_selChars[main.t_charDef[pathID] + 1].basename
+					local displayName = main.t_selChars[main.t_charDef[pathID] + 1].name
+					local infoData = t_tempShop[categoryNo][itemNo].info
+					local colorPrefix = motifShop.shop_info.info.color..' '..t_tempShop[categoryNo][itemNo].color
+					if baseName then
+						t_shopMenu[categoryNo][itemNo]['itemname'] = baseName..' ('..colorPrefix..')'
+						t_shopMenu[categoryNo][itemNo]['displayname'] = baseName..' ('..colorPrefix..')'
+						t_shopMenu[categoryNo][itemNo]['displaynameunlocked'] = baseName..' ('..colorPrefix..')'
+						t_shopMenu[categoryNo][itemNo]['vardisplay'] = ""
+						if infoData ~= nil then
+							t_shopMenu[categoryNo][itemNo]['info'] = infoData
+						else
+							t_shopMenu[categoryNo][itemNo]['info'] = motifShop.shop_info.info.unlock..' '..colorPrefix..' for '..baseName
+						end
+					else
+						t_shopMenu[categoryNo][itemNo]['itemname'] = displayName..' ('..colorPrefix..')'
+						t_shopMenu[categoryNo][itemNo]['displayname'] = displayName..' ('..colorPrefix..')'
+						t_shopMenu[categoryNo][itemNo]['displaynameunlocked'] = displayName..' ('..colorPrefix..')'
+						t_shopMenu[categoryNo][itemNo]['vardisplay'] = ""
+						if infoData ~= nil then
+							t_shopMenu[categoryNo][itemNo]['info'] = infoData
+						else
+							t_shopMenu[categoryNo][itemNo]['info'] = motifShop.shop_info.info.unlock..' '..colorPrefix..' for '..displayName
+						end
+					end
+					t_shopMenu[categoryNo][itemNo]['id'] = t_tempShop[categoryNo][itemNo].id
+					t_shopMenu[categoryNo][itemNo]['char'] = t_tempShop[categoryNo][itemNo].char
+					t_shopMenu[categoryNo][itemNo]['color'] = t_tempShop[categoryNo][itemNo].color
+					t_shopMenu[categoryNo][itemNo]['price'] = tonumber(t_tempShop[categoryNo][itemNo].price)
+					t_shopMenu[categoryNo][itemNo]['unlock'] = t_tempShop[categoryNo][itemNo].unlock
+				else --Ignore items that are not recognized
+					
+				end
+			end
 	--Filter Stages
-		elseif t_tempShop[categoryNo].category == "Stages" or t_tempShop[categoryNo].category == "stages" or t_tempShop[categoryNo].category == "STAGES" then
+		elseif t_tempShop[categoryNo].category:lower() == "stages" then
 			for itemNo=1, #t_tempShop[categoryNo] do
 				local pathID = t_tempShop[categoryNo][itemNo].id:lower()
 				if main.t_stageDef[pathID] ~= nil then --If stage has been added via select.def, add to the shop
 					local infoData = t_tempShop[categoryNo][itemNo].info
-					t_shopMenu[categoryNo][itemNo] = {data = text:create({window = t_menuWindowShop})}
+					t_shopMenu[categoryNo][itemNo] = {data = textImgNew()}
 					t_shopMenu[categoryNo]['category'] = t_tempShop[categoryNo].category
-					t_shopMenu[categoryNo]['info'] = motif.shop_info.info_text_purchase..' '..t_tempShop[categoryNo].category
+					t_shopMenu[categoryNo]['info'] = motifShop.shop_info.info.purchase..' '..t_tempShop[categoryNo].category
 					f_loadStagePreviewData(main.t_stageDef[pathID])
 					if infoData ~= nil then
 						t_shopMenu[categoryNo][itemNo]['info'] = infoData
 					else
-						t_shopMenu[categoryNo][itemNo]['info'] = motif.shop_info.info_text_unlock..' '..main.t_selStages[main.t_stageDef[pathID]].name
+						t_shopMenu[categoryNo][itemNo]['info'] = motifShop.shop_info.info.unlock..' '..main.t_selStages[main.t_stageDef[pathID]].name
 					end
 					t_shopMenu[categoryNo][itemNo]['id'] = pathID
 					t_shopMenu[categoryNo][itemNo]['price'] = tonumber(t_tempShop[categoryNo][itemNo].price)
 					t_shopMenu[categoryNo][itemNo]['itemname'] = main.t_selStages[main.t_stageDef[pathID]].name
+					t_shopMenu[categoryNo][itemNo]['displayname'] = main.t_selStages[main.t_stageDef[pathID]].name
+					t_shopMenu[categoryNo][itemNo]['displaynameunlocked'] = main.t_selStages[main.t_stageDef[pathID]].name
 					t_shopMenu[categoryNo][itemNo]['unlock'] = t_tempShop[categoryNo][itemNo].unlock
+					t_shopMenu[categoryNo][itemNo]['vardisplay'] = ""
 				end
 			end
 	--Custom Stuff
@@ -834,18 +903,21 @@ local function f_loadShop() --Load def file which contains shop items data
 				local pathID = t_tempShop[categoryNo][itemNo].id:lower()
 				--if t_itemDef[pathID] ~= nil then --If item exists, add to the shop
 					local infoData = t_tempShop[categoryNo][itemNo].info
-					t_shopMenu[categoryNo][itemNo] = {data = text:create({window = t_menuWindowShop})}
+					t_shopMenu[categoryNo][itemNo] = {data = textImgNew()}
 					t_shopMenu[categoryNo]['category'] = t_tempShop[categoryNo].category
-					t_shopMenu[categoryNo]['info'] = motif.shop_info.info_text_purchase..' '..t_tempShop[categoryNo].category
+					t_shopMenu[categoryNo]['info'] = motifShop.shop_info.info.purchase..' '..t_tempShop[categoryNo].category
 					if infoData ~= nil then
 						t_shopMenu[categoryNo][itemNo]['info'] = infoData
 					else
-						t_shopMenu[categoryNo][itemNo]['info'] = motif.shop_info.info_text_unlock..' '..t_tempShop[categoryNo][itemNo].name
+						t_shopMenu[categoryNo][itemNo]['info'] = motifShop.shop_info.info.unlock..' '..t_tempShop[categoryNo][itemNo].name
 					end
 					t_shopMenu[categoryNo][itemNo]['id'] = pathID
 					t_shopMenu[categoryNo][itemNo]['price'] = tonumber(t_tempShop[categoryNo][itemNo].price)
 					t_shopMenu[categoryNo][itemNo]['itemname'] = t_tempShop[categoryNo][itemNo].name
+					t_shopMenu[categoryNo][itemNo]['displayname'] = t_tempShop[categoryNo][itemNo].name
+					t_shopMenu[categoryNo][itemNo]['displaynameunlocked'] = t_tempShop[categoryNo][itemNo].name
 					t_shopMenu[categoryNo][itemNo]['unlock'] = t_tempShop[categoryNo][itemNo].unlock
+					t_shopMenu[categoryNo][itemNo]['vardisplay'] = ""
 					
 					t_shopMenu[categoryNo][itemNo]['spr'] = t_tempShop[categoryNo][itemNo].spr
 					t_shopMenu[categoryNo][itemNo]['offset'] = t_tempShop[categoryNo][itemNo].offset
@@ -857,7 +929,7 @@ local function f_loadShop() --Load def file which contains shop items data
 	end
 	f_cleanTable(t_shopMenu) --To remove empty categories
 	for i=1, #t_shopMenu do
-	--Create Shop Stock in stats.json
+	--Create Shop Stock in shopDat.json
 		if #t_shopMenu[i] ~= 0 then
 			f_setShopStock(t_shopMenu[i])
 		end
@@ -867,150 +939,207 @@ local function f_loadShop() --Load def file which contains shop items data
 			main.t_unlockLua.shop[v.id] = v.unlock
 		end
 	end
-	f_saveStats()
-	if main.debugLog then main.f_printTable(t_shopMenu, 'debug/t_shopMenu.txt') end
-	if main.debugLog then main.f_printTable(main.t_selChars, "debug/t_selChars.txt") end
-	if main.debugLog then main.f_printTable(main.t_selStages, "debug/t_selStages.txt") end
---Load .sff file with Shop Items
-	if main.f_fileExists(motif.shop_info.items_spr) then
-		motif.files.shop_data = sffNew(motif.shop_info.items_spr)
-	else
-		motif.files.shop_data = sffNew()
+	f_saveShopData()
+	if gameOption('Debug.DumpLuaTables') then
+		main.f_printTable(t_shopMenu, 'debug/t_shopMenu.txt')
+		main.f_printTable(main.t_selChars, "debug/t_selChars.txt")
+		main.f_printTable(main.t_selStages, "debug/t_selStages.txt")
 	end
 end
 f_loadShop() --Load shop data (items.def & items.sff files) when engine starts
+--===================================================================================
+--								SHOP ASSETS GENERATION
+--===================================================================================
+--[[Background data
+Refer to official Elecbyte docs for information how to define backgrounds:
+http://www.elecbyte.com/mugendocs/bgs.html#description-of-background-elements
 
---creates sprite data out of table values
-local anim = ''
-local facing = ''
-local function f_loadShopSprData(t, v) --This function uses motif.files.shop_data instead system.sff data
-	local animParam = v.s .. 'anim'
-	local sprParam = v.s .. 'spr'
-	local data = v.s .. 'data'
-	-- optional prefix argument only changes parameter name for anim/spr numbers assignment
-	if v.prefix ~= nil then
-		animParam = v.s .. v.prefix .. 'anim'
-		sprParam = v.s .. v.prefix .. 'spr'
-		data = v.s .. v.prefix .. 'data'
-	end
-	if t[v.s .. 'offset'] == nil then t[v.s .. 'offset'] = {0, 0} end
-	if t[v.s .. 'scale'] == nil then t[v.s .. 'scale'] = {1.0, 1.0} end
-	if t[animParam] ~= nil and t[animParam] ~= -1 and motif.anim[t[animParam]] ~= nil then --create animation data
-		if t[v.s .. 'facing'] == nil then t[v.s .. 'facing'] = 1 end
-		t[data] = main.f_animFromTable(
-			motif.anim[t[animParam]],
-			motif.files.shop_data,
-			(t[v.s .. 'offset'][1] + (v.x or 0)) / t[v.s .. 'scale'][1],
-			(t[v.s .. 'offset'][2] + (v.y or 0)) / t[v.s .. 'scale'][2],
-			t[v.s .. 'scale'][1],
-			t[v.s .. 'scale'][2],
-			motif.f_animFacing(t[v.s .. 'facing'])
-		)
-	elseif t[sprParam] ~= nil and #t[sprParam] > 0 then --create sprite data
-		if #t[sprParam] == 1 then --fix values
-			if type(t[sprParam][1]) == 'string' then
-				t[sprParam] = {tonumber(t[sprParam][1]:match('^([0-9]+)')), 0}
-			else
-				t[sprParam] = {t[sprParam][1], 0}
-			end
-		end
-		if t[v.s .. 'facing'] == -1 then facing = ', H' else facing = '' end
-		t[data] = animNew(motif.files.shop_data, t[sprParam][1] .. ', ' .. t[sprParam][2] .. ', ' .. (t[v.s .. 'offset'][1] + (v.x or 0)) / t[v.s .. 'scale'][1] .. ', ' .. (t[v.s .. 'offset'][2] + (v.y or 0)) / t[v.s .. 'scale'][2] .. ', -1' .. facing)
-		animSetScale(t[data], t[v.s .. 'scale'][1], t[v.s .. 'scale'][2])
-		animUpdate(t[data])
-	else --create dummy data
-		t[data] = animNew(motif.files.shop_data, '-1,0, 0,0, -1')
-		animUpdate(t[data])
-	end
-	animSetWindow(t[data], 0, 0, motif.info.localcoord[1], motif.info.localcoord[2])
+I.K.E.M.E.N. Features:
+https://github.com/ikemen-engine/Ikemen-GO/wiki/Background-features
+]]
+local sffBGDat = nil
+if motifShop.shopbgdef.spr ~= nil and main.f_fileExists(motifShop.shopbgdef.spr) then
+	sffBGDat = sffNew(motifShop.shopbgdef.spr) --Load a dedicate sprite .sff file
+else
+	sffBGDat = motif.Sff --Load default system.sff data
 end
-f_loadShopSprData(motif.shop_info, {s = 'preview_bg_'}) --Generate motif.shop_info.preview_bg_data
-f_loadShopSprData(motif.shop_info, {s = 'preview_unknown_'}) --Generate motif.shop_info.preview_unknown_data
-f_loadShopSprData(motif.shop_info, {s = 'purchase_bg_'}) --Generate motif.shop_info.purchase_bg_data
-f_loadShopSprData(motif.shop_info, {s = 'balance_arrow_'}) --Generate motif.shop_info.balance_arrow_data
-f_loadShopSprData(motif.shop_info, {s = 'purchase_cursor_'}) --Generate motif.shop_info.purchase_cursor_data
 
-local function f_drawCustomPreview(group, index, x, y, scaleX, scaleY, x1, y1, x2, y2)
+local modelBGDat = nil
+if motifShop.shopbgdef.model ~= nil and main.f_fileExists(motifShop.shopbgdef.model) then
+	modelBGDat = modelNew(motifShop.shopbgdef.model) --Load a dedicate 3D Model object
+end
+
+motifShop.shopbgdef.BGDef = bgNew(sffBGDat, shopMotifPath, 'shopbg', modelBGDat)
+
+--Rectangle Data
+local rect_boxcursor = f_createRect(motifShop.shop_info, 'menu.boxcursor')
+local rect_boxbg = f_createRect(motifShop.shop_info, 'menu.boxbg')
+local t_menuWindowShop = main.f_menuWindow(motifShop.shop_info.menu)
+
+local overlay_purchase = f_createRect(motifShop.shop_info, 'purchase.overlay')
+local rect_purchaseboxcursor = f_createRect(motifShop.shop_info, 'purchase.boxcursor')
+
+--Text Data
+local txt_shopTitle = f_createTextImg(motifShop.shop_info, 'title')
+local txt_shopCategory = f_createTextImg(motifShop.shop_info, 'category')
+local txt_shopItemInfo = f_createTextImg(motifShop.shop_info, 'info')
+
+local txt_shopCurrency = f_createTextImg(motifShop.shop_info, 'currency')
+local txt_shopPriceInfo = f_createTextImg(motifShop.shop_info, 'price')
+
+local txt_shopBalanceOld = f_createTextImg(motifShop.shop_info, 'balance.old')
+local txt_shopBalanceNew = f_createTextImg(motifShop.shop_info, 'balance.new')
+
+local txt_shopPurchaseQuestion = f_createTextImg(motifShop.shop_info, 'purchase.question')
+local txt_shopPurchaseInfo = f_createTextImg(motifShop.shop_info, 'purchase.info')
+local txt_shopPurchaseYes = f_createTextImg(motifShop.shop_info, 'purchase.yes')
+local txt_shopPurchaseNo = f_createTextImg(motifShop.shop_info, 'purchase.no')
+
+local infoTextCnt = 0
+local infoTextActive = 1
+local function f_resetInfoTxt()
+	infoTextCnt = 0
+	infoTextActive = 1
+end
+if motifShop.shop_info.menu.item then motifShop.shop_info.menu.item.TextSpriteData = f_createTextImg(motifShop.shop_info, 'menu.item') end
+if motifShop.shop_info.menu.item.active then motifShop.shop_info.menu.item.active.TextSpriteData = f_createTextImg(motifShop.shop_info, 'menu.item.active') end
+if motifShop.shop_info.menu.item.value then motifShop.shop_info.menu.item.value.TextSpriteData = f_createTextImg(motifShop.shop_info, 'menu.item.value') end
+if motifShop.shop_info.menu.item.value.active then motifShop.shop_info.menu.item.value.active.TextSpriteData = f_createTextImg(motifShop.shop_info, 'menu.item.value.active') end
+
+--Sprite Data
+local spr_previewBG = f_createAnim(motifShop.shop_info, 'preview.bg', true, true)
+local spr_previewUnknow = f_createAnim(motifShop.shop_info, 'preview.unknown', true, true)
+local spr_purchaseBG = f_createAnim(motifShop.shop_info, 'purchase.bg', true, true)
+local spr_purchaseCursor = f_createAnim(motifShop.shop_info, 'purchase.cursor', true, true)
+local spr_balanceArrow = f_createAnim(motifShop.shop_info, 'balance.arrow', true, true)
+motifShop.shop_info.menu.arrow.up.AnimData = f_createAnim(motifShop.shop_info, 'menu.arrow.up', false, false)
+motifShop.shop_info.menu.arrow.down.AnimData = f_createAnim(motifShop.shop_info, 'menu.arrow.down', false, false)
+
+local function f_drawCustomPreview(group, index, x, y, scaleX, scaleY, x1, y1, x2, y2, angle, xangle, yangle, focallength, projection, layerno)
 	local anim = group..','..index..', 0,0, -1' --local anim = group..','..index..','..x..','..y..','..'-1'
-	anim = animNew(motif.files.shop_data, anim)
-	animSetScale(anim, scaleX, scaleY)
+	anim = animNew(motifShop.sprData, anim)	
+	animSetLocalcoord(anim, motifShop.info.localcoord[1], motifShop.info.localcoord[2])
 	animSetPos(anim, x, y)
+	animSetScale(anim, scaleX, scaleY)
 	animSetWindow(anim, x1, y1, x2, y2)
+	animSetAngle(anim, angle or 0)
+	animSetXAngle(anim, xangle or 0)
+	animSetYAngle(anim, yangle or 0)
+	animSetFocalLength(anim, focallength or 2048)
+	animSetProjection(anim, projection or "orthographic")
+	animSetLayerno(anim, layerno or 0)
 	animUpdate(anim)
 	animDraw(anim)
 end
 
-local function f_drawShopItemPreview(category, itemNo)
-	local itemID = t_shopMenu[shopCategoryNo][itemNo].id --:lower()
---Character Preview
-	if category == "chars" or category == "characters" or category == "costumes" then
-		local shopCharAnimDat = main.t_selChars[main.t_charDef[itemID]+1].shopAnim_data
-		if motif.shop_info.character_preview_resetanim == 1 and resetShopAnim then
-			animReset(shopCharAnimDat)
-		end
-		if resetShopAnim then resetShopAnim = false end
-		main.f_animPosDraw(
-			shopCharAnimDat,
-			motif.shop_info.menu_pos[1] + motif.shop_info.character_preview_offset[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.character_preview_offset[2],
-			motif.shop_info.character_preview_facing,
-			true
-		)
---Stage Preview
-	elseif category == "stages" then
-		main.f_animPosDraw(
-			motif.shop_info.preview_unknown_data,
-			motif.shop_info.menu_pos[1] + motif.shop_info.preview_unknown_offset[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.preview_unknown_offset[2],
-			motif.shop_info.preview_unknown_facing,
-			true
-		)
-		local shopStageAnimDat = main.t_selStages[main.t_stageDef[itemID]].shopAnim_data --main.t_selStages[main.t_selectableStages[main.t_stageDef[itemID]]].shopAnim_data
-		if motif.shop_info.stage_preview_resetanim == 1 and resetShopAnim then
-			animReset(shopStageAnimDat)
-		end
-		if resetShopAnim then resetShopAnim = false end
-		main.f_animPosDraw(
-			shopStageAnimDat,
-			motif.shop_info.menu_pos[1] + motif.shop_info.stage_preview_offset[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.stage_preview_offset[2],
-			motif.shop_info.stage_preview_facing,
-			true
-		)
---Custom Stuff Preview
-	else
-		if t_shopMenu[shopCategoryNo][itemNo].spr == nil then
+local function f_drawShopItemPreview(category, itemNo, unlocked)
+--Item unlocked
+	if unlocked then
+		local itemID = t_shopMenu[shopCategoryNo][itemNo].id --:lower()
+	--Character Preview
+		if category == "chars" or category == "characters" or category == "costumes" then
+			local shopCharAnimDat = main.t_selChars[main.t_charDef[itemID] + 1].shopAnim_data
+			if motifShop.shop_info.character.preview.resetanim == 1 and resetShopAnim then
+				animReset(shopCharAnimDat)
+			end
+			if resetShopAnim then resetShopAnim = false end
 			main.f_animPosDraw(
-				motif.shop_info.preview_unknown_data,
-				motif.shop_info.menu_pos[1] + motif.shop_info.preview_unknown_offset[1],
-				motif.shop_info.menu_pos[2] + motif.shop_info.preview_unknown_offset[2],
-				motif.shop_info.preview_unknown_facing,
-				true
+				shopCharAnimDat,
+				motifShop.shop_info.menu.pos[1] + motifShop.shop_info.character.preview.offset[1],
+				motifShop.shop_info.menu.pos[2] + motifShop.shop_info.character.preview.offset[2],
+				motifShop.shop_info.character.preview.facing
 			)
+	--Character Color Preview
+		elseif category == "colors" or category == "palettes" then
+			itemID = t_shopMenu[shopCategoryNo][itemNo].char
+			local color = tonumber(t_shopMenu[shopCategoryNo][itemNo].color)
+			local shopPalAnimDat = main.t_selChars[main.t_charDef[itemID] + 1].shopPalAnim_data[color]
+			--start.loadPalettes(shopPalAnimDat, main.t_selChars[main.t_charDef[itemID] + 1].char_ref, t_shopMenu[shopCategoryNo][itemNo].color)
+			if motifShop.shop_info.character.preview.resetanim == 1 and resetShopAnim then
+				animReset(shopPalAnimDat)
+			end
+			if resetShopAnim then resetShopAnim = false end
+			main.f_animPosDraw(
+				shopPalAnimDat,
+				motifShop.shop_info.menu.pos[1] + motifShop.shop_info.character.preview.offset[1],
+				motifShop.shop_info.menu.pos[2] + motifShop.shop_info.character.preview.offset[2],
+				motifShop.shop_info.character.preview.facing
+			)
+	--Stage Preview
+		elseif category == "stages" then
+			main.f_animPosDraw(
+				spr_previewUnknow,
+				motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.unknown.offset[1],
+				motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.unknown.offset[2],
+				motifShop.shop_info.preview_unknown_facing
+			)
+			local shopStageAnimDat = main.t_selStages[main.t_stageDef[itemID]].shopAnim_data --main.t_selStages[main.t_selectableStages[main.t_stageDef[itemID]]].shopAnim_data
+			if motifShop.shop_info.stage.preview.resetanim == 1 and resetShopAnim then
+				animReset(shopStageAnimDat)
+			end
+			if resetShopAnim then resetShopAnim = false end
+			main.f_animPosDraw(
+				shopStageAnimDat,
+				motifShop.shop_info.menu.pos[1] + motifShop.shop_info.stage.preview.offset[1],
+				motifShop.shop_info.menu.pos[2] + motifShop.shop_info.stage.preview.offset[2],
+				motifShop.shop_info.stage.preview.facing
+			)
+	--Custom Stuff Preview
 		else
-			f_drawCustomPreview(
-				t_shopMenu[shopCategoryNo][itemNo].spr[1], --group
-				t_shopMenu[shopCategoryNo][itemNo].spr[2], --index
-				motif.shop_info.menu_pos[1] + t_shopMenu[shopCategoryNo][itemNo].offset[1], --x
-				motif.shop_info.menu_pos[2] + t_shopMenu[shopCategoryNo][itemNo].offset[2], --y
-				t_shopMenu[shopCategoryNo][itemNo].scale[1], --scaleX
-				t_shopMenu[shopCategoryNo][itemNo].scale[2], --scaleY
-				t_shopMenu[shopCategoryNo][itemNo].window[1], --x1
-				t_shopMenu[shopCategoryNo][itemNo].window[2], --y1
-				t_shopMenu[shopCategoryNo][itemNo].window[3], --x2
-				t_shopMenu[shopCategoryNo][itemNo].window[4] --y2
-			)
+			if t_shopMenu[shopCategoryNo][itemNo].spr == nil then
+				main.f_animPosDraw(
+					spr_previewUnknow,
+					motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.unknown.offset[1],
+					motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.unknown.offset[2],
+					motifShop.shop_info.preview_unknown_facing
+				)
+			else
+				f_drawCustomPreview(
+					t_shopMenu[shopCategoryNo][itemNo].spr[1], --group
+					t_shopMenu[shopCategoryNo][itemNo].spr[2], --index
+					motifShop.shop_info.menu.pos[1] + t_shopMenu[shopCategoryNo][itemNo].offset[1], --x
+					motifShop.shop_info.menu.pos[2] + t_shopMenu[shopCategoryNo][itemNo].offset[2], --y
+					t_shopMenu[shopCategoryNo][itemNo].scale[1], --scaleX
+					t_shopMenu[shopCategoryNo][itemNo].scale[2], --scaleY
+					t_shopMenu[shopCategoryNo][itemNo].window[1], --x1
+					t_shopMenu[shopCategoryNo][itemNo].window[2], --y1
+					t_shopMenu[shopCategoryNo][itemNo].window[3], --x2
+					t_shopMenu[shopCategoryNo][itemNo].window[4] --y2
+				)
+			end
 		end
+--Item Locked
+	else
+		main.f_animPosDraw(
+			spr_previewUnknow,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.unknown.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.unknown.offset[2],
+			motifShop.shop_info.preview_unknown_facing
+		)
 	end
 end
 
+--Fade Data
+if motifShop.shop_info.fadein.anim ~= -1 then
+	motifShop.shop_info.fadein.AnimData = f_createAnim(motifShop.shop_info, 'fadein', false, false)
+end
+motifShop.shop_info.fadein.FadeData = fadeNew(motifShop.shop_info.fadein)
+
+if motifShop.shop_info.fadeout.anim ~= -1 then
+	motifShop.shop_info.fadeout.AnimData = f_createAnim(motifShop.shop_info, 'fadeout', false, false)
+end
+motifShop.shop_info.fadeout.FadeData = fadeNew(motifShop.shop_info.fadeout)
+
+if gameOption('Debug.DumpLuaTables') then main.f_printTable(motifShop, "debug/shopMenuMotif.txt") end
+--===================================================================================
+--								 SHOP MENU
+--===================================================================================
 local function f_confirmShopReset()
 	confirmPurchase = false
 	purchaseCursor = 2
 end
 
 local function f_confirmPurchase(item, enoughMoney)
-	main.f_cmdInput()
 	local fontYes = nil
 	local fontNo = nil
 	local bankYes = nil
@@ -1036,84 +1165,85 @@ local function f_confirmPurchase(item, enoughMoney)
 	local cursorText = ""
 	if purchaseCursor == 1 then
 	--Yes Active
-		fontYes = motif.shop_info.purchase_yes_active_font[1]
-		bankYes = motif.shop_info.purchase_yes_active_font[2]
-		alignYes = motif.shop_info.purchase_yes_active_font[3]
-		rYes = motif.shop_info.purchase_yes_active_font[4]
-		gYes = motif.shop_info.purchase_yes_active_font[5]
-		bYes = motif.shop_info.purchase_yes_active_font[6]
-		heightYes = motif.shop_info.purchase_yes_active_font[7]
-		xYes = motif.shop_info.menu_pos[1] + motif.shop_info.purchase_yes_active_offset[1]
-		yYes = motif.shop_info.menu_pos[2] + motif.shop_info.purchase_yes_active_offset[2]
-		scaleXYes = motif.shop_info.purchase_yes_active_scale[1]
-		scaleYYes = motif.shop_info.purchase_yes_active_scale[2]
+		fontYes = motifShop.shop_info.purchase.yes.active.font[1]
+		bankYes = motifShop.shop_info.purchase.yes.active.font[2]
+		alignYes = motifShop.shop_info.purchase.yes.active.font[3]
+		rYes = motifShop.shop_info.purchase.yes.active.font[4]
+		gYes = motifShop.shop_info.purchase.yes.active.font[5]
+		bYes = motifShop.shop_info.purchase.yes.active.font[6]
+		heightYes = motifShop.shop_info.purchase.yes.active.font[7]
+		xYes = motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.yes.active.offset[1]
+		yYes = motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.yes.active.offset[2]
+		scaleXYes = motifShop.shop_info.purchase.yes.active.scale[1]
+		scaleYYes = motifShop.shop_info.purchase.yes.active.scale[2]
 	--No Inactive
-		fontNo = motif.shop_info.purchase_no_font[1]
-		bankNo = motif.shop_info.purchase_no_font[2]
-		alignNo = motif.shop_info.purchase_no_font[3]
-		rNo = motif.shop_info.purchase_no_font[4]
-		gNo = motif.shop_info.purchase_no_font[5]
-		bNo = motif.shop_info.purchase_no_font[6]
-		heightNo = motif.shop_info.purchase_no_font[7]
-		xNo = motif.shop_info.menu_pos[1] + motif.shop_info.purchase_no_offset[1]
-		yNo = motif.shop_info.menu_pos[2] + motif.shop_info.purchase_no_offset[2]
-		scaleXNo = motif.shop_info.purchase_no_scale[1]
-		scaleYNo = motif.shop_info.purchase_no_scale[2]
+		fontNo = motifShop.shop_info.purchase.no.font[1]
+		bankNo = motifShop.shop_info.purchase.no.font[2]
+		alignNo = motifShop.shop_info.purchase.no.font[3]
+		rNo = motifShop.shop_info.purchase.no.font[4]
+		gNo = motifShop.shop_info.purchase.no.font[5]
+		bNo = motifShop.shop_info.purchase.no.font[6]
+		heightNo = motifShop.shop_info.purchase.no.font[7]
+		xNo = motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.no.offset[1]
+		yNo = motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.no.offset[2]
+		scaleXNo = motifShop.shop_info.purchase.no.scale[1]
+		scaleYNo = motifShop.shop_info.purchase.no.scale[2]
 	elseif purchaseCursor == 2 then
 	--Yes Inactive
-		fontYes = motif.shop_info.purchase_yes_font[1]
-		bankYes = motif.shop_info.purchase_yes_font[2]
-		alignYes = motif.shop_info.purchase_yes_font[3]
-		rYes = motif.shop_info.purchase_yes_font[4]
-		gYes = motif.shop_info.purchase_yes_font[5]
-		bYes = motif.shop_info.purchase_yes_font[6]
-		heightYes = motif.shop_info.purchase_yes_font[7]
-		xYes = motif.shop_info.menu_pos[1] + motif.shop_info.purchase_yes_offset[1]
-		yYes = motif.shop_info.menu_pos[2] + motif.shop_info.purchase_yes_offset[2]
-		scaleXYes = motif.shop_info.purchase_yes_scale[1]
-		scaleYYes = motif.shop_info.purchase_yes_scale[2]
+		fontYes = motifShop.shop_info.purchase.yes.font[1]
+		bankYes = motifShop.shop_info.purchase.yes.font[2]
+		alignYes = motifShop.shop_info.purchase.yes.font[3]
+		rYes = motifShop.shop_info.purchase.yes.font[4]
+		gYes = motifShop.shop_info.purchase.yes.font[5]
+		bYes = motifShop.shop_info.purchase.yes.font[6]
+		heightYes = motifShop.shop_info.purchase.yes.font[7]
+		xYes = motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.yes.offset[1]
+		yYes = motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.yes.offset[2]
+		scaleXYes = motifShop.shop_info.purchase.yes.scale[1]
+		scaleYYes = motifShop.shop_info.purchase.yes.scale[2]
 	--No Active	
-		fontNo = motif.shop_info.purchase_no_active_font[1]
-		bankNo = motif.shop_info.purchase_no_active_font[2]
-		alignNo = motif.shop_info.purchase_no_active_font[3]
-		rNo = motif.shop_info.purchase_no_active_font[4]
-		gNo = motif.shop_info.purchase_no_active_font[5]
-		bNo = motif.shop_info.purchase_no_active_font[6]
-		heightNo = motif.shop_info.purchase_no_active_font[7]
-		xNo = motif.shop_info.menu_pos[1] + motif.shop_info.purchase_no_active_offset[1]
-		yNo = motif.shop_info.menu_pos[2] + motif.shop_info.purchase_no_active_offset[2]
-		scaleXNo = motif.shop_info.purchase_no_active_scale[1]
-		scaleYNo = motif.shop_info.purchase_no_active_scale[2]
+		fontNo = motifShop.shop_info.purchase.no.active.font[1]
+		bankNo = motifShop.shop_info.purchase.no.active.font[2]
+		alignNo = motifShop.shop_info.purchase.no.active.font[3]
+		rNo = motifShop.shop_info.purchase.no.active.font[4]
+		gNo = motifShop.shop_info.purchase.no.active.font[5]
+		bNo = motifShop.shop_info.purchase.no.active.font[6]
+		heightNo = motifShop.shop_info.purchase.no.active.font[7]
+		xNo = motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.no.active.offset[1]
+		yNo = motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.no.active.offset[2]
+		scaleXNo = motifShop.shop_info.purchase.no.active.scale[1]
+		scaleYNo = motifShop.shop_info.purchase.no.active.scale[2]
 	end
 --Actions
-	if esc() or main.f_input(main.t_players, {'m'}) then
-		sndPlay(motif.files.snd_data, motif.shop_info.cancel_snd[1], motif.shop_info.cancel_snd[2])
+	if esc() or getInput(-1, motifShop.shop_info.menu.cancel.key) then
+		sndPlay(motifShop.sndData, motifShop.shop_info.cancel.snd[1], motifShop.shop_info.cancel.snd[2])
+		f_resetInfoTxt()
 		f_confirmShopReset()
 --Previous Item
-	elseif commandGetState(main.t_cmd[main.playerInput], '$U') then
+	elseif getInput(-1, motifShop.shop_info.menu.previous.key) then
 		if enoughMoney then
-			sndPlay(motif.files.snd_data, motif.shop_info.cursor_move_snd[1], motif.shop_info.cursor_move_snd[2])
+			sndPlay(motifShop.sndData, motifShop.shop_info.cursor.move.snd[1], motifShop.shop_info.cursor.move.snd[2])
 			purchaseCursor = purchaseCursor - 1
 		end
 --Next Item
-	elseif commandGetState(main.t_cmd[main.playerInput], '$D') then
+	elseif getInput(-1, motifShop.shop_info.menu.next.key) then
 		if enoughMoney then
-			sndPlay(motif.files.snd_data, motif.shop_info.cursor_move_snd[1], motif.shop_info.cursor_move_snd[2])
+			sndPlay(motifShop.sndData, motifShop.shop_info.cursor.move.snd[1], motifShop.shop_info.cursor.move.snd[2])
 			purchaseCursor = purchaseCursor + 1
 		end
 --Accept Button
-	elseif main.f_input(main.t_players, {'pal', 's'}) then
+	elseif getInput(-1, motifShop.shop_info.menu.done.key) then
 	--YES
 		if purchaseCursor == 1 then
 		--Item Purchased (Save Data)
-			sndPlay(motif.files.snd_data, motif.shop_info.cursor_purchase_snd[1], motif.shop_info.cursor_purchase_snd[2])
-			stats.playerCurrency = stats.playerCurrency - t_shopMenu[shopCategoryNo][item].price
-			stats.shopstock[t_shopMenu[shopCategoryNo].category][t_shopMenu[shopCategoryNo][item].id] = false --Item Sold out
-			f_saveStats()
-			f_unlockShop(false) --Check Shop Items Discovery/Unlocks
+			sndPlay(motifShop.sndData, motifShop.shop_info.cursor.purchase.snd[1], motifShop.shop_info.cursor.purchase.snd[2])
+			currency.setMoney(- t_shopMenu[shopCategoryNo][item].price)
+			shopDat.shopstock[t_shopMenu[shopCategoryNo].category][t_shopMenu[shopCategoryNo][item].id] = false --Item Sold out
+			f_saveShopData()
+			main.f_unlock(true) --Check Shop Items Discovery/Unlocks
 	--NO/ACCEPT
 		elseif purchaseCursor == 2 then
-			sndPlay(motif.files.snd_data, motif.shop_info.cancel_snd[1], motif.shop_info.cancel_snd[2])
+			sndPlay(motifShop.sndData, motifShop.shop_info.cancel.snd[1], motifShop.shop_info.cancel.snd[2])
 		end
 		f_confirmShopReset()
 	end
@@ -1124,153 +1254,154 @@ local function f_confirmPurchase(item, enoughMoney)
 		purchaseCursor = 1
 	end
 --Draw Overlay BG
-	overlay_purchase:draw()
---Draw Purchase Screen BG
-	main.f_animPosDraw(
-		motif.shop_info.purchase_bg_data,
-		motif.shop_info.menu_pos[1] + motif.shop_info.purchase_bg_offset[1],
-		motif.shop_info.menu_pos[2] + motif.shop_info.purchase_bg_offset[2],
-		motif.shop_info.purchase_bg_facing,
-		false
+	rectSetColor(
+		overlay_purchase,
+		motifShop.shop_info.purchase.overlay.col[1],
+		motifShop.shop_info.purchase.overlay.col[2],
+		motifShop.shop_info.purchase.overlay.col[3]
 	)
-	animSetWindow(motif.shop_info.purchase_bg_data, motif.shop_info.purchase_bg_window[1], motif.shop_info.purchase_bg_window[2], motif.shop_info.purchase_bg_window[3], motif.shop_info.purchase_bg_window[4])
+	rectUpdate(overlay_purchase)
+	rectDraw(overlay_purchase)
+--Draw Purchase Screen BG
+	animSetWindow(spr_purchaseBG, motifShop.shop_info.purchase.bg.window[1], motifShop.shop_info.purchase.bg.window[2], motifShop.shop_info.purchase.bg.window[3], motifShop.shop_info.purchase.bg.window[4])
+	main.f_animPosDraw(
+		spr_purchaseBG,
+		motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.bg.offset[1],
+		motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.bg.offset[2],
+		motifShop.shop_info.purchase.bg.facing
+	)
 	if enoughMoney then
-		cursorText = motif.shop_info.purchase_no_text
+		cursorText = motifShop.shop_info.purchase.no.text
 	--Draw Question Title
-		txt_shopPurchaseQuestion:draw()
-		txt_shopPurchaseQuestion:update({
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.purchase_question_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.purchase_question_offset[2]
-		})
+		textImgSetPos(
+			txt_shopPurchaseQuestion,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.question.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.question.offset[2]
+		)
+		textImgDraw(txt_shopPurchaseQuestion)
 	--Draw Balance Text
 	--Before Purchase
-		txt_shopBalanceOld:draw()
-		txt_shopBalanceOld:update({
-			text = stats.playerCurrency..motif.shop_info.currency_text,
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.balance_old_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.balance_old_offset[2]
-		})
-	--After Purchase
-		txt_shopBalanceNew:draw()
-		txt_shopBalanceNew:update({
-			text = stats.playerCurrency - t_shopMenu[shopCategoryNo][item].price..motif.shop_info.currency_text,
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.balance_new_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.balance_new_offset[2]
-		})
-	--Draw Balance Arrow Sprite
-		main.f_animPosDraw(
-			motif.shop_info.balance_arrow_data,
-			motif.shop_info.menu_pos[1] + motif.shop_info.balance_arrow_offset[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.balance_arrow_offset[2],
-			motif.shop_info.balance_arrow_facing,
-			false
+		textImgSetPos(
+			txt_shopBalanceOld,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.balance.old.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.balance.old.offset[2]
 		)
-		animSetWindow(motif.shop_info.balance_arrow_data, motif.shop_info.balance_arrow_window[1], motif.shop_info.balance_arrow_window[2], motif.shop_info.balance_arrow_window[3], motif.shop_info.balance_arrow_window[4])
+		textImgSetText(txt_shopBalanceOld, currency.getMoney()..motifCurrency.currency_info.currency.suffix)
+		textImgDraw(txt_shopBalanceOld)
+	--After Purchase
+		textImgSetPos(
+			txt_shopBalanceNew,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.balance.new.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.balance.new.offset[2]
+		)
+		textImgSetText(
+			txt_shopBalanceNew,
+			currency.getMoney() - t_shopMenu[shopCategoryNo][item].price..motifCurrency.currency_info.currency.suffix
+		)
+		textImgDraw(txt_shopBalanceNew)
+	--Draw Balance Arrow Sprite
+		animSetWindow(spr_balanceArrow, motifShop.shop_info.balance.arrow.window[1], motifShop.shop_info.balance.arrow.window[2], motifShop.shop_info.balance.arrow.window[3], motifShop.shop_info.balance.arrow.window[4])
+		main.f_animPosDraw(
+			spr_balanceArrow,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.balance.arrow.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.balance.arrow.offset[2],
+			motifShop.shop_info.balance.arrow.facing
+		)
 	--Draw Purchase Options Text
 	--Yes
-		txt_shopPurchaseYes:draw()
-		txt_shopPurchaseYes:update({
-			font = fontYes,
-			bank = bankYes,
-			align = alignYes,
-			x = xYes,
-			y = yYes,
-			scaleX = scaleXYes,
-			scaleY = scaleYYes,
-			r = rYes,
-			g = gYes,
-			b = bYes,
-			height = heightYes
-		})
+		textImgSetFont(txt_shopPurchaseYes, motifShop.fontData[fontYes])
+		textImgSetBank(txt_shopPurchaseYes, bankYes)
+		textImgSetAlign(txt_shopPurchaseYes, alignYes)
+		textImgSetColor(txt_shopPurchaseYes, rYes, gYes, bYes, 255)
+		textImgSetPos(txt_shopPurchaseYes, xYes, yYes)
+		textImgSetScale(txt_shopPurchaseYes, scaleXYes, scaleYYes)
+		textImgDraw(txt_shopPurchaseYes)
 	else
 	--Draw Info Title
-		main.f_textRender(
+		infoTextActive = f_textRender(
 			txt_shopPurchaseInfo,
-			motif.shop_info.purchase_info_text,
-			1,
-			motif.shop_info.menu_pos[1] + motif.shop_info.purchase_info_offset[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.purchase_info_offset[2],
-			motif.shop_info.purchase_info_spacing[1],
-			motif.shop_info.purchase_info_spacing[2],
-			main.font_def[motif.shop_info.purchase_info_font[1]..motif.shop_info.purchase_info_font[7]],
-			0,
-			main.f_lineLength(
-				motif.shop_info.menu_pos[1] + motif.shop_info.purchase_info_offset[1],
-				motif.info.localcoord[1],
-				motif.shop_info.purchase_info_font[3],
-				motif.shop_info.purchase_info_window,
-				'[wl]'
-			)
+			motifShop.shop_info.purchase.info.text,
+			infoTextCnt,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.info.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.info.offset[2],
+			motifShop.shop_info.purchase.info.scale[1],
+			motifShop.shop_info.purchase.info.scale[2],
+			motifShop.shop_info.purchase.info.spacing,
+			motifShop.shop_info.purchase.info.delay,
+			motifShop.shop_info.purchase.info.length
 		)
-		cursorText = motif.shop_info.purchase_ok_text
+		if infoTextActive > 0 then infoTextCnt = infoTextCnt + 1 end
+		cursorText = motifShop.shop_info.purchase.ok.text
 	end
 --No/Accept
-	txt_shopPurchaseNo:draw()
-	txt_shopPurchaseNo:update({
-		font = fontNo,
-		bank = bankNo,
-		align = alignNo,
-		text = cursorText,
-		x = xNo,
-		y = yNo,
-		scaleX = scaleXNo,
-		scaleY = scaleYNo,
-		r = rNo,
-		g = gNo,
-		b = bNo,
-		height = heightNo
-	})
+	textImgSetFont(txt_shopPurchaseNo, motifShop.fontData[fontNo])
+	textImgSetBank(txt_shopPurchaseNo, bankNo)
+	textImgSetAlign(txt_shopPurchaseNo, alignNo)
+	textImgSetColor(txt_shopPurchaseNo, rNo, gNo, bNo, 255)
+	textImgSetPos(txt_shopPurchaseNo, xNo, yNo)
+	textImgSetScale(txt_shopPurchaseNo, scaleXNo, scaleYNo)
+	textImgSetText(txt_shopPurchaseNo, cursorText)
+	textImgDraw(txt_shopPurchaseNo)
 --Draw Cursor
-	if motif.shop_info.purchase_boxcursor_visible == 1 then
-		local src, dst = main.f_boxcursorAlpha(
-			motif.shop_info.purchase_boxcursor_alpharange[1],
-			motif.shop_info.purchase_boxcursor_alpharange[2],
-			motif.shop_info.purchase_boxcursor_alpharange[3],
-			motif.shop_info.purchase_boxcursor_alpharange[4],
-			motif.shop_info.purchase_boxcursor_alpharange[5],
-			motif.shop_info.purchase_boxcursor_alpharange[6]
+	if motifShop.shop_info.purchase.boxcursor.visible == 1 and not fadeActive() then
+		local x1 = motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.boxcursor.coords[1] + (purchaseCursor - 1) * motifShop.shop_info.purchase.boxcursor.spacing[1]
+		local y1 = motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.boxcursor.coords[2] + (purchaseCursor - 1) * motifShop.shop_info.purchase.boxcursor.spacing[2]
+		local w  = motifShop.shop_info.purchase.boxcursor.coords[3] - motifShop.shop_info.purchase.boxcursor.coords[1] + 1
+		local h  = motifShop.shop_info.purchase.boxcursor.coords[4] - motifShop.shop_info.purchase.boxcursor.coords[2] + 1
+		rectSetColor(
+			rect_purchaseboxcursor,
+			motifShop.shop_info.purchase.boxcursor.col[1],
+			motifShop.shop_info.purchase.boxcursor.col[2],
+			motifShop.shop_info.purchase.boxcursor.col[3]
 		)
-		rect_purchaseboxcursor:update({
-			x1 =    motif.shop_info.menu_pos[1] + motif.shop_info.purchase_boxcursor_coords[1] + (purchaseCursor - 1) * motif.shop_info.purchase_boxcursor_spacing[1],
-			y1 =    motif.shop_info.menu_pos[2] + motif.shop_info.purchase_boxcursor_coords[2] + (purchaseCursor - 1) * motif.shop_info.purchase_boxcursor_spacing[2],
-			x2 =    motif.shop_info.purchase_boxcursor_coords[3] - motif.shop_info.purchase_boxcursor_coords[1] + 1,
-			y2 =    motif.shop_info.purchase_boxcursor_coords[4] - motif.shop_info.purchase_boxcursor_coords[2] + 1,
-			r =     motif.shop_info.purchase_boxcursor_col[1],
-			g =     motif.shop_info.purchase_boxcursor_col[2],
-			b =     motif.shop_info.purchase_boxcursor_col[3],
-			src =   src,
-			dst =   dst,
-			defsc = motif.defaultShop,
-		})
-		rect_purchaseboxcursor:draw()
---Draw Custom Cursor if purchase_boxcursor_visible is 0
+		rectSetAlphaPulse(
+			rect_purchaseboxcursor,
+			motifShop.shop_info.menu.boxcursor.pulse[1],
+			motifShop.shop_info.menu.boxcursor.pulse[2],
+			motifShop.shop_info.menu.boxcursor.pulse[3]
+		)
+		rectSetWindow(rect_purchaseboxcursor, x1, y1, x1 + w, y1 + h)
+		rectUpdate(rect_purchaseboxcursor)
+		rectDraw(rect_purchaseboxcursor)
+--Draw Custom Cursor if purchase.boxcursor.visible is 0
 	else
+		animSetWindow(spr_purchaseCursor, motifShop.shop_info.purchase.cursor.window[1], motifShop.shop_info.purchase.cursor.window[2], motifShop.shop_info.purchase.cursor.window[3], motifShop.shop_info.purchase.cursor.window[4])
 		main.f_animPosDraw(
-			motif.shop_info.purchase_cursor_data,
-			motif.shop_info.menu_pos[1] + motif.shop_info.purchase_cursor_offset[1] + (purchaseCursor - 1) * motif.shop_info.purchase_cursor_spacing[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.purchase_cursor_offset[2] + (purchaseCursor - 1) * motif.shop_info.purchase_cursor_spacing[2],
-			motif.shop_info.purchase_cursor_facing,
-			false
+			spr_purchaseCursor,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.purchase.cursor.offset[1] + (purchaseCursor - 1) * motifShop.shop_info.purchase.cursor.spacing[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.purchase.cursor.offset[2] + (purchaseCursor - 1) * motifShop.shop_info.purchase.cursor.spacing[2],
+			motifShop.shop_info.purchase.cursor.facing
 		)
-		animSetWindow(motif.shop_info.purchase_cursor_data, motif.shop_info.purchase_cursor_window[1], motif.shop_info.purchase_cursor_window[2], motif.shop_info.purchase_cursor_window[3], motif.shop_info.purchase_cursor_window[4])
 	end
 end
 
 local function f_shopMenu()
-	if motif.shop_info.reload_enabled == 1 then f_loadShop() end --Reload shop data (items.def & items.sff files) each time that shop menu is initialized
+	if motifShop.shop_info.reload.enabled == 1 then f_loadShop() end --Reload shop data (items.def & items.sff files) each time that shop menu is initialized
 	if #t_shopMenu == 0 then return end --If there is not shop data, return to main menu
 --If there is shop data, enter in shop menu
-	f_unlockShop(false) --Check Shop Items Discovery/Unlocks
-	main.f_bgReset(motif.shopbgdef.bg)
-	main.f_fadeReset('fadein', motif.shop_info)
+	main.f_unlock(true) --Check Shop Items Discovery/Unlocks
+	bgReset(motifShop.shopbgdef.BGDef)
+	fadeInInit(motifShop.shop_info.fadein.FadeData)
 	main.close = false
-	sndPlay(motif.files.snd_data, motif.shop_info.cursor_done_snd[1], motif.shop_info.cursor_done_snd[2])
-	if motif.music.shop_bgm ~= '' then
-		main.f_playBGM(false, motif.music.shop_bgm, motif.music.shop_bgm_loop, motif.music.shop_bgm_volume, motif.music.shop_bgm_loopstart, motif.music.shop_bgm_loopend)
+	sndPlay(motifShop.sndData, motifShop.shop_info.cursor.done.snd[1], motifShop.shop_info.cursor.done.snd[2])
+	if motifShop.music.menu.bgm ~= '' then
+		playBgm({
+			bgm = motifShop.music.menu.bgm,
+			loop = tonumber(motifShop.music.menu.loop),
+			volume = tonumber(motifShop.music.menu.volume),
+			loopstart = tonumber(motifShop.music.menu.loopstart),
+			loopend = tonumber(motifShop.music.menu.loopend),
+			startposition = tonumber(motifShop.music.menu.startposition),
+			freqmul = tonumber(motifShop.music.menu.freqmul),
+			loopcount = tonumber(motifShop.music.menu.loopcount),
+			interrupt = true
+		})
 	end
 	local cursorPosY = 1
 	local moveTxt = 0
 	local item = 1
+	currentCursor = item
+	f_resetInfoTxt()
 	f_confirmShopReset()
 	shopCategoryNo = 1
 	resetShopAnim = true
@@ -1279,314 +1410,369 @@ local function f_shopMenu()
 		cursorPosY = 1
 		moveTxt = 0
 		item = 1
-		if main.debugLog then main.f_printTable(t_shopMenu, "debug/t_shopMenu.txt") end
+		if gameOption('Debug.DumpLuaTables') then main.f_printTable(t_shopMenu, "debug/t_shopMenu.txt") end
 	end
 	local enoughMoney = nil
 	local inCategory = true --Start inside Category 1
 	local nameTextData = nil
-	local infoTextData = nil
+	local infoTextData = ""
 	local infoPriceData = nil
-	local categoryTitle = nil
+	local categoryTitle = ""
 	local currencyTextData = nil
+	local unlockItem = nil
 	while true do
-	--Clear Color
-		if not skipClear then
-			clearColor(motif.shopbgdef.bgclearcolor[1], motif.shopbgdef.bgclearcolor[2], motif.shopbgdef.bgclearcolor[3])
+		local offx = 0
+		local offy = 0
+	--effective visible-items: treat 0 or 'unlimitedItems' as "all"
+		local visible = (motifShop.shop_info.menu.window and motifShop.shop_info.menu.window.visibleitems) or #t_shopMenu[shopCategoryNo]
+		if not visible or visible <= 0 then
+			visible = #t_shopMenu[shopCategoryNo]
 		end
+		clearColor(motifShop.shopbgdef.bgclearcolor[1], motifShop.shopbgdef.bgclearcolor[2], motifShop.shopbgdef.bgclearcolor[3])
 	--Layerno = 0 backgrounds
-		bgDraw(motif.shopbgdef.bg, falseBool)
+		bgDraw(motifShop.shopbgdef.BGDef, 0)
 	--Draw Item Preview BG
+		animSetWindow(spr_previewBG, motifShop.shop_info.preview.bg.window[1], motifShop.shop_info.preview.bg.window[2], motifShop.shop_info.preview.bg.window[3], motifShop.shop_info.preview.bg.window[4])
 		main.f_animPosDraw(
-			motif.shop_info.preview_bg_data,
-			motif.shop_info.menu_pos[1] + motif.shop_info.preview_bg_offset[1],
-			motif.shop_info.menu_pos[2] + motif.shop_info.preview_bg_offset[2],
-			motif.shop_info.preview_bg_facing,
-			false
+			spr_previewBG,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.bg.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.bg.offset[2],
+			motifShop.shop_info.preview.bg.facing
 		)
-		animSetWindow(motif.shop_info.preview_bg_data, motif.shop_info.preview_bg_window[1], motif.shop_info.preview_bg_window[2], motif.shop_info.preview_bg_window[3], motif.shop_info.preview_bg_window[4])
 	--Draw Menu Box
-		if motif.shop_info.menu_boxbg_visible == 1 then
-			rect_boxbg:update({
-				x1 =    motif.shop_info.menu_pos[1] + motif.shop_info.menu_boxcursor_coords[1],
-				y1 =    motif.shop_info.menu_pos[2] + motif.shop_info.menu_boxcursor_coords[2],
-				x2 =    motif.shop_info.menu_boxcursor_coords[3] - motif.shop_info.menu_boxcursor_coords[1] + 1,
-				y2 =    motif.shop_info.menu_boxcursor_coords[4] - motif.shop_info.menu_boxcursor_coords[2] + 1 + (math.min(#t_shopMenu[shopCategoryNo], motif.shop_info.menu_window_visibleitems) - 1) * motif.shop_info.menu_item_spacing[2],
-				r =     motif.shop_info.menu_boxbg_col[1],
-				g =     motif.shop_info.menu_boxbg_col[2],
-				b =     motif.shop_info.menu_boxbg_col[3],
-				src =   motif.shop_info.menu_boxbg_alpha[1],
-				dst =   motif.shop_info.menu_boxbg_alpha[2],
-				defsc = motif.defaultShop,
-			})
-			rect_boxbg:draw()
+		if motifShop.shop_info.menu.boxbg.visible == 1 then
+			local x1 = offx + motifShop.shop_info.menu.pos[1] + motifShop.shop_info.menu.boxcursor.coords[1]
+			local y1 = offy + motifShop.shop_info.menu.pos[2] + motifShop.shop_info.menu.boxcursor.coords[2]
+			local w = motifShop.shop_info.menu.boxcursor.coords[3] - motifShop.shop_info.menu.boxcursor.coords[1] + 1
+			local h = motifShop.shop_info.menu.boxcursor.coords[4] - motifShop.shop_info.menu.boxcursor.coords[2] + 1 + (math.min(#t_shopMenu[shopCategoryNo], motifShop.shop_info.menu.window.visibleitems) - 1) * motifShop.shop_info.menu.item.spacing[2]
+			rectSetColor(
+				rect_boxbg,
+				motifShop.shop_info.menu.boxbg.col[1],
+				motifShop.shop_info.menu.boxbg.col[2],
+				motifShop.shop_info.menu.boxbg.col[3]
+			)
+			rectSetAlpha(
+				rect_boxbg,
+				motifShop.shop_info.menu.boxbg.alpha[1],
+				motifShop.shop_info.menu.boxbg.alpha[2]
+			)
+			rectSetWindow(rect_boxbg, x1, y1, x1 + w, y1 + h)
+			rectUpdate(rect_boxbg)
+			rectDraw(rect_boxbg)
 		end
 	--Draw Menu Title Text
-		txt_shopTitle:draw()
-		txt_shopTitle:update({
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.title_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.title_offset[2]
-		})
+		textImgSetPos(
+			txt_shopTitle,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.title.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.title.offset[2]
+		)
+		textImgDraw(txt_shopTitle)
 	--Draw Category Title Text
-		txt_shopCategory:draw()
-		txt_shopCategory:update({
-			text = categoryTitle,
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.category_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.category_offset[2]
-		})
+		textImgSetText(txt_shopCategory, categoryTitle)
+		textImgSetPos(
+			txt_shopCategory,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.category.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.category.offset[2]
+		)
+		textImgDraw(txt_shopCategory)
 	--Draw Currency Text
-		currencyTextData = stats.playerCurrency..motif.shop_info.currency_text
-		txt_shopCurrency:draw()
-		txt_shopCurrency:update({
-			text = currencyTextData,
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.currency_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.currency_offset[2]
-		})
+		currencyTextData = currency.getMoney()..motifCurrency.currency_info.currency.suffix
+		textImgSetText(txt_shopCurrency, currencyTextData)
+		textImgSetPos(
+			txt_shopCurrency,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.currency.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.currency.offset[2]
+		)
+		textImgDraw(txt_shopCurrency)
 	--Draw Menu Items
-		local items_shown = item + motif.shop_info.menu_window_visibleitems - cursorPosY
-		if items_shown > #t_shopMenu[shopCategoryNo] or (motif.shop_info.menu_window_visibleitems > 0 and items_shown < #t_shopMenu[shopCategoryNo] and (motif.shop_info.menu_window_margins_y[1] ~= 0 or motif.shop_info.menu_window_margins_y[2] ~= 0)) then
+		local cur = moveTxt
+		local tgt = moveTxt
+		if motifShop.shop_info.menuTweenData then
+			cur = motifShop.shop_info.menuTweenData.currentPos or motifShop.shop_info.menuTweenData.slideOffset or cur
+			tgt = motifShop.shop_info.menuTweenData.targetPos or tgt
+		end
+		local tweenDone = math.abs((cur or 0) - (tgt or 0)) < 1
+		local items_shown = item + visible - cursorPosY
+		if items_shown > #t_shopMenu[shopCategoryNo] or (visible > 0 and items_shown < #t_shopMenu[shopCategoryNo] and (motifShop.shop_info.menu.window.margins.y[1] ~= 0 or motifShop.shop_info.menu.window.margins.y[2] ~= 0)) then
 			items_shown = #t_shopMenu[shopCategoryNo]
 		end
-		for i = 1, items_shown do
-			if not inCategory then
-				nameTextData = t_shopMenu[i].category
+	--helper that draws a single item either as active or inactive
+		local function drawItem(i, isActive)
+		--Condition to Show Unlocked Content
+			local itemData = t_shopMenu[shopCategoryNo][i]
+		--If the item has been Discovered
+			if main.t_unlockLua.shop[t_shopMenu[shopCategoryNo][item].id] == nil then
+				unlockItem = true
+		--Item not Discovered
 			else
-			--If the item has been Discovered
-				if main.t_unlockLua.shop[t_shopMenu[shopCategoryNo][i].id] == nil then
-					nameTextData = t_shopMenu[shopCategoryNo][i].itemname
-			--Item not Discovered
+				unlockItem = false
+			end
+			if main.t_unlockLua.shop[itemData.id] == nil then
+				if itemData.displayname ~= "" then
+					itemData.displayname = t_shopMenu[shopCategoryNo][i].displaynameunlocked
+				end
+				if itemData.vardisplay ~= nil and shopDat ~= nil and shopDat.shopstock ~= nil and shopDat.shopstock[t_shopMenu[shopCategoryNo].category] ~= nil and not shopDat.shopstock[t_shopMenu[shopCategoryNo].category][itemData.id] then
+					itemData.vardisplay = motifShop.shop_info.menu.itemname.purchased
 				else
-					nameTextData = motif.shop_info.info_text_unknown
+					itemData.vardisplay = motifShop.shop_info.menu.itemname.new
+				end
+			else
+				if itemData.displayname ~= "" then
+					itemData.displayname = motifShop.shop_info.menu.itemname.unknown
+				end
+				if itemData.vardisplay ~= nil then
+					itemData.vardisplay = ""
 				end
 			end
-			if i > item - cursorPosY then
-				if i == item then
-				--Draw active item background
-					if t_shopMenu[shopCategoryNo][i].paramname ~= nil then
-						animDraw(motif.shop_info[t_shopMenu[shopCategoryNo][i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
-						animUpdate(motif.shop_info[t_shopMenu[shopCategoryNo][i].paramname:gsub('menu_itemname_', 'menu_bg_active_') .. '_data'])
-					end
-				--Draw active item font
-					if t_shopMenu[shopCategoryNo][i].selected then
-						t_shopMenu[shopCategoryNo][i].data:update({
-							font =   motif.shop_info.menu_item_selected_active_font[1],
-							bank =   motif.shop_info.menu_item_selected_active_font[2],
-							align =  motif.shop_info.menu_item_selected_active_font[3],
-							text =   nameTextData,
-							x =      motif.shop_info.menu_pos[1] + motif.shop_info.menu_item_offset[1] + (i - 1) * motif.shop_info.menu_item_spacing[1],
-							y =      motif.shop_info.menu_pos[2] + motif.shop_info.menu_item_offset[2] + (i - 1) * motif.shop_info.menu_item_spacing[2] - moveTxt,
-							scaleX = motif.shop_info.menu_item_selected_active_scale[1],
-							scaleY = motif.shop_info.menu_item_selected_active_scale[2],
-							r =      motif.shop_info.menu_item_selected_active_font[4],
-							g =      motif.shop_info.menu_item_selected_active_font[5],
-							b =      motif.shop_info.menu_item_selected_active_font[6],
-							height = motif.shop_info.menu_item_selected_active_font[7],
-							defsc =  motif.defaultShop,
-						})
-						t_shopMenu[shopCategoryNo][i].data:draw()
-					else
-						t_shopMenu[shopCategoryNo][i].data:update({
-							font =   motif.shop_info.menu_item_active_font[1],
-							bank =   motif.shop_info.menu_item_active_font[2],
-							align =  motif.shop_info.menu_item_active_font[3],
-							text =   nameTextData,
-							x =      motif.shop_info.menu_pos[1] + motif.shop_info.menu_item_active_offset[1] + (i - 1) * motif.shop_info.menu_item_spacing[1],
-							y =      motif.shop_info.menu_pos[2] + motif.shop_info.menu_item_active_offset[2] + (i - 1) * motif.shop_info.menu_item_spacing[2] - moveTxt,
-							scaleX = motif.shop_info.menu_item_active_scale[1],
-							scaleY = motif.shop_info.menu_item_active_scale[2],
-							r =      motif.shop_info.menu_item_active_font[4],
-							g =      motif.shop_info.menu_item_active_font[5],
-							b =      motif.shop_info.menu_item_active_font[6],
-							height = motif.shop_info.menu_item_active_font[7],
-							defsc =  motif.defaultShop,
-						})
-						t_shopMenu[shopCategoryNo][i].data:draw()
-					end
+		--display name
+			local displayname = itemData.displayname
+			if itemData.itemname:match("^spacer%d*$") then
+				displayname = ""
+			end
+		--shared position
+			local posX = offx + motifShop.shop_info.menu.pos[1] + (i - 1) * motifShop.shop_info.menu.item.spacing[1]
+			local posY = offy + motifShop.shop_info.menu.pos[2] + (i - 1) * motifShop.shop_info.menu.item.spacing[2] - moveTxt
+	--[[
+		--background params
+			local bgTable = isActive and motifShop.shop_info.menu.item.active.bg or motifShop.shop_info.menu.item.bg
+			local params = bgTable[itemData.paramname] or bgTable.default
+		--draw background
+			local bgPosX = offx 
+			local bgPosY = offy
+			if bgTable.default.spacing[1] ~= 0 or bgTable.default.spacing[2] ~= 0 then
+				bgPosX = bgPosX + (i - 1) * bgTable.default.spacing[1]
+				bgPosY = bgPosY + (i - 1) * bgTable.default.spacing[2] - moveTxt
+			end
+			main.f_animPosDraw(params.AnimData, bgPosX, bgPosY)
+	--]]
+		--text sprite for label
+			local labelSprite
+			if itemData.selected then
+				labelSprite = isActive and motifShop.shop_info.menu.item.selected.active.TextSpriteData or motifShop.shop_info.menu.item.selected.TextSpriteData
+			else
+				labelSprite = isActive and motifShop.shop_info.menu.item.active.TextSpriteData or motifShop.shop_info.menu.item.TextSpriteData
+			end
+			textImgReset(labelSprite)
+			textImgAddPos(labelSprite, posX, posY)
+			textImgSetText(labelSprite, displayname)
+			textImgDraw(labelSprite)
+		--value / info sprites
+			if itemData.vardisplay ~= nil then
+				if itemData.conflict and motifShop.shop_info.menu.item.value.conflict and motifShop.shop_info.menu.item.value.conflict.TextSpriteData then
+					local spr = motifShop.shop_info.menu.item.value.conflict.TextSpriteData
+					textImgReset(spr)
+					textImgAddPos(spr, posX, posY)
+					textImgSetText(spr, itemData.vardisplay)
+					textImgDraw(spr)
 				else
-				--Draw not active item background
-					if t_shopMenu[shopCategoryNo][i].paramname ~= nil then
-						animDraw(motif.shop_info[t_shopMenu[shopCategoryNo][i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
-						animUpdate(motif.shop_info[t_shopMenu[shopCategoryNo][i].paramname:gsub('menu_itemname_', 'menu_bg_') .. '_data'])
-					end
-				--Draw not active item font
-					if t_shopMenu[shopCategoryNo][i].selected then
-						t_shopMenu[shopCategoryNo][i].data:update({
-							font =   motif.shop_info.menu_item_selected_font[1],
-							bank =   motif.shop_info.menu_item_selected_font[2],
-							align =  motif.shop_info.menu_item_selected_font[3],
-							text =   nameTextData,
-							x =      motif.shop_info.menu_pos[1] + motif.shop_info.menu_item_selected_offset[1] + (i - 1) * motif.shop_info.menu_item_spacing[1],
-							y =      motif.shop_info.menu_pos[2] + motif.shop_info.menu_item_selected_offset[2] + (i - 1) * motif.shop_info.menu_item_spacing[2] - moveTxt,
-							scaleX = motif.shop_info.menu_item_selected_scale[1],
-							scaleY = motif.shop_info.menu_item_selected_scale[2],
-							r =      motif.shop_info.menu_item_selected_font[4],
-							g =      motif.shop_info.menu_item_selected_font[5],
-							b =      motif.shop_info.menu_item_selected_font[6],
-							height = motif.shop_info.menu_item_selected_font[7],
-							defsc =  motif.defaultShop,
-						})
-						t_shopMenu[shopCategoryNo][i].data:draw()
-					else
-						t_shopMenu[shopCategoryNo][i].data:update({
-							font =   motif.shop_info.menu_item_font[1],
-							bank =   motif.shop_info.menu_item_font[2],
-							align =  motif.shop_info.menu_item_font[3],
-							text =   nameTextData,
-							x =      motif.shop_info.menu_pos[1] + motif.shop_info.menu_item_offset[1] + (i - 1) * motif.shop_info.menu_item_spacing[1],
-							y =      motif.shop_info.menu_pos[2] + motif.shop_info.menu_item_offset[2] + (i - 1) * motif.shop_info.menu_item_spacing[2] - moveTxt,
-							scaleX = motif.shop_info.menu_item_scale[1],
-							scaleY = motif.shop_info.menu_item_scale[2],
-							r =      motif.shop_info.menu_item_font[4],
-							g =      motif.shop_info.menu_item_font[5],
-							b =      motif.shop_info.menu_item_font[6],
-							height = motif.shop_info.menu_item_font[7],
-							defsc =  motif.defaultShop,
-						})
-						t_shopMenu[shopCategoryNo][i].data:draw()
-					end
+					local spr = isActive and motifShop.shop_info.menu.item.value.active.TextSpriteData or motifShop.shop_info.menu.item.value.TextSpriteData
+					textImgReset(spr)
+					textImgAddPos(spr, posX, posY)
+					textImgSetText(spr, itemData.vardisplay)
+					textImgDraw(spr)
+				end
+			elseif itemData.infodisplay ~= nil then
+				local spr = isActive and motifShop.shop_info.menu.item.info.active.TextSpriteData or motifShop.shop_info.menu.item.info.TextSpriteData
+				textImgReset(spr)
+				textImgAddPos(spr, posX, posY)
+				textImgSetText(spr, itemData.infodisplay)
+				textImgDraw(spr)
+			end
+		end
+	--draw not active items
+		for i = 1, items_shown do
+			if i > item - cursorPosY or not tweenDone then
+				local isSelected = (i == item) --and (not forceInactive)
+				if not isSelected then
+					drawItem(i, false)
 				end
 			end
+		end
+	--draw active items
+		for i = 1, items_shown do
+			if i > item - cursorPosY or not tweenDone then
+				local isSelected = (i == item) --and (not forceInactive)
+				if isSelected then
+					drawItem(i, true)
+				end
+			end
+		end		
+	--initialize storage for boxcursor per section if missing
+		if not motifShop.shop_info.boxCursorData then
+			motifShop.shop_info.boxCursorData = {
+				offsetY = 0, 
+				snap = 0, 
+				init = false
+			}
+		end
+	--calculate target Y position for cursor
+		local targetY = offy + motifShop.shop_info.menu.pos[2] + motifShop.shop_info.menu.boxcursor.coords[2] + (cursorPosY - 1) * motifShop.shop_info.menu.item.spacing[2]
+		local t_factor = motifShop.shop_info.menu.boxcursor.tween.factor
+	--snap cursor immediately if first use or snap enabled
+		if motifShop.shop_info.boxCursorData.snap == 1 or not motifShop.shop_info.boxCursorData.init then
+			motifShop.shop_info.boxCursorData.offsetY = targetY
+			motifShop.shop_info.boxCursorData.init = true
+			motifShop.shop_info.boxCursorData.snap = -1
+		end
+		if motifShop.shop_info.menu.boxcursor.tween.wrap.snap and main.menuWrapped then
+			motifShop.shop_info.boxCursorData.offsetY = targetY
+		end
+	--apply tween if enabled, otherwise snap to target
+		if t_factor[1] > 0 then
+			motifShop.shop_info.boxCursorData.offsetY = f_tweenStep(motifShop.shop_info.boxCursorData.offsetY, targetY, t_factor[1])
+		else
+			motifShop.shop_info.boxCursorData.offsetY = targetY
 		end
 	--Draw menu cursor
-		if motif.shop_info.menu_boxcursor_visible == 1 and not confirmPurchase and not main.fadeActive then
-			local src, dst = main.f_boxcursorAlpha(
-				motif.shop_info.menu_boxcursor_alpharange[1],
-				motif.shop_info.menu_boxcursor_alpharange[2],
-				motif.shop_info.menu_boxcursor_alpharange[3],
-				motif.shop_info.menu_boxcursor_alpharange[4],
-				motif.shop_info.menu_boxcursor_alpharange[5],
-				motif.shop_info.menu_boxcursor_alpharange[6]
+		if motifShop.shop_info.menu.boxcursor.visible == 1 and not confirmPurchase and not fadeActive() then
+			local x1 = offx + motifShop.shop_info.menu.pos[1] + motifShop.shop_info.menu.boxcursor.coords[1] + (cursorPosY - 1) * motifShop.shop_info.menu.item.spacing[1]
+			local y1 = motifShop.shop_info.boxCursorData.offsetY
+			local w  = motifShop.shop_info.menu.boxcursor.coords[3] - motifShop.shop_info.menu.boxcursor.coords[1] + 1
+			local h  = motifShop.shop_info.menu.boxcursor.coords[4] - motifShop.shop_info.menu.boxcursor.coords[2] + 1
+			rectSetColor(
+				rect_boxcursor,
+				motifShop.shop_info.menu.boxcursor.col[1],
+				motifShop.shop_info.menu.boxcursor.col[2],
+				motifShop.shop_info.menu.boxcursor.col[3]
 			)
-			rect_boxcursor:update({
-				x1 =    motif.shop_info.menu_pos[1] + motif.shop_info.menu_boxcursor_coords[1] + (cursorPosY - 1) * motif.shop_info.menu_item_spacing[1],
-				y1 =    motif.shop_info.menu_pos[2] + motif.shop_info.menu_boxcursor_coords[2] + (cursorPosY - 1) * motif.shop_info.menu_item_spacing[2],
-				x2 =    motif.shop_info.menu_boxcursor_coords[3] - motif.shop_info.menu_boxcursor_coords[1] + 1,
-				y2 =    motif.shop_info.menu_boxcursor_coords[4] - motif.shop_info.menu_boxcursor_coords[2] + 1,
-				r =     motif.shop_info.menu_boxcursor_col[1],
-				g =     motif.shop_info.menu_boxcursor_col[2],
-				b =     motif.shop_info.menu_boxcursor_col[3],
-				src =   src,
-				dst =   dst,
-				defsc = motif.defaultShop,
-			})
-			rect_boxcursor:draw()
+			rectSetAlphaPulse(
+				rect_boxcursor,
+				motifShop.shop_info.menu.boxcursor.pulse[1],
+				motifShop.shop_info.menu.boxcursor.pulse[2],
+				motifShop.shop_info.menu.boxcursor.pulse[3]
+			)
+			rectSetWindow(rect_boxcursor, x1, y1, x1 + w, y1 + h)
+			rectUpdate(rect_boxcursor)
+			rectDraw(rect_boxcursor)
 		end
 	--Draw Scroll Arrows
-		if #t_shopMenu[shopCategoryNo] > motif.shop_info.menu_window_visibleitems then
+		if #t_shopMenu[shopCategoryNo] > visible then
 			if item > cursorPosY then
-				animUpdate(motif.shop_info.menu_arrow_up_data)
-				animDraw(motif.shop_info.menu_arrow_up_data)
+				animReset(motifShop.shop_info.menu.arrow.up.AnimData, {'pos'})
+				animSetPos(motifShop.shop_info.menu.arrow.up.AnimData, motifShop.shop_info.menu.arrow.up.offset[1], motifShop.shop_info.menu.arrow.up.offset[2])
+				animUpdate(motifShop.shop_info.menu.arrow.up.AnimData)
+				animDraw(motifShop.shop_info.menu.arrow.up.AnimData)
 			end
-			if item >= cursorPosY and item + motif.shop_info.menu_window_visibleitems - cursorPosY < #t_shopMenu[shopCategoryNo] then
-				animUpdate(motif.shop_info.menu_arrow_down_data)
-				animDraw(motif.shop_info.menu_arrow_down_data)
+			if item >= cursorPosY and item + visible - cursorPosY < #t_shopMenu[shopCategoryNo] then
+				animReset(motifShop.shop_info.menu.arrow.down.AnimData, {'pos'})
+				animSetPos(motifShop.shop_info.menu.arrow.down.AnimData, motifShop.shop_info.menu.arrow.down.offset[1], motifShop.shop_info.menu.arrow.down.offset[2])
+				animUpdate(motifShop.shop_info.menu.arrow.down.AnimData)
+				animDraw(motifShop.shop_info.menu.arrow.down.AnimData)
 			end
 		end
 	--Draw Items Stuff
-		if inCategory and main.t_unlockLua.shop[t_shopMenu[shopCategoryNo][item].id] == nil then --If are inside a category and the item has been Discovered
-			f_drawShopItemPreview(t_shopMenu[shopCategoryNo].category:lower(), item)
-		--Draw Shop Item Price Info
-			if stats.shopstock[t_shopMenu[shopCategoryNo].category][t_shopMenu[shopCategoryNo][item].id] then
-				infoPriceData = t_shopMenu[shopCategoryNo][item].price..motif.shop_info.currency_text
-			else
-				infoPriceData = motif.shop_info.price_text_sold
+		if inCategory then --If are inside a category
+			f_drawShopItemPreview(t_shopMenu[shopCategoryNo].category:lower(), item, unlockItem)
+			if unlockItem then --if the item has been Discovered
+			--Draw Shop Item Price Info
+				if shopDat.shopstock[t_shopMenu[shopCategoryNo].category][t_shopMenu[shopCategoryNo][item].id] then
+					infoPriceData = t_shopMenu[shopCategoryNo][item].price..motifCurrency.currency_info.currency.suffix
+				else
+					infoPriceData = motifShop.shop_info.price.sold
+				end
+				textImgSetText(txt_shopPriceInfo, infoPriceData)
+				textImgSetPos(
+					txt_shopPriceInfo,
+					motifShop.shop_info.menu.pos[1] + motifShop.shop_info.price.offset[1],
+					motifShop.shop_info.menu.pos[2] + motifShop.shop_info.price.offset[2]
+				)
+				textImgDraw(txt_shopPriceInfo)
 			end
-			txt_shopPriceInfo:draw()
-			txt_shopPriceInfo:update({
-				text = infoPriceData,
-				x = motif.shop_info.menu_pos[1] + motif.shop_info.price_offset[1],
-				y = motif.shop_info.menu_pos[2] + motif.shop_info.price_offset[2]
-			})
 		end
 	--Draw Shop Item Info
-		txt_shopItemInfo:draw()
-		txt_shopItemInfo:update({
-			text = infoTextData,
-			x = motif.shop_info.menu_pos[1] + motif.shop_info.info_offset[1],
-			y = motif.shop_info.menu_pos[2] + motif.shop_info.info_offset[2]
-		})
+		textImgSetText(txt_shopItemInfo, infoTextData)
+		textImgSetPos(
+			txt_shopItemInfo,
+			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.info.offset[1],
+			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.info.offset[2]
+		)
+		textImgDraw(txt_shopItemInfo)
 	--Attract Credits/Coins
-		if motif.attract_mode.enabled == 1 and main.credits ~= -1 then
-			txt_attract_credits:update({text = main.f_extractText(motif.attract_mode.credits_text, main.credits)[1]})
-			txt_attract_credits:draw()
+		if motif.attract_mode.enabled and getCredits() ~= -1 then
+			textImgReset(motif.attract_mode.credits.TextSpriteData)
+			textImgSetText(motif.attract_mode.credits.TextSpriteData, string.format(motif.attract_mode.credits.text, getCredits()))
+			textImgDraw(motif.attract_mode.credits.TextSpriteData)
 		end
 	--Layerno = 1 backgrounds
-		bgDraw(motif.shopbgdef.bg, trueBool)
-	--Fadein/Fadeout
-		main.f_fadeAnim(motif.shop_info)
+		bgDraw(motifShop.shopbgdef.BGDef, 1)
 --;---------------------------------------------------------------------------------------------------------------------
 		if not confirmPurchase then
-			if not main.fadeActive then
+			if not fadeActive() then
 				if inCategory then
-					cursorPosY, moveTxt, item = f_menuCommonCalc(t_shopMenu[shopCategoryNo], item, cursorPosY, moveTxt, 'shop_info', {'$U'}, {'$D'})
+					cursorPosY, moveTxt, item = main.f_menuCommonCalc(t_shopMenu[shopCategoryNo], item, cursorPosY, moveTxt, motifShop.shop_info, motifShop.shop_info.cursor)
 				--else
-				--	cursorPosY, moveTxt, shopCategoryNo = f_menuCommonCalc(t_shopMenu, shopCategoryNo, cursorPosY, moveTxt, 'shop_info', {'$U'}, {'$D'})
+				--	cursorPosY, moveTxt, shopCategoryNo = main.f_menuCommonCalc(t_shopMenu, shopCategoryNo, cursorPosY, moveTxt, motifShop.shop_info, motifShop.shop_info.cursor)
+				end
+				if currentCursor ~= item then
+					f_resetInfoTxt()
+					currentCursor = item
 				end
 			end
 		--Close Menu
-			if main.close and not main.fadeActive then
-				main.f_bgReset(motif.shopbgdef.bg)
-				main.f_fadeReset('fadein', motif.shop_info)
-				main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
+			if main.close and not fadeActive() then
+				bgReset(motifShop.shopbgdef.BGDef)
+				fadeInInit(motifShop.shop_info.fadein.FadeData)
+				playBgm({source = "motif.title", interrupt = true})
 				main.close = false
-				main.f_unlock(false) --Check Menu Unlocks
-				stats.playerCurrencyOLD = stats.playerCurrency --Refresh player currency backup to do calculations
+				main.f_unlock(true) --Check Menu Unlocks
+				currencyDat.moneyOLD = currency.getMoney() --Refresh player currency backup to do calculations
 				break
-			elseif (esc() or main.f_input(main.t_players, {'m'})) and not main.close then
-				sndPlay(motif.files.snd_data, motif.shop_info.cancel_snd[1], motif.shop_info.cancel_snd[2])
+			elseif (esc() or getInput(-1, motifShop.shop_info.menu.cancel.key)) and not main.close then
+				sndPlay(motifShop.sndData, motifShop.shop_info.cancel.snd[1], motifShop.shop_info.cancel.snd[2])
 			--Back to Category Select
 				--if inCategory then
 				--	f_resetCursor()
 				--	inCategory = false
 			--Exit to Main Menu
 				--else
-					main.f_fadeReset('fadeout', motif.shop_info)
+					fadeOutInit(motifShop.shop_info.fadeout.FadeData)
 					main.close = true
 				--end
 		--Previous Category
-			elseif commandGetState(main.t_cmd[main.playerInput], 'd') and inCategory and not main.fadeActive then
-				sndPlay(motif.files.snd_data, motif.shop_info.cursor_category_snd[1], motif.shop_info.cursor_category_snd[2])
+			elseif getInput(-1, motifShop.shop_info.menu.previouscategory.key) and inCategory and not fadeActive() then
+				sndPlay(motifShop.sndData, motifShop.shop_info.cursor.category.snd[1], motifShop.shop_info.cursor.category.snd[2])
 				f_resetCursor()
 				shopCategoryNo = shopCategoryNo - 1
 		--Next Category
-			elseif commandGetState(main.t_cmd[main.playerInput], 'w') and inCategory and not main.fadeActive then
-				sndPlay(motif.files.snd_data, motif.shop_info.cursor_category_snd[1], motif.shop_info.cursor_category_snd[2])
+			elseif getInput(-1, motifShop.shop_info.menu.nextcategory.key) and inCategory and not fadeActive() then
+				sndPlay(motifShop.sndData, motifShop.shop_info.cursor.category.snd[1], motifShop.shop_info.cursor.category.snd[2])
 				f_resetCursor()
 				shopCategoryNo = shopCategoryNo + 1
 		--Previous Item
-			elseif commandGetState(main.t_cmd[main.playerInput], '$U') and not main.fadeActive then
+			elseif getInput(-1, motifShop.shop_info.menu.next.key) and not fadeActive() then
 				resetShopAnim = true
 				if inCategory then
-					--item = item - 1 --This is already managed by f_menuCommonCalc
+					--item = item - 1 --This is already managed by main.f_menuCommonCalc
 				else
 					shopCategoryNo = shopCategoryNo - 1
 				end
 		--Next Item
-			elseif commandGetState(main.t_cmd[main.playerInput], '$D') and not main.fadeActive then
+			elseif getInput(-1, motifShop.shop_info.menu.previous.key) and not fadeActive() then
 				resetShopAnim = true
 				if inCategory then
-					--item = item + 1 --This is already managed by f_menuCommonCalc
+					--item = item + 1 --This is already managed by main.f_menuCommonCalc
 				else
 					shopCategoryNo = shopCategoryNo + 1
 				end
 		--Enter Actions
-			elseif main.f_input(main.t_players, {'pal', 's'}) and not main.fadeActive then
+			elseif getInput(-1, motifShop.shop_info.menu.done.key) and not fadeActive() then
 			--Outside a Category
 				if not inCategory then
 				--Open Category (Items Available)
 					if #t_shopMenu[shopCategoryNo] ~= 0 then
-						sndPlay(motif.files.snd_data, motif.shop_info.cursor_done_snd[1], motif.shop_info.cursor_done_snd[2])
+						sndPlay(motifShop.sndData, motifShop.shop_info.cursor.done.snd[1], motifShop.shop_info.cursor.done.snd[2])
 						f_resetCursor()
 						inCategory = true
 				--Can't Open Category (No Items Available)
 					else
-						sndPlay(motif.files.snd_data, motif.shop_info.cursor_error_snd[1], motif.shop_info.cursor_error_snd[2])
+						sndPlay(motifShop.sndData, motifShop.shop_info.cursor.error.snd[1], motifShop.shop_info.cursor.error.snd[2])
 					end
 			--Inside a Category
 				else
 				--Purchase item
-					if stats.shopstock[t_shopMenu[shopCategoryNo].category][t_shopMenu[shopCategoryNo][item].id] and main.t_unlockLua.shop[t_shopMenu[shopCategoryNo][item].id] == nil then
-						sndPlay(motif.files.snd_data, motif.shop_info.cursor_done_snd[1], motif.shop_info.cursor_done_snd[2])
-						if stats.playerCurrency >= t_shopMenu[shopCategoryNo][item].price then
+					if shopDat.shopstock[t_shopMenu[shopCategoryNo].category][t_shopMenu[shopCategoryNo][item].id] and unlockItem then
+						sndPlay(motifShop.sndData, motifShop.shop_info.cursor.done.snd[1], motifShop.shop_info.cursor.done.snd[2])
+						if currency.getMoney() >= t_shopMenu[shopCategoryNo][item].price then
 							enoughMoney = true
 						else --No enough Money
 							enoughMoney = false
@@ -1594,7 +1780,7 @@ local function f_shopMenu()
 						confirmPurchase = true --Show Confirm Purchase
 				--Item Sold Out or Item has not been discovered
 					else
-						sndPlay(motif.files.snd_data, motif.shop_info.cursor_error_snd[1], motif.shop_info.cursor_error_snd[2])
+						sndPlay(motifShop.sndData, motifShop.shop_info.cursor.error.snd[1], motifShop.shop_info.cursor.error.snd[2])
 					end
 				end
 			end
@@ -1609,182 +1795,22 @@ local function f_shopMenu()
 		end
 	--Show Category Data
 		if not inCategory then
-			categoryTitle = motif.shop_info.category_text
+			categoryTitle = motifShop.shop_info.category_text
 			infoTextData = t_shopMenu[shopCategoryNo].info
 	--Show Item Data
 		else
 			categoryTitle = t_shopMenu[shopCategoryNo].category
-			if main.t_unlockLua.shop[t_shopMenu[shopCategoryNo][item].id] == nil then --If the item has been Discovered
+			if unlockItem then --If the item has been Discovered
 				infoTextData = t_shopMenu[shopCategoryNo][item].info
 			else
-				infoTextData = motif.shop_info.info_text_locked
+				infoTextData = motifShop.shop_info.info.locked
 			end
 		end
-		if not confirmPurchase then main.f_cmdInput() end --To avoid issues with inputs in f_confirmPurchase()
-		main.f_refresh()
+		if not confirmPurchase then cmdInput = true end --To avoid issues with inputs in f_confirmPurchase()
+		refresh()
 	end
 end
---;===========================================================================================
---; 							  REWARD MESSAGE LOGIC
---;===========================================================================================
-local txt_reward = main.f_createTextImg(motif.reward_info, 'reward', {defsc = motif.defaultShop})
-local txt_rewardAccept = main.f_createTextImg(motif.reward_info, 'accept', {defsc = motif.defaultShop})
 
-local function f_rewardScreen()
-	if stats.playerCurrency == stats.playerCurrencyOLD or stats.playerCurrencyOLD == -1 then return end --Skip this screen
-	local rewardTextData = (stats.playerCurrency - stats.playerCurrencyOLD)..motif.reward_info.reward_text
-	local done = false
-	stats.playerCurrencyOLD = -1 --Reset Var
-	f_saveStats()
-	main.f_bgReset(motif.rewardbgdef.bg)
-	main.f_fadeReset('fadein', motif.reward_info)
-	sndPlay(motif.files.snd_data, motif.reward_info.reward_snd[1], motif.reward_info.reward_snd[2]) --Play Reward SFX
-	--if motif.music.reward_bgm ~= '' then
-		main.f_playBGM(false, "", 0, 100, 0, 0)
-	--end
-	while true do
-	--Clear Color
-		if not skipClear then
-			clearColor(motif.rewardbgdef.bgclearcolor[1], motif.rewardbgdef.bgclearcolor[2], motif.rewardbgdef.bgclearcolor[3])
-		end
-	--Layerno = 0 backgrounds
-		bgDraw(motif.rewardbgdef.bg, falseBool)
-	--Draw Reward Text
-		txt_reward:draw()
-		txt_reward:update({
-			text = rewardTextData,
-			x = motif.reward_info.menu_pos[1] + motif.reward_info.reward_offset[1],
-			y = motif.reward_info.menu_pos[2] + motif.reward_info.reward_offset[2]
-		})
-	--Draw Accept Text
-		txt_rewardAccept:draw()
-		txt_rewardAccept:update({
-			x = motif.reward_info.menu_pos[1] + motif.reward_info.accept_offset[1],
-			y = motif.reward_info.menu_pos[2] + motif.reward_info.accept_offset[2]
-		})
-	--Attract Credits/Coins
-		if motif.attract_mode.enabled == 1 and main.credits ~= -1 then
-			txt_attract_credits:update({text = main.f_extractText(motif.attract_mode.credits_text, main.credits)[1]})
-			txt_attract_credits:draw()
-		end
-	--Layerno = 1 backgrounds
-		bgDraw(motif.rewardbgdef.bg, trueBool)
-	--Fadein/Fadeout
-		main.f_fadeAnim(motif.reward_info)
-	--Close Menu
-		if done and not main.fadeActive then
-			main.f_bgReset(motif.rewardbgdef.bg)
-			main.f_fadeReset('fadein', motif.reward_info)
-			main.f_unlock(false) --Check Menu Unlocks
-			break
-		elseif main.f_input(main.t_players, {'pal', 's', 'm'}) and not main.fadeActive then
-			sndPlay(motif.files.snd_data, motif.reward_info.accept_snd[1], motif.reward_info.accept_snd[2])
-			main.f_fadeReset('fadeout', motif.reward_info)
-			done = true
-		end
-		main.f_cmdInput()
-		main.f_refresh()
-	end
-end
---;===========================================================
---; MODES LOOP
---;===========================================================
-function start.f_selectMode()
-	start.f_selectReset(true)
-	while true do
-		--select screen
-		if not start.f_selectScreen() then
-			f_rewardScreen() --Display Currency Reward Screen before back to main menu
-			sndPlay(motif.files.snd_data, motif.select_info.cancel_snd[1], motif.select_info.cancel_snd[2])
-			main.f_bgReset(motif[main.background].bg)
-			main.f_fadeReset('fadein', motif[main.group])
-			main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
-			return
-		end
-		--first match
-		if start.reset then
-			main.t_availableChars = main.f_tableCopy(main.t_orderChars)
-			--generate default roster
-			if main.makeRoster then
-				start.t_roster = start.f_makeRoster()
-			end
-			--generate AI ramping table
-			if main.aiRamp then
-				start.f_aiRamp(1)
-			end
-			start.reset = false
-		end
-		--lua file with custom arcade path detection
-		local path = main.luaPath
-		if main.charparam.arcadepath then
-			if start.p[2].ratio and start.f_getCharData(start.p[1].t_selected[1].ref).ratiopath ~= '' then
-				path = start.f_getCharData(start.p[1].t_selected[1].ref).ratiopath
-				if not main.f_fileExists(path) then
-					panicError("\n" .. start.f_getCharData(start.p[1].t_selected[1].ref).name .. " ratiopath doesn't exist: " .. path .. "\n")
-				end
-			elseif not start.p[2].ratio and start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath ~= '' then
-				path = start.f_getCharData(start.p[1].t_selected[1].ref).arcadepath
-				if not main.f_fileExists(path) then
-					panicError("\n" .. start.f_getCharData(start.p[1].t_selected[1].ref).name .. " arcadepath doesn't exist: " .. path .. "\n")
-				end
-			end
-		end
-		--external script execution
-		assert(loadfile(path))()
-		--infinite matches flag detected
-		if main.makeRoster and start.t_roster[matchno()] ~= nil and start.t_roster[matchno()][1] == -1 then
-			table.remove(start.t_roster, matchno())
-			start.t_roster = start.f_makeRoster(start.t_roster)
-			if main.aiRamp then
-				start.f_aiRamp(matchno())
-			end
-		--otherwise
-		else
-			if matchno() == -1 then --no more matches left
-				--hiscore and stats data
-				local cleared, place = start.f_storeStats()
-				if main.hiscoreScreen and main.t_hiscoreData[gamemode()] ~= nil and motif.hiscore_info.enabled == 1 and place > 0 then
-					start.hiscoreInit = false
-					while start.f_hiscore(main.t_hiscoreData[gamemode()], true, place) do
-						main.f_refresh()
-					end
-				end
-				f_saveStats()
-				--credits
-				if cleared and main.storyboard.credits and motif.end_credits.enabled == 1 and main.f_fileExists(motif.end_credits.storyboard) then
-					storyboard.f_storyboard(motif.end_credits.storyboard)
-				end
-				--game over
-				if main.storyboard.gameover and motif.game_over_screen.enabled == 1 and main.f_fileExists(motif.game_over_screen.storyboard) then
-					if cleared or not main.continueScreen or (not continue() and motif.continue_screen.gameover_enabled == 1) then
-						storyboard.f_storyboard(motif.game_over_screen.storyboard)
-					end
-				end
-				--exit to main menu
-				if main.exitSelect then
-					if motif.files.intro_storyboard ~= '' and motif.attract_mode.enabled == 0 then
-						storyboard.f_storyboard(motif.files.intro_storyboard)
-					end
-				end
-				start.exit = start.exit or main.exitSelect or not main.selectMenu[1]
-			end
-			if start.exit then
-				f_rewardScreen() --Display Currency Reward Screen before back to main menu
-				main.f_bgReset(motif[main.background].bg)
-				main.f_fadeReset('fadein', motif[main.group])
-				main.f_playBGM(false, motif.music.title_bgm, motif.music.title_bgm_loop, motif.music.title_bgm_volume, motif.music.title_bgm_loopstart, motif.music.title_bgm_loopend)
-				start.exit = false
-				return
-			end
-			if not continue() or esc() then
-				start.f_selectReset(false)
-			else
-				t_reservedChars = {{}, {}}
-			end
-		end
-	end
-end
-if main.debugLog then main.f_printTable(motif, "debug/t_motif.txt") end
 main.t_itemname.shop = function()
 	return f_shopMenu()
 end
