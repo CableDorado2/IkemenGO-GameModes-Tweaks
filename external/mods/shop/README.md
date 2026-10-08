@@ -3,7 +3,7 @@
 ***Item Shop*** is a dedicated menu to spend In-Game Currency and Unlock Content.
 [![Alt text](https://i.ytimg.com/vi/fKo6Ag_lZO4/maxresdefault.jpg)](https://www.youtube.com/watch?v=fKo6Ag_lZO4)
 
-> [!NOTE]
+> [!IMPORTANT]
 > - This module requires a [Currency System](https://github.com/CableDorado2/IkemenGO-GameModes-Tweaks/tree/main/external/mods/currency) module to work.
 >
 > - [Palette Select Plus+](https://github.com/dionednd/paletteselect-plus) module by dionednd, is recommended to setup characters palette/color unlocks.
