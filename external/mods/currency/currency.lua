@@ -1,6 +1,6 @@
 --[[					 		   CURRENCY MODULE
 ===========================================================================================
-Version: 1.0.0
+Version: 1.0.1
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: Adds In-Game Currency System (Player Currency will increase after win a match).
@@ -380,15 +380,20 @@ if gameOption('Debug.DumpLuaTables') then main.f_printTable(currency, 'debug/t_c
 --;===========================================================================================
 --; 							    REWARD SCREEN
 --;===========================================================================================
-local function f_rewardScreen()
+local function f_setReward()
 	if getWinnerTeam() == 0 or getWinnerTeam() == 1 then
 		local reward = motifCurrency.reward_info.victory.reward
 		if firstAttack() then reward = reward + motifCurrency.reward_info.firstattack.reward end
 		if winSpecial() then reward = reward + motifCurrency.reward_info.specialko.reward end
 		if winHyper() then reward = reward + motifCurrency.reward_info.superko.reward end
 		if winPerfect() then reward = reward + motifCurrency.reward_info.perfectko.reward end
+		if matchNo() > 1 then reward = reward * matchNo() end
+		if getConsecutiveWins(1) then reward = reward * getConsecutiveWins(1) end
 		currency.setMoney(reward)
 	end
+end
+
+local function f_rewardScreen()
 	if netPlay() or (currency.getMoney() == currencyDat.moneyOLD or currencyDat.moneyOLD == -1) then return end --Skip this screen
 	local rewardTextData = (currency.getMoney() - currencyDat.moneyOLD)..motifCurrency.currency_info.currency.suffix..' '..motifCurrency.reward_info.reward.text
 	local rewardClaimed = false
@@ -545,6 +550,7 @@ function start.f_selectMode()
 --;---------------------------------------------------------------------------------------------------------------------
 			--EVENTS MODE RESULTS
 				if eventModeActive then f_eventResults() end
+				f_setReward() --Reward Evaluation
 --;---------------------------------------------------------------------------------------------------------------------
 				--exit to main menu
 				if main.exitSelect then

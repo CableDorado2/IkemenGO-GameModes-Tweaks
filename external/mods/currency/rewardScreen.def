@@ -30,7 +30,7 @@ menu.loopcount = -1
 [Currency Info] ;Currency display definition
 currency.font = 3,0,-1
 currency.suffix = P$
-currency.offset = 1270,45
+currency.offset = 1270,46
 currency.scale = 1.0, 1.0
 ;-------------------------------------------------------------------------------
 [Reward Info] ;Reward screen definition
