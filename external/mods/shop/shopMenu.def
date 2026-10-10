@@ -152,8 +152,8 @@ menu.item.value.active.scale = 1.0, 1.0
 menu.tween.factor = 0.5, 0
 menu.tween.wrap.snap = 0
 
-menu.window.margins.y = 21,2
-menu.window.visibleitems = 10
+menu.window.margins.y = -131,170
+menu.window.visibleitems = 9
 
 menu.boxcursor.visible = 1
 menu.boxcursor.coords = -5,128, 778,172
@@ -169,15 +169,15 @@ menu.boxbg.alpha = 0,128
 
 ;menu.arrow.up.anim = -1
 menu.arrow.up.spr = 400,0
-menu.arrow.up.offset = 700,100
+menu.arrow.up.offset = 750,110
 menu.arrow.up.facing = 1
-menu.arrow.up.scale = 1.5, 1.5
+menu.arrow.up.scale = 1.0, 1.0
 
 ;menu.arrow.down.anim = -1
 menu.arrow.down.spr = 401,0
-menu.arrow.down.offset = 700,590
+menu.arrow.down.offset = 750,540
 menu.arrow.down.facing = 1
-menu.arrow.down.scale = 1.5, 1.5
+menu.arrow.down.scale = 1.0, 1.0
 
 ;Fade BG during Purchase Screen
 purchase.overlay.window = 0,0, 1280,720

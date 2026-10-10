@@ -1,6 +1,6 @@
 --[[					 		   SHOP MODULE
 ===========================================================================================
-Version: 1.3.0
+Version: 1.3.1
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: A menu dedicated to spend In-Game Currency and Unlock Content
@@ -289,14 +289,14 @@ local function f_createAnim(t, sect, moduleSff, moduleActions)
 --Use [Files] "spr = " data from system.def
 	if not moduleSff then
 		sffDat = motif.Sff
---Use "events.spr" data from module shopMotifPath, instead system.def file
+--Use "sff" data from module shopMotifPath, instead system.def file
 	else
 		sffDat = motifShop.sprData
 	end
 --Use Animations/Actions data from system.def file
 	if (moduleActions and motifShop.airData == nil) or not moduleActions then
 		airDat = motif.AnimTable
---Use "events.air" data from module shopMotifPath, instead system.def file
+--Use "air" data from module shopMotifPath, instead system.def file
 	else
 		airDat = motifShop.airData
 	end
@@ -703,7 +703,7 @@ local function f_loadShop() --Load def file which contains shop items data
 	local shopItemsDef = nil
 	motifShop.sprData = sffNew() --Create blank sprite data
 	motifShop.sndData = motif.Snd --Use default system.def sound data
---If events files section is detected, replace Default Data with Custom Data
+--If shop items files section is detected, replace Default Data with Custom Data
 	if motifShop.files ~= nil then
 	--Load .def file with Shop Items
 		if motifShop.files.def ~= nil and main.f_fileExists(motifShop.files.def) then
@@ -1071,7 +1071,7 @@ local function f_drawShopItemPreview(category, itemNo, unlocked)
 				spr_previewUnknow,
 				motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.unknown.offset[1],
 				motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.unknown.offset[2],
-				motifShop.shop_info.preview_unknown_facing
+				motifShop.shop_info.preview.unknown.facing
 			)
 			local shopStageAnimDat = main.t_selStages[main.t_stageDef[itemID]].shopAnim_data --main.t_selStages[main.t_selectableStages[main.t_stageDef[itemID]]].shopAnim_data
 			if motifShop.shop_info.stage.preview.resetanim == 1 and resetShopAnim then
@@ -1091,7 +1091,7 @@ local function f_drawShopItemPreview(category, itemNo, unlocked)
 					spr_previewUnknow,
 					motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.unknown.offset[1],
 					motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.unknown.offset[2],
-					motifShop.shop_info.preview_unknown_facing
+					motifShop.shop_info.preview.unknown.facing
 				)
 			else
 				f_drawCustomPreview(
@@ -1114,7 +1114,7 @@ local function f_drawShopItemPreview(category, itemNo, unlocked)
 			spr_previewUnknow,
 			motifShop.shop_info.menu.pos[1] + motifShop.shop_info.preview.unknown.offset[1],
 			motifShop.shop_info.menu.pos[2] + motifShop.shop_info.preview.unknown.offset[2],
-			motifShop.shop_info.preview_unknown_facing
+			motifShop.shop_info.preview.unknown.facing
 		)
 	end
 end
@@ -1383,6 +1383,20 @@ local function f_shopMenu()
 	bgReset(motifShop.shopbgdef.BGDef)
 	fadeInInit(motifShop.shop_info.fadein.FadeData)
 	main.close = false
+	--[[
+	for _, v in pairs(motifShop.shop_info.menu.item.bg) do
+		animSetWindow(v.AnimData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	end
+	for _, v in pairs(motifShop.shop_info.menu.item.active.bg) do
+		animSetWindow(v.AnimData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	end
+--]]
+	textImgSetWindow(motifShop.shop_info.menu.item.TextSpriteData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	textImgSetWindow(motifShop.shop_info.menu.item.active.TextSpriteData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	textImgSetWindow(motifShop.shop_info.menu.item.value.TextSpriteData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	textImgSetWindow(motifShop.shop_info.menu.item.value.active.TextSpriteData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	--textImgSetWindow(motifShop.shop_info.menu.item.selected.TextSpriteData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
+	--textImgSetWindow(motifShop.shop_info.menu.item.selected.active.TextSpriteData, t_menuWindowShop[1], t_menuWindowShop[2], t_menuWindowShop[3], t_menuWindowShop[4])
 	sndPlay(motifShop.sndData, motifShop.shop_info.cursor.done.snd[1], motifShop.shop_info.cursor.done.snd[2])
 	if motifShop.music.menu.bgm ~= '' then
 		playBgm({
