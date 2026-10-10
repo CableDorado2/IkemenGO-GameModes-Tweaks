@@ -88,31 +88,31 @@ unlock = shopDat.shopstock ~= nil and shopDat.shopstock["Stages"] ~= nil and sho
 
 [Colors]
 id = kfmpal3
-char = kfm
+char = kfm_zss
 color = 3
 
 id = kfmpal4
-char = kfm
+char = kfm_zss
 color = 4
 
 id = kfmpal5
-char = kfm
+char = kfm_zss
 color = 5
 
 id = kfmpal13
-char = kfm
+char = kfm_zss
 color = 13
 price = 800
 unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm ~= nil
 
 id = kfmpal14
-char = kfm
+char = kfm_zss
 color = 14
 price = 800
 unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm ~= nil
 
 id = kfmpal15
-char = kfm
+char = kfm_zss
 color = 15
 price = 1000
 unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm ~= nil
