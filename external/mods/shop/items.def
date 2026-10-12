@@ -103,19 +103,19 @@ id = kfmpal13
 char = kfm_zss
 color = 13
 price = 800
-unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm ~= nil
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm_zss ~= nil
 
 id = kfmpal14
 char = kfm_zss
 color = 14
 price = 800
-unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm ~= nil
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm_zss ~= nil
 
 id = kfmpal15
 char = kfm_zss
 color = 15
 price = 1000
-unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm ~= nil
+unlock = stats.modes ~= nil and stats.modes.arcade ~= nil and stats.modes.arcade.clearcount ~= nil and stats.modes.arcade.clearcount.kfm_zss ~= nil
 
 [Stages]
 id = stages/kfm.def
