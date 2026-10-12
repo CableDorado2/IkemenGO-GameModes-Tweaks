@@ -1,6 +1,6 @@
 --[[					 		   CURRENCY MODULE
 ===========================================================================================
-Version: 1.0.1
+Version: 1.1.0
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: Adds In-Game Currency System (Player Currency will increase after win a match).
@@ -378,19 +378,53 @@ function currency.display()
 end
 if gameOption('Debug.DumpLuaTables') then main.f_printTable(currency, 'debug/t_currency.txt') end --Print Debug Info
 --;===========================================================================================
+--; 							    LISTEN MATCH
+--;===========================================================================================
+--Match Tracking
+local comboCnt = 0
+function f_resetMatchVars()
+	comboCnt = 0
+end
+
+local function f_matchTracking()
+	if not netPlay() then
+		if roundState() == 0 then f_resetMatchVars() end --Reset vars at the start of the match
+		if roundState() == 2 and player(1) then
+			if fightTime() > 1000 and comboCount() > comboCnt then
+				comboCnt = comboCount()
+			end
+		end
+	end
+end
+hook.add("loop", "getMatchDat", f_matchTracking)
+--;===========================================================================================
 --; 							    REWARD SCREEN
 --;===========================================================================================
+local function f_survivalRewards(rewardAdquired)
+	local reward = rewardAdquired + motifCurrency.reward_info.victory.reward
+	if matchNo() > 1 then reward = reward * matchNo() end
+	if getConsecutiveWins(1) then reward = reward * getConsecutiveWins(1) end
+	return reward
+end
+
 local function f_setReward()
+	local reward = 0
+--Arcade/VS Modes
 	if getWinnerTeam() == 0 or getWinnerTeam() == 1 then
-		local reward = motifCurrency.reward_info.victory.reward
 		if firstAttack() then reward = reward + motifCurrency.reward_info.firstattack.reward end
 		if winSpecial() then reward = reward + motifCurrency.reward_info.specialko.reward end
 		if winHyper() then reward = reward + motifCurrency.reward_info.superko.reward end
 		if winPerfect() then reward = reward + motifCurrency.reward_info.perfectko.reward end
-		if matchNo() > 1 then reward = reward * matchNo() end
-		if getConsecutiveWins(1) then reward = reward * getConsecutiveWins(1) end
-		currency.setMoney(reward)
+		reward = f_survivalRewards(reward)
+--Survival Mode
+	elseif getWinnerTeam() == 2 and (gameMode() == "survival" or gameMode() == "survivalcoop") then
+		reward = f_survivalRewards(reward)
+--Training Mode
+	elseif (getWinnerTeam() == -1 or getWinnerTeam() == 0) and gameMode() == "training" then
+		reward = comboCnt * 10
 	end
+	currency.setMoney(reward)
+	f_resetMatchVars()
 end
 
 local function f_rewardScreen()
