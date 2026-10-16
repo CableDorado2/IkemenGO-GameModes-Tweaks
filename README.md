@@ -44,6 +44,10 @@ A Lifebar package that mix several Gameplay mechanics from many Fighting Games.
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
 [![Alt text](https://i.ytimg.com/vi/HsXv_Eum7A0/maxresdefault.jpg)](https://www.youtube.com/watch?v=HsXv_Eum7A0)
 
+## [Tournament Mode](https://github.com/Majestic-Menace/Tournament-Mode-for-Ikemen-GO) (By Majestic Menace)
+A Customizable Tournament Mode.
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/bf5324e2-e9c9-46fa-b811-1a6ad159f3a7" />
+
 ## _[Color Edit Mode](https://github.com/saintjr2004/Ikemen-GO-ColorEdit) (By jay_ts & m14)_
 A character Color Editor ➤ https://www.youtube.com/watch?v=5xvTTVMZm8s
 <img width="974" height="542" alt="image" src="https://github.com/user-attachments/assets/f8a6a4b1-2f62-48b0-a28e-f3f482325a69" />
