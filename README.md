@@ -44,7 +44,7 @@ A Lifebar package that mix several Gameplay mechanics from many Fighting Games.
 A Combo Challenge Mode ➤ https://www.youtube.com/watch?v=HsXv_Eum7A0
 [![Alt text](https://i.ytimg.com/vi/HsXv_Eum7A0/maxresdefault.jpg)](https://www.youtube.com/watch?v=HsXv_Eum7A0)
 
-## [Tournament Mode](https://github.com/Majestic-Menace/Tournament-Mode-for-Ikemen-GO) (By Majestic Menace)
+## _[Tournament Mode](https://github.com/Majestic-Menace/Tournament-Mode-for-Ikemen-GO) (By Majestic Menace)_
 A Customizable Tournament Mode.
 <img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/bf5324e2-e9c9-46fa-b811-1a6ad159f3a7" />
 
