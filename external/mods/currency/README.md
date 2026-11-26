@@ -25,5 +25,7 @@ A dedicated rewards:
 - specialko.reward
 - superko.reward
 - perfectko.reward
+- clutchko.reward
+- <gamemode>.reward
 
 are provided in rewardScreen.def file to setup for each victory condition.
