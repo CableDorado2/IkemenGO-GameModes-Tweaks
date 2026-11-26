@@ -1,6 +1,6 @@
 --[[					 		   CURRENCY MODULE
 ===========================================================================================
-Version: 1.1.0
+Version: 1.2.0
 Author: Cable Dorado 2 (CD2)
 Tested on: I.K.E.M.E.N. GO Engine (v1.0.0)
 Description: Adds In-Game Currency System (Player Currency will increase after win a match).
@@ -11,18 +11,6 @@ local currencySavePath = "save/currencyDat.json" --Set the Currency Save Data Fi
 --===================================================================================
 --								 COMMON FUNCTIONS
 --===================================================================================
---calculate menu.tween and boxcursor.tween (copy from external/script/main.lua)
-local function f_tweenStep(val, target, factor)
-	if not factor or factor <= 0 then
-		return target
-	end
-	local newVal = val + (target - val) * math.min(factor, 1)
-	if math.abs(newVal - target) < 1 then
-		return target
-	end
-	return newVal
-end
-
 --function for navigating into subtables
 local function f_readSubtable(tDat, subt)
 	if not subt or subt == "" then return tDat end
@@ -32,16 +20,6 @@ local function f_readSubtable(tDat, subt)
 		if not t then return nil end
 	end
 	return t
-end
-
---Set thousand format to a number value
-local function f_setThousandsFormat(num)
-	local txt = tostring(num)
-	txt = txt:reverse():gsub("(...)", "%1."):reverse()
-	if txt:sub(1, 1) == "." then
-		txt = txt:sub(2)
-	end
-	return txt
 end
 
 --shortcut for updating text
@@ -83,108 +61,6 @@ local function f_createTextImg(t, sect)
 	local textData = textImgNew()
 	f_updateTextImg(t, sect, textData)
 	return textData
-end
-
---[[Wrap a long string. Source: http://lua-users.org/wiki/StringRecipes
-str: string to wrap
-limit: maximum line length
-indent: regular indentation
-indent1: indentation of first line
-]]
-local function f_wrap(str, limit, indent, indent1)
-	indent = indent or ''
-	indent1 = indent1 or indent
-	limit = limit or 72
-	local here = 1 - #indent1
-	return indent1 .. str:gsub("(%s+)()(%S+)()",
-	function(sp, st, word, fi)
-		if fi - here > limit then
-			here = st - #indent
-			return '\n' .. indent .. word
-		end
-	end)
-end
-
---[[Draw string letter by letter + wrap lines:
-textData: text data
-str: string (text to draw)
-counter: external counter (values should be increased each frame by 1 starting from 1)
-x: first line X position
-y: first line Y position
-scaleX: scale X axis
-scaleY: scale Y axis
-spacing: spacing between lines (rendering Y position increasement for each line)
-delay (optional): ticks (frames) delay between each letter is rendered, defaults to 0 (all text rendered immediately)
-limit (optional): maximum line length (string wraps when reached), if omitted line wraps only if string contains '\n'
-maxLimit (optional): maximum number of lines allowed before truncating
-]]
-local function f_textRender(textData, str, counter, x, y, scaleX, scaleY, spacing, delay, limit, maxlimit)
-	local delay = delay or 0
-	local limit = limit or -1
-	local maxLimit = maxlimit or 0 --0= No Max Limits
-	str = tostring(str)
---Process line breaks and wrapping if necessary
-	if limit == -1 then
-		str = str:gsub('\\n', '\n')
-	else
-		str = str:gsub('%s*\\n%s*', ' ')
-		if math.floor(#str / limit) + 1 > 1 then
-			str = f_wrap(str, limit, indent, indent1)
-		end
-	end
---Determine how much text to display
-	local subEnd = math.floor(#str - (#str - counter / delay))
-	local t = {}
-	for line in str:gmatch('([^\r\n]*)[\r\n]?') do
-		t[#t + 1] = line
-	end
-	t[#t] = nil --get rid of the last blank line
---If maxLimit > 0 and we have exceeded that limit, replace the last line with "..."
-	if maxLimit > 0 and #t > maxLimit then
-		for i=1, maxLimit - 1 do
-		--draw the first lines normally
-			local line = t[i]
-			if subEnd < #str then
-				local length = #line
-				local totalLength = 0
-				for j=1, i-1 do
-					totalLength = totalLength + #t[j] + 1
-				end
-				if subEnd < totalLength + length then
-					line = line:sub(1, subEnd - totalLength)
-				end
-			end
-			textImgSetText(textData, line)
-			textImgSetPos(textData, x, y + spacing * (i - 1))
-			textImgSetScale(textData, scaleX, scaleY)
-			textImgDraw(textData)
-		end
-	--replace the last allowed line with "..."
-		textImgSetText(textData, "...")
-		textImgSetPos(textData, x, y + spacing * (maxLimit - 1))
-		textImgSetScale(textData, scaleX, scaleY)
-		textImgDraw(textData)
-		--return lengthCnt
-	else
-		local lengthCnt = 0
-		for i=1, #t do
-			if subEnd < #str then
-				local length = #t[i]
-				if i > 1 and i <= #t then
-					length = length + 1
-				end
-				lengthCnt = lengthCnt + length
-				if subEnd < lengthCnt then
-					t[i] = t[i]:sub(0, subEnd - lengthCnt)
-				end
-			end
-			textImgSetText(textData, t[i])
-			textImgSetPos(textData, x, y + spacing * (i - 1))
-			textImgSetScale(textData, scaleX, scaleY)
-			textImgDraw(textData)
-		end
-		return lengthCnt
-	end
 end
 
 --shortcut for updating animation/sprite
@@ -380,50 +256,82 @@ if gameOption('Debug.DumpLuaTables') then main.f_printTable(currency, 'debug/t_c
 --;===========================================================================================
 --; 							    LISTEN MATCH
 --;===========================================================================================
---Match Tracking
-local comboCnt = 0
-function f_resetMatchVars()
-	comboCnt = 0
+local rewardDat = {}
+rewardDat.firstAttacks = 0
+rewardDat.comboCnt = 0
+rewardDat.specialWin = 0
+rewardDat.superWin = 0
+rewardDat.perfectWin = 0
+rewardDat.clutchWin = 0
+rewardDat.matchesWon = 0
+local evalDone = false
+
+local function f_resetMatchVars()
+	rewardDat.firstAttacks = 0
+	rewardDat.comboCnt = 0
+	rewardDat.specialWin = 0
+	rewardDat.superWin = 0
+	rewardDat.perfectWin = 0
+	rewardDat.clutchWin = 0
+	rewardDat.matchesWon = 0
+	evalDone = false
 end
 
 local function f_matchTracking()
-	if not netPlay() then
-		if roundState() == 0 then f_resetMatchVars() end --Reset vars at the start of the match
-		if roundState() == 2 and player(1) then
-			if fightTime() > 1000 and comboCount() > comboCnt then
-				comboCnt = comboCount()
+	if not netPlay() and gameMode() ~= "demo" then
+	--Reset vars at the start of the match 1
+		if matchNo() == 1 and roundNo() == 1 and roundState() == 1 then
+			f_resetMatchVars()
+		end
+		if roundState() == 1 then evalDone = false end --Always reset
+	--Evaluate vars during match
+		for p=1,7,2 do --Check only Left Side
+			if playerNoExist(p) then
+				player(p)
+				if roundState() == 2 and gameMode() == "training" then
+					if fightTime() > 1000 and comboCount() > rewardDat.comboCnt then
+						rewardDat.comboCnt = comboCount()
+					end
+				end
+			--Evaluate vars when match over
+				if matchOver() and not evalDone then
+					if win() then rewardDat.matchesWon = rewardDat.matchesWon + 1 end
+					if firstAttack() then rewardDat.firstAttacks = rewardDat.firstAttacks + 1 end
+					if winSpecial() then rewardDat.specialWin = rewardDat.specialWin + 1 end
+					if winHyper() then rewardDat.superWin = rewardDat.superWin + 1 end
+					if winPerfect() then rewardDat.perfectWin = rewardDat.perfectWin + 1 end
+					if winClutch() then rewardDat.clutchWin = rewardDat.clutchWin + 1 end
+					evalDone = true
+				end
 			end
 		end
 	end
 end
+
 hook.add("loop", "getMatchDat", f_matchTracking)
 --;===========================================================================================
 --; 							    REWARD SCREEN
 --;===========================================================================================
-local function f_survivalRewards(rewardAdquired)
-	local reward = rewardAdquired + motifCurrency.reward_info.victory.reward
-	if matchNo() > 1 then reward = reward * matchNo() end
-	if getConsecutiveWins(1) then reward = reward * getConsecutiveWins(1) end
-	return reward
-end
-
 local function f_setReward()
-	local reward = 0
---Arcade/VS Modes
+	local money = 0
+--Per match Rewards
+	if rewardDat.matchesWon > 0 then money = money + (rewardDat.matchesWon * 10) end
+	if rewardDat.comboCnt > 0 then money = money + (rewardDat.comboCnt * 10) end
+	if rewardDat.firstAttacks > 0 then money = money + (motifCurrency.reward_info.firstattack.reward * rewardDat.firstAttacks) end
+	if rewardDat.specialWin > 0 then money = money + (motifCurrency.reward_info.specialko.reward * rewardDat.specialWin) end
+	if rewardDat.superWin > 0 then money = money + (motifCurrency.reward_info.superko.reward * rewardDat.superWin) end
+	if rewardDat.perfectWin > 0 then money = money + (motifCurrency.reward_info.perfectko.reward * rewardDat.perfectWin) end
+	if rewardDat.clutchWin > 0 then money = money + (motifCurrency.reward_info.clutchko.reward * rewardDat.clutchWin) end
+--Clear Mode only Rewards
 	if getWinnerTeam() == 0 or getWinnerTeam() == 1 then
-		if firstAttack() then reward = reward + motifCurrency.reward_info.firstattack.reward end
-		if winSpecial() then reward = reward + motifCurrency.reward_info.specialko.reward end
-		if winHyper() then reward = reward + motifCurrency.reward_info.superko.reward end
-		if winPerfect() then reward = reward + motifCurrency.reward_info.perfectko.reward end
-		reward = f_survivalRewards(reward)
---Survival Mode
-	elseif getWinnerTeam() == 2 and (gameMode() == "survival" or gameMode() == "survivalcoop") then
-		reward = f_survivalRewards(reward)
---Training Mode
-	elseif (getWinnerTeam() == -1 or getWinnerTeam() == 0) and gameMode() == "training" then
-		reward = comboCnt * 10
+	--Dedicate game mode reward
+		if motifCurrency.reward_info[gameMode()] and motifCurrency.reward_info[gameMode()].reward then
+			money = money + motifCurrency.reward_info[gameMode()].reward
+		end
+	--Default reward
+		money = money + motifCurrency.reward_info.victory.reward
 	end
-	currency.setMoney(reward)
+	currency.setMoney(money)
 	f_resetMatchVars()
 end
 
